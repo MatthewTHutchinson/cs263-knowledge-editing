@@ -1,0 +1,75 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environments
+.venv/
+venv/
+env/
+.env
+.envrc
+.python-version
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Model weights and caches
+*.pt
+*.bin
+*.safetensors
+*.ckpt
+.cache/
+~/.cache/huggingface/
+hf_cache/
+transformers_cache/
+
+# Experiment tracking
+wandb/
+mlruns/
+lightning_logs/
+tb_logs/
+
+# Data (raw, large)
+data/raw/
+data/downloads/
+data/counterfact_full/
+data/mquake_full/
+data/rippleedits_full/
+*.jsonl.gz
+
+# Results (keep the folder structure via README stubs, ignore the actual outputs)
+results/runs/
+results/checkpoints/
+results/figures/
+!results/**/README.md
+
+# External clones (we reference them, don't vendor them)
+external/EasyEdit/
+external/rome/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Secrets
+secrets.yaml
+*.key
+*.pem
