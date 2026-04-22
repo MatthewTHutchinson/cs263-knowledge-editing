@@ -22,8 +22,8 @@ git clone https://github.com/zjunlp/EasyEdit external/EasyEdit
 git clone https://github.com/kmeng01/rome external/rome
 
 # Create conda env matching EasyEdit's requirements
-conda create -n editing python=3.10 -y
-conda activate editing
+conda create -n cs263-project python=3.10 -y
+conda activate cs263-project
 pip install -r external/EasyEdit/requirements.txt
 ```
 
