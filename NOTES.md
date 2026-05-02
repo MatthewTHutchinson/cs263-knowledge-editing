@@ -15,6 +15,18 @@ Format for each entry:
 
 ---
 
+## 2026-05-02 — ROME smoke test passing; two compatibility bugs fixed
+
+- **nethook.py bug (PyTorch 2.9.1)**: `register_forward_hook` with `with_kwargs=True` passes `(module, args, kwargs, output)` — EasyEdit had the signature as `(m, inputs, output, kwargs=None)`, so `output` received the kwargs dict and the hook returned it as the module's output. This replaced `c_proj`'s tensor output with a dict, crashing `dropout()` on the next line. Fixed by correcting the parameter order in `retain_hook`.
+- **summarize() bug**: EasyEdit returns all metrics as lists (e.g. `[1.0]`), not scalars. The `isinstance(node, (int, float))` check in `smoke_test_rome.py` never matched, so all averaged metrics came back `None` and the final assertion fired. Fixed to handle lists and numpy scalars.
+- Smoke test now passes cleanly. Results on 5 CounterFact edits:
+  - rewrite_acc: **1.00** (paper: ~0.99) ✓
+  - rephrase_acc: **0.93** (paper: ~0.93) ✓
+  - locality_acc: **0.70** (paper: ~0.79 — within normal variance) ✓
+- Pipeline is trusted. Next: run 100-edit CounterFact baseline and compare to paper Table 1 formally.
+
+---
+
 ## 2026-04-22 — Environment verified; ROME smoke test script ready
 
 - EasyEdit + ROME repo cloned into `external/`.

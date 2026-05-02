@@ -100,8 +100,11 @@ def summarize(metrics: list[dict]) -> dict:
             node = m
             for k in key_path:
                 node = node.get(k, {})
-            if isinstance(node, (int, float)):
-                vals.append(node)
+            # EasyEdit returns metrics as lists (e.g. [1.0]); handle lists and scalars
+            if isinstance(node, list):
+                vals.extend(float(x) for x in node)
+            elif isinstance(node, (int, float)) or hasattr(node, 'item'):
+                vals.append(float(node))
         return round(sum(vals) / len(vals), 4) if vals else None
 
     return {
