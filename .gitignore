@@ -40,9 +40,10 @@ mlruns/
 lightning_logs/
 tb_logs/
 
-# Data (raw, large)
+# Data (raw, large) — data/counterfact/ is small enough to track (8MB)
 data/raw/
 data/downloads/
+data/stats/
 data/counterfact_full/
 data/mquake_full/
 data/rippleedits_full/
@@ -57,6 +58,11 @@ results/figures/
 # External clones (we reference them, don't vendor them)
 external/EasyEdit/
 external/rome/
+
+# Runtime logs and install artifacts
+logs/
+Miniconda3-*.sh
+install.log
 
 # OS
 .DS_Store
