@@ -29,6 +29,7 @@ HPARAMS_PATH = "configs/ROME/gpt2-xl"
 # Format: (prompt, ground_truth, target_new, rephrase_prompt, locality_prompt, locality_gt)
 EDITS = [
     {
+        "subject": "Danielle Darrieux",
         "prompt": "The mother tongue of Danielle Darrieux is",
         "ground_truth": "French",
         "target_new": "Spanish",
@@ -37,6 +38,7 @@ EDITS = [
         "locality_ground_truth": "Polish",
     },
     {
+        "subject": "Sanofi",
         "prompt": "The headquarters of Sanofi is in",
         "ground_truth": "Paris",
         "target_new": "Berlin",
@@ -45,6 +47,7 @@ EDITS = [
         "locality_ground_truth": "Munich",
     },
     {
+        "subject": "Watts Humphrey",
         "prompt": "Watts Humphrey attended",
         "ground_truth": "Illinois Institute of Technology",
         "target_new": "University of Michigan",
@@ -53,6 +56,7 @@ EDITS = [
         "locality_ground_truth": "Oxford",
     },
     {
+        "subject": "Theo Walcott",
         "prompt": "The sport that Theo Walcott plays is",
         "ground_truth": "association football",
         "target_new": "basketball",
@@ -61,6 +65,7 @@ EDITS = [
         "locality_ground_truth": "basketball",
     },
     {
+        "subject": "Lil Wayne",
         "prompt": "The record label of Lil Wayne is",
         "ground_truth": "Cash Money Records",
         "target_new": "Interscope Records",
@@ -74,6 +79,7 @@ EDITS = [
 def build_inputs(edits: list[dict]) -> dict:
     return {
         "prompts":            [e["prompt"]            for e in edits],
+        "subject":            [e["subject"]            for e in edits],
         "ground_truth":       [e["ground_truth"]       for e in edits],
         "target_new":         [e["target_new"]         for e in edits],
         "rephrase_prompts":   [e["rephrase_prompt"]    for e in edits],
