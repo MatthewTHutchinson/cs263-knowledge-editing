@@ -10,7 +10,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 
 | Method | Type | Owner | Status |
 |--------|------|-------|--------|
-| ROME | Parameter-based (rank-one) | Matthew | Baseline running |
+| ROME | Parameter-based (rank-one) | Matthew | Baseline done ✓ |
 | MEMIT | Parameter-based (batch) | Matthew | Not started |
 | IKE | Retrieval / in-context | Matthew | Not started |
 
@@ -37,8 +37,8 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | ROME 100-edit baseline | Done | rewrite=1.00, rephrase=0.54, locality=0.79 |
 | ROME vs. paper validation | Partial | rewrite/locality ✓, rephrase gap under investigation |
 | Rephrase failure inspection | Done | `scripts/inspect_rephrase_failures.py`; 34/46 failures have prompt-quality flags |
-| MEMIT baseline | Not started | |
-| IKE baseline | Not started | |
+| MEMIT baseline | **Next** | Script: `scripts/baseline_memit.py` |
+| IKE baseline | Not started | After MEMIT |
 | RippleEdits download + eval | Not started | |
 | MQuAKE download + eval | Not started | |
 | Probe set design | In progress | See probe design notes below |
@@ -58,7 +58,9 @@ See `results/runs.jsonl` for machine-readable records. Summary:
 
 **Paper targets (ROME, GPT-2 XL, CounterFact):** rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%
 
-Rephrase gap (~40 points) is partly explained by poor-quality rephrase prompts in EasyEdit's dataset version. Static audit of `logs/results.json` found 46/100 rephrase failures; 34/46 had clear prompt-quality flags such as relation mismatch, retrieval noise, or indirect prompts. Treat EasyEdit rephrase_acc as a relative comparison metric unless a cleaner prompt set is used.
+Rephrase gap (~40 points) is explained by poor-quality rephrase prompts in EasyEdit's dataset (relation mismatches, garbage text, indirect prompts — not actual paraphrases). The original ROME CounterFact uses curated `paraphrase_prompts` which would give paper-comparable numbers, but this conversion is deferred. **Decision: treat rephrase_acc as a relative comparison across ROME/MEMIT/IKE only — do not compare absolute rephrase numbers to the paper.** Rewrite and locality are paper-comparable and sufficient to trust the pipeline.
+
+Original ROME repo cross-validation also deferred — rewrite (1.000) and locality (0.790) already confirm EasyEdit's ROME is faithful. Revisit only if MEMIT/IKE numbers look anomalous.
 
 ---
 

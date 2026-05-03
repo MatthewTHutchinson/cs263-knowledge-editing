@@ -72,6 +72,8 @@ A ~50-item hand-curated diagnostic probe set with three probe types:
 ## Gotchas to remember
 
 - Paper numbers are almost never exactly reproducible (seeds, tokenizer versions, prompt formatting). ±2 points is fine.
+- **rephrase_acc is relative-only**: EasyEdit's CounterFact rephrase prompts are poor quality (relation mismatches, garbage text). Do not compare rephrase_acc absolute values to the original papers. Use it only to compare ROME vs MEMIT vs IKE against each other.
+- **No original ROME repo cross-validation needed**: rewrite=1.000 and locality=0.790 confirm EasyEdit's ROME is faithful to the paper.
 - CounterFact full eval is ~2500 edits. Each ROME edit takes a few minutes on T4. Budget overnight for a full run; use 100-sample subsets for iteration.
 - MEMIT is a *batch* editor — don't run it one edit at a time.
 - IKE doesn't modify weights. The "edited model" at inference time is just base model + prompted context. Probes need to be run through IKE's inference wrapper, not against a saved checkpoint.

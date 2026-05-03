@@ -23,7 +23,8 @@ Format for each entry:
 - EasyEdit computes rephrase_acc as teacher-forced token exact match against `target_new`, so bad rephrase prompts can depress the score even when direct rewrite succeeds.
 - Decision: do not treat EasyEdit rephrase_acc as absolutely paper-comparable for this dataset version. Use it mainly as a relative metric across ROME/MEMIT/IKE, or rerun on a cleaned rephrase set if the final writeup needs paper-style generalization numbers.
 - Cleaned accidental staged log/date artifact files (`2`, `2026.log`, `23:43:45`, `May`, `UTC`) from the repo.
-- Next: bring up MEMIT baseline.
+- Decision on rephrase_acc: EasyEdit's rephrase prompts are not comparable to the original ROME paper. Using rephrase_acc as relative-only (ROME vs MEMIT vs IKE). Original ROME repo cross-check deferred — rewrite/locality already confirm pipeline fidelity.
+- Next: MEMIT baseline (`scripts/baseline_memit.py`).
 
 ## 2026-05-03 — ROME 100-edit baseline complete; rephrase_acc gap flagged
 
