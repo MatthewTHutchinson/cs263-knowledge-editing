@@ -2,7 +2,7 @@
 Diagnostic probe evaluation — runs the hand-curated probe set against an edited model.
 
 For each edit case in the probe set:
-  1. Apply the edit to the base model (ROME or MEMIT; IKE uses in-context wrapper).
+  1. Apply the edit to the base model (ROME or MEMIT).
   2. Run all probes for that edit case.
   3. Record: pre-edit prediction, post-edit prediction, pass/fail vs expected.
   4. Restore the base model before the next edit case.
@@ -27,6 +27,8 @@ Notes:
       expected_first_token / expected_contains.  Both checks are case-insensitive.
     - Pre-edit predictions are captured before the edit is applied, allowing
       direct comparison of base model vs. edited model on each probe.
+    - probe_type distinguishes implicit edit tests from prompts that condition on
+      the target value or explicitly state the edited fact.
 """
 
 import sys, json, datetime, os, argparse
@@ -61,10 +63,8 @@ def load_model(model_name: str, device: str):
 def restore_weights(model: AutoModelForCausalLM, weights_copy: dict) -> None:
     with torch.no_grad():
         for w_name, orig in weights_copy.items():
-            w = model
-            for attr in w_name.split("."):
-                w = getattr(w, attr)
-            w[...] = orig
+            weight = nethook.get_parameter(model, w_name)
+            weight[...] = orig.to(weight.device)
 
 
 def apply_edit(method: str, model, tok, hparams, edit_case: EditCase) -> dict:
@@ -162,6 +162,7 @@ def main():
 
     all_results = []
     category_stats: dict[str, dict] = {}
+    type_stats: dict[str, dict] = {}
 
     for edit_key, probes in probes_by_edit.items():
         edit_case = EDIT_CASES[edit_key]
@@ -171,50 +172,57 @@ def main():
         # Pre-edit baseline
         pre_results = {p.probe_id: run_probe(p, model, tok, device) for p in probes}
 
-        # Apply edit
         weights_copy = apply_edit(args.method, model, tok, hparams, edit_case)
 
-        # Post-edit evaluation
-        for probe in probes:
-            post = run_probe(probe, model, tok, device)
-            pre  = pre_results[probe.probe_id]
+        try:
+            # Post-edit evaluation
+            for probe in probes:
+                post = run_probe(probe, model, tok, device)
+                pre  = pre_results[probe.probe_id]
 
-            result = {
-                "probe_id":    probe.probe_id,
-                "edit_key":    edit_key,
-                "method":      args.method,
-                "category":    probe.category,
-                "probe_prompt": probe.probe_prompt,
-                "expected_first_token": probe.expected_first_token,
-                "expected_contains":    probe.expected_contains,
-                "pre_edit": {
-                    "first_token": pre["first_token"],
-                    "generation":  pre["generation"],
-                    "passed":      pre["passed"],
-                },
-                "post_edit": {
-                    "first_token": post["first_token"],
-                    "generation":  post["generation"],
-                    "passed":      post["passed"],
-                },
-                "note": probe.note,
-            }
-            all_results.append(result)
+                result = {
+                    "probe_id":    probe.probe_id,
+                    "edit_key":    edit_key,
+                    "method":      args.method,
+                    "category":    probe.category,
+                    "probe_type":  probe.probe_type,
+                    "probe_prompt": probe.probe_prompt,
+                    "expected_first_token": probe.expected_first_token,
+                    "expected_contains":    probe.expected_contains,
+                    "pre_edit": {
+                        "first_token": pre["first_token"],
+                        "generation":  pre["generation"],
+                        "passed":      pre["passed"],
+                    },
+                    "post_edit": {
+                        "first_token": post["first_token"],
+                        "generation":  post["generation"],
+                        "passed":      post["passed"],
+                    },
+                    "note": probe.note,
+                }
+                all_results.append(result)
 
-            # Update category stats
-            cat = probe.category
-            if cat not in category_stats:
-                category_stats[cat] = {"n": 0, "pre_pass": 0, "post_pass": 0}
-            category_stats[cat]["n"]         += 1
-            category_stats[cat]["pre_pass"]  += int(pre["passed"])
-            category_stats[cat]["post_pass"] += int(post["passed"])
+                # Update category stats
+                cat = probe.category
+                if cat not in category_stats:
+                    category_stats[cat] = {"n": 0, "pre_pass": 0, "post_pass": 0}
+                category_stats[cat]["n"]         += 1
+                category_stats[cat]["pre_pass"]  += int(pre["passed"])
+                category_stats[cat]["post_pass"] += int(post["passed"])
 
-            status = "✓" if post["passed"] else "✗"
-            print(f"   {status} [{probe.category[:6]}] {probe.probe_id}: "
-                  f"'{post['first_token']}' ... (pre: '{pre['first_token']}')")
+                probe_type = probe.probe_type
+                if probe_type not in type_stats:
+                    type_stats[probe_type] = {"n": 0, "pre_pass": 0, "post_pass": 0}
+                type_stats[probe_type]["n"]         += 1
+                type_stats[probe_type]["pre_pass"]  += int(pre["passed"])
+                type_stats[probe_type]["post_pass"] += int(post["passed"])
 
-        # Restore model
-        restore_weights(model, weights_copy)
+                status = "✓" if post["passed"] else "✗"
+                print(f"   {status} [{probe.category[:6]}/{probe.probe_type[:8]}] {probe.probe_id}: "
+                      f"'{post['first_token']}' ... (pre: '{pre['first_token']}')")
+        finally:
+            restore_weights(model, weights_copy)
 
     # Summary table
     print("\n" + "=" * 68)
@@ -235,6 +243,18 @@ def main():
         pre_tot  = total_pre  / total_n
         post_tot = total_post / total_n
         print(f"  {'TOTAL':<22} {total_n:>4}  {pre_tot:>5.1%}  {post_tot:>5.1%}  {post_tot - pre_tot:>+5.1%}")
+    print("=" * 68)
+
+    print("\n" + "=" * 68)
+    print(f"  Probe results by probe_type")
+    print("=" * 68)
+    print(f"  {'Probe type':<28} {'N':>4}  {'Pre':>6}  {'Post':>6}  {'Δ':>6}")
+    print("  " + "-" * 54)
+    for probe_type, s in sorted(type_stats.items()):
+        n, pre, post = s["n"], s["pre_pass"], s["post_pass"]
+        pre_pct  = pre  / n if n else 0
+        post_pct = post / n if n else 0
+        print(f"  {probe_type:<28} {n:>4}  {pre_pct:>5.1%}  {post_pct:>5.1%}  {post_pct - pre_pct:>+5.1%}")
     print("=" * 68)
 
     # Save

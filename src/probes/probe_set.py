@@ -20,6 +20,7 @@ Probe format:
     expected_contains : substring that should appear in a short greedy generation
         (used when the exact first token is ambiguous, e.g. multi-word answers)
     category      : one of the five categories above
+    probe_type    : implicit_edit, target_conditioned, or supplied_fact_reasoning
     note          : brief rationale / what failure means
 
 EDIT_CASES:
@@ -27,7 +28,7 @@ EDIT_CASES:
     When running probes via run_probes.py, these edits are applied before querying.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass
@@ -51,6 +52,7 @@ class Probe:
     expected_first_token: str | None   # None = rely on expected_contains
     expected_contains: str | None      # substring match on short generation
     note: str
+    probe_type: str = "implicit_edit"
 
 
 EDIT_CASES: dict[str, EditCase] = {
@@ -190,6 +192,7 @@ PROBES: list[Probe] = [
         expected_first_token=None,
         expected_contains="Sanofi",
         note="Inverse of HQ edit: city→company. ROME/MEMIT expected to fail (layer not updated).",
+        probe_type="target_conditioned",
     ),
     Probe(
         probe_id="sym-2",
@@ -199,6 +202,7 @@ PROBES: list[Probe] = [
         expected_first_token=None,
         expected_contains="Lil Wayne",
         note="Inverse of label edit: label→artist. Tests whether inverse relation updated.",
+        probe_type="target_conditioned",
     ),
     Probe(
         probe_id="sym-3",
@@ -208,6 +212,7 @@ PROBES: list[Probe] = [
         expected_first_token=None,
         expected_contains="Walcott",
         note="Inverse sport query. GPT-2 XL unlikely to link Walcott here post-edit.",
+        probe_type="target_conditioned",
     ),
     Probe(
         probe_id="sym-4",
@@ -217,6 +222,7 @@ PROBES: list[Probe] = [
         expected_first_token=None,
         expected_contains="Darrieux",
         note="Inverse language query. Highly unlikely to succeed for any method.",
+        probe_type="target_conditioned",
     ),
     Probe(
         probe_id="sym-5",
@@ -226,6 +232,7 @@ PROBES: list[Probe] = [
         expected_first_token=None,
         expected_contains="Humphrey",
         note="Inverse alumni query. Expected to fail for all parametric methods.",
+        probe_type="target_conditioned",
     ),
 
     # ── COMPOSITIONAL / TRANSITIVE ───────────────────────────────────────────────
@@ -242,6 +249,7 @@ PROBES: list[Probe] = [
         expected_first_token="Germany",
         expected_contains="Germany",
         note="Chain: Sanofi→Berlin→Germany. First hop is edited; second is world knowledge.",
+        probe_type="supplied_fact_reasoning",
     ),
     Probe(
         probe_id="comp-2",
@@ -251,6 +259,7 @@ PROBES: list[Probe] = [
         expected_first_token="German",
         expected_contains="German",
         note="Two-hop chain through country. Tests whether the model tracks the edit chain.",
+        probe_type="supplied_fact_reasoning",
     ),
     Probe(
         probe_id="comp-3",
@@ -260,6 +269,7 @@ PROBES: list[Probe] = [
         expected_first_token=None,
         expected_contains="Universal",
         note="Chain: Wayne→Interscope→Universal Music Group. IKE likely fails (chain not in context).",
+        probe_type="supplied_fact_reasoning",
     ),
     Probe(
         probe_id="comp-4",
@@ -269,6 +279,7 @@ PROBES: list[Probe] = [
         expected_first_token="NBA",
         expected_contains="NBA",
         note="Chain: Walcott→basketball→NBA. Tests whether sport change flows to league inference.",
+        probe_type="supplied_fact_reasoning",
     ),
     Probe(
         probe_id="comp-5",
@@ -278,6 +289,7 @@ PROBES: list[Probe] = [
         expected_first_token="Michigan",
         expected_contains="Michigan",
         note="Chain: Humphrey→U of M→Michigan (state). Simple geography follow-on.",
+        probe_type="supplied_fact_reasoning",
     ),
     Probe(
         probe_id="comp-6",
@@ -287,6 +299,7 @@ PROBES: list[Probe] = [
         expected_first_token=None,
         expected_contains="Spain",
         note="Chain: Darrieux→Spanish→Spain. Two-hop through language→country.",
+        probe_type="supplied_fact_reasoning",
     ),
     Probe(
         probe_id="comp-7",
@@ -296,6 +309,7 @@ PROBES: list[Probe] = [
         expected_first_token=None,
         expected_contains="Santa Monica",
         note="Three-hop chain. Likely too long for any method; baseline for failure analysis.",
+        probe_type="supplied_fact_reasoning",
     ),
 
     # ── LOGICAL CONTRADICTION ────────────────────────────────────────────────────
@@ -356,6 +370,7 @@ PROBES: list[Probe] = [
         expected_first_token=None,
         expected_contains="false",
         note="Double-negation contradiction. Model must hold the new value to deny this.",
+        probe_type="target_conditioned",
     ),
     Probe(
         probe_id="contra-7",
@@ -365,6 +380,7 @@ PROBES: list[Probe] = [
         expected_first_token="Inter",
         expected_contains="Interscope",
         note="Forced choice between old and new value. Tests disambiguation post-edit.",
+        probe_type="target_conditioned",
     ),
 
     # ── CHAIN OF THOUGHT ─────────────────────────────────────────────────────────
@@ -382,6 +398,7 @@ PROBES: list[Probe] = [
         expected_first_token="Germany",
         expected_contains="Germany",
         note="Explicit CoT scaffold: tests whether model completes the reasoning correctly.",
+        probe_type="supplied_fact_reasoning",
     ),
     Probe(
         probe_id="cot-2",
@@ -391,6 +408,7 @@ PROBES: list[Probe] = [
         expected_first_token=None,
         expected_contains="Universal",
         note="Explicit CoT for label chain. Tests multi-step consistency.",
+        probe_type="supplied_fact_reasoning",
     ),
     Probe(
         probe_id="cot-3",
@@ -400,6 +418,7 @@ PROBES: list[Probe] = [
         expected_first_token="the",
         expected_contains="NBA",
         note="CoT for sport→league chain.",
+        probe_type="supplied_fact_reasoning",
     ),
     Probe(
         probe_id="cot-4",
@@ -409,6 +428,7 @@ PROBES: list[Probe] = [
         expected_first_token=None,
         expected_contains="Spain",
         note="CoT for language→country chain.",
+        probe_type="supplied_fact_reasoning",
     ),
     Probe(
         probe_id="cot-5",
@@ -418,6 +438,7 @@ PROBES: list[Probe] = [
         expected_first_token="Germany",
         expected_contains="Germany",
         note="CoT with question framing. Tests whether model tracks the stated edit.",
+        probe_type="supplied_fact_reasoning",
     ),
     Probe(
         probe_id="cot-6",
@@ -427,6 +448,7 @@ PROBES: list[Probe] = [
         expected_first_token="Inter",
         expected_contains="Interscope",
         note="CoT with explicit before/after contrast. Model must resolve to new value.",
+        probe_type="supplied_fact_reasoning",
     ),
     Probe(
         probe_id="cot-7",
@@ -436,6 +458,7 @@ PROBES: list[Probe] = [
         expected_first_token="Michigan",
         expected_contains="Michigan",
         note="CoT for education→location chain. Tests post-edit geographic consistency.",
+        probe_type="supplied_fact_reasoning",
     ),
     Probe(
         probe_id="cot-8",
@@ -445,5 +468,6 @@ PROBES: list[Probe] = [
         expected_first_token=None,
         expected_contains="court",
         note="CoT contrast probe: model must reason about the NEW sport's properties.",
+        probe_type="supplied_fact_reasoning",
     ),
 ]

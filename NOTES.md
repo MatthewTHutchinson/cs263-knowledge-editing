@@ -15,6 +15,19 @@ Format for each entry:
 
 ---
 
+## 2026-05-03 — Fixed Claude script issues after review
+
+- Fixed `scripts/baseline_ike.py`: EasyEdit's IKE path expects cached retrieval embeddings under `results/IKE/embedding/`, so the script now calls `encode_ike_facts(...)` before `BaseEditor.edit(...)` and skips rebuilding when the cache exists. Added `--rebuild_embeddings` for explicit refreshes.
+- Fixed `scripts/batch_memit.py`: removed first-token-only scoring and switched to EasyEdit's `compute_edit_quality(...)` for rewrite/rephrase. Locality now matches EasyEdit semantics: post-edit locality outputs are compared to pre-edit model outputs, not directly to `locality_ground_truth`.
+- Hardened weight restoration in `batch_memit.py` and `run_probes.py` by using EasyEdit `nethook.get_parameter(...)` and `try/finally` around edited-model evaluation.
+- Added `probe_type` metadata to `src/probes/probe_set.py`:
+  - `implicit_edit`: prompt does not state the new fact.
+  - `target_conditioned`: prompt conditions on the new target value or forced choice.
+  - `supplied_fact_reasoning`: prompt states the edited fact; analyze separately because the base model can pass by following the prompt.
+- Updated `scripts/run_probes.py` and `scripts/show_results.py` to record and summarize probe results by `probe_type`.
+- Corrected docs: probe set currently has 34 probes, not 37. IKE probe support is still pending; ROME/MEMIT probes are ready.
+- Local verification: `python3 -m py_compile` passed for changed scripts; `python3 scripts/show_results.py --all` runs.
+
 ## 2026-05-03 — Scripts written; MEMIT cache timing corrected
 
 - **MEMIT covariance cache timing**: Earlier estimate of ~45–60 min was wrong. Actual wall-clock time on T4 for 5 layers × 100k Wikipedia samples is ~3–4 hours. Updated STATUS.md and docstrings accordingly. The run is still the correct thing to do — it only happens once.

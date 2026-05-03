@@ -68,7 +68,7 @@ Safe work while the remote job runs:
 
 ### 1. True MEMIT Batch Script
 
-Goal: add a script that performs one model edit containing many facts, then evaluates the edited model.
+Goal: run the script that performs one model edit containing many facts, then evaluates the edited model.
 
 Suggested file:
 
@@ -78,24 +78,30 @@ scripts/batch_memit.py
 
 Key requirement: do not accidentally reproduce the current independent single-edit loop. Confirm through logs or EasyEdit internals that the edit writes many key/value pairs into one model update.
 
+Current implementation notes:
+
+- Calls `apply_memit_to_model(...)` once with all N requests.
+- Uses EasyEdit's `compute_edit_quality(...)` for rewrite/rephrase.
+- Computes locality as preservation of pre-edit locality predictions, matching EasyEdit's baseline semantics.
+
 Suggested CLI:
 
 ```bash
 python scripts/batch_memit.py \
   --data_path data/counterfact/counterfact-edit.json \
-  --n_edits 100 \
+  --batch_sizes 10,50,100 \
   --seed 42
 ```
 
 Start with small dry runs once GPU is free:
 
 ```bash
-python scripts/batch_memit.py --data_path data/counterfact/counterfact-edit.json --n_edits 10 --seed 42
+python scripts/batch_memit.py --data_path data/counterfact/counterfact-edit.json --batch_sizes 10 --seed 42
 ```
 
-### 2. IKE Baseline Scaffold
+### 2. IKE Baseline
 
-Goal: create a same-record IKE baseline for CounterFact.
+Goal: run a same-record IKE baseline for CounterFact.
 
 Suggested file:
 
@@ -108,6 +114,7 @@ Interpretation:
 - IKE does not modify model weights.
 - A fair baseline is base model plus retrieved/in-context edit examples at inference time.
 - Do not describe IKE as producing a persistent edited model.
+- `baseline_ike.py` now builds EasyEdit's retrieval embedding cache under `results/IKE/embedding/` before evaluation. Use `--rebuild_embeddings` only when the retrieval pool or sentence model changes.
 
 Useful comparison conditions:
 
@@ -115,21 +122,24 @@ Useful comparison conditions:
 - many-edit retrieval memory
 - many-edit context stress test
 
-### 3. Probe Dataset Draft
+### 3. Probe Set
 
-Goal: create a small hand-curated probe set before writing the runner.
+Goal: run and refine the hand-curated probe set.
 
-Suggested location:
-
-```text
-data/probes/
-```
-
-Suggested first artifact:
+Current location:
 
 ```text
-data/probes/probes_seed.json
+src/probes/probe_set.py
 ```
+
+Current state:
+
+- 34 probes across logical negation, symmetric/inverse, compositional, contradiction, and chain-of-thought categories.
+- Each probe has a `probe_type`:
+  - `implicit_edit`: does not state the new fact.
+  - `target_conditioned`: mentions the edited target or a forced choice.
+  - `supplied_fact_reasoning`: states the edited fact and tests reasoning from it.
+- Analyze supplied-fact probes separately because a base model can pass by following the prompt rather than because the edit propagated.
 
 Probe categories:
 
@@ -139,11 +149,9 @@ Probe categories:
 - contradiction choice
 - reasoning-chain consistency
 
-Keep this small first: 10-15 edited facts and roughly 50 total probes.
-
 ### 4. Probe Runner
 
-Goal: run the same probe records against post-edit behavior for ROME, MEMIT, and IKE.
+Goal: run the same probe records against post-edit behavior for ROME and MEMIT.
 
 Suggested file:
 
@@ -151,7 +159,7 @@ Suggested file:
 scripts/run_probes.py
 ```
 
-Do this after the probe JSON format is stable.
+IKE probe support is still pending because IKE needs an inference-context wrapper rather than a weight-edited model.
 
 ### 5. Result Utilities
 

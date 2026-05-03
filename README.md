@@ -27,7 +27,7 @@ pip install -r external/EasyEdit/requirements.txt
 ```
 
 **Note**: `data/counterfact/` is included in the repo — no separate download needed.
-`data/stats/` (ROME's Wikipedia covariance cache) will recompute on first ROME run (~30 min on T4).
+`data/stats/` (ROME/MEMIT Wikipedia covariance cache) will recompute on first run; MEMIT's GPT-2 XL cache can take several hours on T4.
 
 ---
 
@@ -49,8 +49,18 @@ python scripts/baseline_rome.py --data_path data/counterfact/counterfact-edit.js
 # MEMIT single-edit baseline/cache warmup
 python scripts/baseline_memit.py --data_path data/counterfact/counterfact-edit.json
 
-# View all results
-python scripts/show_results.py
+# True MEMIT batch/mass-edit sweep (run after MEMIT covariance cache is warm)
+python scripts/batch_memit.py --data_path data/counterfact/counterfact-edit.json --batch_sizes 10,50,100
+
+# IKE retrieval/in-context baseline
+python scripts/baseline_ike.py --data_path data/counterfact/counterfact-edit.json
+
+# Diagnostic probes for post-edit consistency
+python scripts/run_probes.py --method ROME
+python scripts/run_probes.py --method MEMIT
+
+# View all results and probe summaries
+python scripts/show_results.py --all
 ```
 
 ---
@@ -73,9 +83,12 @@ python scripts/show_results.py
 ```
 scripts/              # runnable experiment scripts
 configs/ROME/         # versioned YAML hparams
+configs/MEMIT/        # versioned YAML hparams
+configs/IKE/          # versioned YAML hparams
 data/counterfact/     # EasyEdit CounterFact dataset (10K records, in repo)
-data/stats/           # ROME covariance cache (gitignored, recomputed on first run)
+data/stats/           # ROME/MEMIT covariance cache (gitignored, recomputed on first run)
 results/runs.jsonl    # structured run log (all experiments)
+src/probes/           # hand-curated diagnostic probe set
 patches/              # fixes for gitignored external/EasyEdit
 external/EasyEdit/    # gitignored — clone manually per setup above
 NOTES.md              # daily working log
@@ -93,7 +106,7 @@ CLAUDE.md             # context for Claude Code sessions
 | 2026-05-03 | ROME | CounterFact | 100 | 1.000 | 0.540 | 0.790 |
 
 Paper targets (ROME, GPT-2 XL): rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%.
-Rephrase gap vs. paper likely due to EasyEdit's rephrase prompt quality — under investigation.
+The EasyEdit CounterFact rephrase prompts are noisy, so `rephrase_acc` is relative-only for method comparisons.
 
 ### Experiment Interpretation
 
@@ -101,12 +114,12 @@ The current ROME and MEMIT baseline scripts run **independent single-edit trials
 
 That means `N=100` is not one model with 100 stored edits. It is 100 sampled CounterFact cases evaluated independently.
 
-Planned follow-up:
+Current follow-up experiments:
 
-- Add a true MEMIT batch/mass-edit script that inserts many edits into one model.
-- Treat IKE separately as retrieval/in-context editing: many-edit IKE means many facts in memory or context, not a persistent weight-edited model.
+- `scripts/batch_memit.py` inserts many MEMIT edits into one model and evaluates that edited model with EasyEdit-compatible rewrite/rephrase/locality metrics.
+- `scripts/baseline_ike.py` evaluates IKE as retrieval/in-context editing. It builds cached retrieval embeddings under `results/IKE/embedding/` on first run.
+- `scripts/run_probes.py` runs the custom probe set for ROME and MEMIT. Probe records include `probe_type` so implicit edit tests are separated from target-conditioned and supplied-fact reasoning prompts.
 - Keep `rephrase_acc` relative-only until rephrase prompts are cleaned or replaced with paper-style paraphrases.
-- Consider full CounterFact scale after the pipeline is stable; use batch-size sweeps for MEMIT before one expensive full run.
 
 ---
 

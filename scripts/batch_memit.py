@@ -26,6 +26,9 @@ Notes:
     - Covariance stats must already be cached from a prior baseline_memit.py run.
       If not cached, first batch will take ~45-60 min to build them.
     - Each batch size edits a FRESH copy of the model (no accumulation across sizes).
+    - Metrics use EasyEdit's own evaluator. In particular, locality_acc means
+      post-edit locality predictions match the pre-edit model predictions, not
+      whether they match the dataset's locality_ground_truth label.
     - Results are appended to results/runs.jsonl with dataset="CounterFact-batch-N".
 """
 
@@ -39,6 +42,8 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from easyeditor import MEMITHyperParams
 from easyeditor.models.memit import apply_memit_to_model
+from easyeditor.evaluate.evaluate import compute_edit_quality
+from easyeditor.util import nethook
 
 HPARAMS_PATH = "configs/MEMIT/gpt2-xl"
 
@@ -59,58 +64,80 @@ def records_to_requests(records: list[dict]) -> list[dict]:
             "subject":      r["subject"],
             "target_new":   r["target_new"],
             "ground_truth": r["ground_truth"],
+            "rephrase_prompt": r["rephrase_prompt"],
+            "locality": {
+                "neighborhood": {
+                    "prompt":       r["locality_prompt"],
+                    "ground_truth": r["locality_ground_truth"],
+                }
+            },
+            "portability": {},
         }
         for r in records
     ]
 
 
-def first_token_acc(
-    model: AutoModelForCausalLM,
-    tok: AutoTokenizer,
-    prompts: list[str],
-    targets: list[str],
-    device: str,
-) -> float:
-    """Teacher-forced first-token accuracy across (prompt, target) pairs."""
-    correct = 0
-    for prompt, target in zip(prompts, targets):
-        inp = tok(prompt, return_tensors="pt").to(device)
-        with torch.no_grad():
-            logits = model(**inp).logits[0, -1]
-        target_ids = tok.encode(" " + target.strip(), add_special_tokens=False)
-        if target_ids and logits.argmax().item() == target_ids[0]:
-            correct += 1
-    return correct / len(prompts) if prompts else 0.0
-
-
 def restore_weights(model: AutoModelForCausalLM, weights_copy: dict) -> None:
     with torch.no_grad():
         for w_name, orig in weights_copy.items():
-            w = model
-            for attr in w_name.split("."):
-                w = getattr(w, attr)
-            w[...] = orig
+            weight = nethook.get_parameter(model, w_name)
+            weight[...] = orig.to(weight.device)
+
+
+def flatten(val):
+    """Unwrap EasyEdit's list-wrapped or numpy scalar metrics."""
+    if isinstance(val, list):
+        return float(np.mean(val)) if val else None
+    if hasattr(val, "item"):
+        return float(val)
+    if isinstance(val, (int, float)):
+        return float(val)
+    return None
 
 
 def evaluate_batch(
     model: AutoModelForCausalLM,
+    model_name: str,
+    hparams: MEMITHyperParams,
     tok: AutoTokenizer,
-    records: list[dict],
-    device: str,
-) -> dict:
-    rewrite_acc  = first_token_acc(model, tok,
-                                   [r["prompt"]          for r in records],
-                                   [r["target_new"]      for r in records], device)
-    rephrase_acc = first_token_acc(model, tok,
-                                   [r["rephrase_prompt"] for r in records],
-                                   [r["target_new"]      for r in records], device)
-    locality_acc = first_token_acc(model, tok,
-                                   [r["locality_prompt"]        for r in records],
-                                   [r["locality_ground_truth"]  for r in records], device)
+    requests: list[dict],
+) -> list[dict]:
+    return [
+        compute_edit_quality(
+            model,
+            model_name,
+            hparams,
+            tok,
+            request,
+            hparams.device,
+        )
+        for request in requests
+    ]
+
+
+def summarize(pre_metrics: list[dict], post_metrics: list[dict]) -> dict:
+    rewrite_vals = []
+    rephrase_vals = []
+    locality_vals = []
+
+    for pre, post in zip(pre_metrics, post_metrics):
+        rewrite = flatten(post.get("rewrite_acc"))
+        rephrase = flatten(post.get("rephrase_acc"))
+        if rewrite is not None:
+            rewrite_vals.append(rewrite)
+        if rephrase is not None:
+            rephrase_vals.append(rephrase)
+
+        pre_outputs = pre.get("locality", {}).get("neighborhood_output")
+        post_outputs = post.get("locality", {}).get("neighborhood_output")
+        if pre_outputs is not None and post_outputs is not None:
+            for before, after in zip(pre_outputs, post_outputs):
+                locality_vals.append(float(np.mean(np.equal(before, after))))
+
     return {
-        "rewrite_acc":  round(rewrite_acc,  4),
-        "rephrase_acc": round(rephrase_acc, 4),
-        "locality_acc": round(locality_acc, 4),
+        "rewrite_acc":  round(sum(rewrite_vals) / len(rewrite_vals), 4) if rewrite_vals else None,
+        "rephrase_acc": round(sum(rephrase_vals) / len(rephrase_vals), 4) if rephrase_vals else None,
+        "locality_acc": round(sum(locality_vals) / len(locality_vals), 4) if locality_vals else None,
     }
 
 
@@ -119,9 +146,11 @@ def run_batch(
     tok: AutoTokenizer,
     hparams: MEMITHyperParams,
     records: list[dict],
-    device: str,
 ) -> dict:
     requests = records_to_requests(records)
+    print(f"\n  Capturing pre-edit predictions for {len(requests)} requests ...")
+    pre_metrics = evaluate_batch(model, hparams.model_name, hparams, tok, requests)
+
     print(f"\n  Applying MEMIT batch of {len(requests)} edits ...")
     _, weights_copy = apply_memit_to_model(
         model=model,
@@ -130,10 +159,15 @@ def run_batch(
         hparams=hparams,
         return_orig_weights=True,
     )
-    print(f"  Evaluating {len(records)} prompts ...")
-    metrics = evaluate_batch(model, tok, records, device)
-    print(f"  Restoring original weights ...")
-    restore_weights(model, weights_copy)
+
+    try:
+        print(f"  Evaluating edited model on {len(requests)} requests ...")
+        post_metrics = evaluate_batch(model, hparams.model_name, hparams, tok, requests)
+        metrics = summarize(pre_metrics, post_metrics)
+    finally:
+        print(f"  Restoring original weights ...")
+        restore_weights(model, weights_copy)
+
     return metrics
 
 
@@ -172,10 +206,11 @@ def main():
 
     for batch_n in batch_sizes:
         batch_records = records[:batch_n]
-        metrics = run_batch(model, tok, hparams, batch_records, device)
+        metrics = run_batch(model, tok, hparams, batch_records)
 
-        print(f"  {batch_n:>6}  {metrics['rewrite_acc']:>8.3f}  "
-              f"{metrics['rephrase_acc']:>9.3f}  {metrics['locality_acc']:>9.3f}")
+        fmt = lambda v: f"{v:.3f}" if v is not None else "N/A"
+        print(f"  {batch_n:>6}  {fmt(metrics['rewrite_acc']):>8}  "
+              f"{fmt(metrics['rephrase_acc']):>9}  {fmt(metrics['locality_acc']):>9}")
 
         run_record = {
             "timestamp":  datetime.datetime.utcnow().isoformat(),

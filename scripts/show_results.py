@@ -193,6 +193,34 @@ def show_probe_summary(probe_results: list[dict]) -> None:
     print("  (Δ = post − pre edit pass rate)")
     print("=" * 80)
 
+    type_stats: dict[tuple, dict] = defaultdict(lambda: {"n": 0, "pre": 0, "post": 0})
+    for r in probe_results:
+        key = (r.get("method", "?"), r.get("probe_type", "implicit_edit"))
+        type_stats[key]["n"]    += 1
+        type_stats[key]["pre"]  += int(r.get("pre_edit",  {}).get("passed", False))
+        type_stats[key]["post"] += int(r.get("post_edit", {}).get("passed", False))
+
+    probe_types = sorted({k[1] for k in type_stats})
+    print("\n" + "=" * 80)
+    print("  PROBE RESULTS — post-edit pass rate by probe_type and method")
+    print("=" * 80)
+    header = f"  {'Probe type':<26}" + "".join(f"{m:>{col_w}}" for m in methods)
+    print(header)
+    print("  " + "-" * (26 + col_w * len(methods)))
+    for probe_type in probe_types:
+        row = f"  {probe_type:<26}"
+        for method in methods:
+            s = type_stats.get((method, probe_type))
+            if s and s["n"]:
+                post_pct = s["post"] / s["n"]
+                pre_pct  = s["pre"]  / s["n"]
+                row += f"  {post_pct:4.0%} ({post_pct - pre_pct:>+4.0%})"
+            else:
+                row += f"  {'—':>{col_w - 2}}"
+        print(row)
+    print("  (probe_type separates implicit edit tests from target-conditioned/supplied-fact prompts)")
+    print("=" * 80)
+
 
 def ascii_bar(label: str, value: float | None, paper: float | None,
               bar_width: int = 40) -> str:

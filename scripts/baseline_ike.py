@@ -12,7 +12,7 @@ Target numbers (IKE, GPT-2 XL, CounterFact — Zheng et al. Table 2):
 
 IMPORTANT — first run:
     Downloads sentence-transformers/all-MiniLM-L6-v2 (~90 MB) if not cached.
-    Builds a FAISS-style retrieval index over the training pool on startup.
+    Builds and caches retrieval embeddings under results/IKE/embedding/.
     GPT-2 XL (1.5 GB) is loaded as the base model — no weight edits are stored.
 
 Usage:
@@ -40,6 +40,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "external", "Ea
 
 import torch
 from easyeditor import IKEHyperParams, BaseEditor
+from easyeditor.models.ike import encode_ike_facts
+from sentence_transformers import SentenceTransformer
 
 HPARAMS_PATH = "configs/IKE/gpt2-xl"
 
@@ -85,6 +87,29 @@ def build_inputs(records: list[dict], train_ds_path: str) -> dict:
     }
 
 
+def embedding_path(hparams: IKEHyperParams, train_ds: list[dict]) -> str:
+    safe_model_name = hparams.sentence_model_name.rsplit("/", 1)[-1]
+    return os.path.join(
+        hparams.results_dir,
+        hparams.alg_name,
+        "embedding",
+        f"{safe_model_name}_{type(train_ds).__name__}_{len(train_ds)}.pkl",
+    )
+
+
+def ensure_ike_embeddings(hparams: IKEHyperParams, train_ds: list[dict], rebuild: bool) -> None:
+    path = embedding_path(hparams, train_ds)
+    if os.path.exists(path) and not rebuild:
+        print(f"  IKE retrieval embeddings found: {path}")
+        return
+
+    print("  Building IKE retrieval embeddings ...")
+    print(f"  sentence_model={hparams.sentence_model_name}")
+    sentence_model = SentenceTransformer(hparams.sentence_model_name).to(f"cuda:{hparams.device}")
+    encode_ike_facts(sentence_model, train_ds, hparams)
+    print(f"  IKE retrieval embeddings cached: {path}")
+
+
 def flatten(val):
     if isinstance(val, list):
         return float(np.mean(val)) if val else None
@@ -121,6 +146,8 @@ def main():
                         help="Path to counterfact-edit.json (used for both test and retrieval pool)")
     parser.add_argument("--n_edits", type=int, default=100)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--rebuild_embeddings", action="store_true",
+                        help="Recompute cached IKE retrieval embeddings before evaluation")
     args = parser.parse_args()
 
     assert torch.cuda.is_available(), "CUDA required — run on GCP T4"
@@ -133,12 +160,17 @@ def main():
     print(f"  sentence_model={hparams.sentence_model_name}")
     print(f"  NOTE: IKE does not modify weights — no covariance cache needed.")
 
+    with open(args.data_path) as f:
+        train_ds = json.load(f)
+
+    ensure_ike_embeddings(hparams, train_ds, args.rebuild_embeddings)
+
     print("\nBuilding editor ...")
     editor = BaseEditor.from_hparams(hparams)
 
     inputs = build_inputs(records, args.data_path)
     print(f"\nRunning {len(records)} IKE edits ...")
-    print("(Building retrieval index, then running per-edit inference ...)")
+    print("(Loading cached retrieval embeddings, then running per-edit inference ...)")
     metrics, _, _ = editor.edit(**inputs)
 
     summary = summarize(metrics)

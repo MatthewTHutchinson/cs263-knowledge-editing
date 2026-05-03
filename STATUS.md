@@ -11,8 +11,8 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | Method | Type | Owner | Status |
 |--------|------|-------|--------|
 | ROME | Parameter-based (rank-one) | Matthew | Baseline done ✓ |
-| MEMIT | Parameter-based (batch/mass edit) | Matthew | Single-edit baseline running; `batch_memit.py` written, not yet run |
-| IKE | Retrieval / in-context | Matthew | Scaffold written (`baseline_ike.py`); not yet run |
+| MEMIT | Parameter-based (batch/mass edit) | Matthew | Single-edit baseline running; batch script fixed for EasyEdit-compatible metrics, not yet run |
+| IKE | Retrieval / in-context | Matthew | Baseline script fixed to build retrieval embeddings, not yet run |
 
 ---
 
@@ -23,7 +23,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | CounterFact (EasyEdit) | Baseline eval: efficacy, paraphrase, specificity | `data/counterfact/counterfact-edit.json` | Downloaded (10K records) |
 | RippleEdits | Ripple effect eval | TBD | Not downloaded |
 | MQuAKE | Multi-hop reasoning eval | TBD | Not downloaded |
-| Diagnostic probe set | Novel contribution — logical consistency | `src/probes/probe_set.py` | 37 probes written (5 categories × 5 edit cases) |
+| Diagnostic probe set | Novel contribution — logical consistency | `src/probes/probe_set.py` | 34 probes written (5 categories × 5 edit cases; includes `probe_type` labels) |
 
 ---
 
@@ -38,13 +38,13 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | ROME vs. paper validation | Partial | rewrite/locality ✓, rephrase gap under investigation |
 | Rephrase failure inspection | Done | `scripts/inspect_rephrase_failures.py`; 34/46 failures have prompt-quality flags |
 | MEMIT single-edit baseline | Running on GCP | `scripts/baseline_memit.py`; covariance cache takes ~3–4 h on T4 (not 45 min) |
-| MEMIT true batch/mass-edit eval | Ready to run | `scripts/batch_memit.py` written; run after single-edit baseline completes |
-| IKE baseline | Scaffold ready | `scripts/baseline_ike.py` written; run after MEMIT |
+| MEMIT true batch/mass-edit eval | Ready to run | `scripts/batch_memit.py` applies all N edits in one update and uses EasyEdit-compatible rewrite/rephrase/locality metrics |
+| IKE baseline | Ready to run | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation |
 | RippleEdits download + eval | Not started | |
 | MQuAKE download + eval | Not started | |
-| Probe set design | Done | 37 probes across 5 categories in `src/probes/probe_set.py` |
-| Probe set evaluation | Ready to run | `scripts/run_probes.py` written; run after baselines complete |
-| Results summarization | Done | `scripts/show_results.py` updated with comparison table, batch sweep, probe summary, ASCII plot |
+| Probe set design | Done | 34 probes across 5 categories in `src/probes/probe_set.py`; `probe_type` separates implicit, target-conditioned, and supplied-fact prompts |
+| Probe set evaluation | Ready for ROME/MEMIT | `scripts/run_probes.py` records pre/post pass rates by category and probe type; IKE probe support still pending |
+| Results summarization | Done | `scripts/show_results.py` updated with comparison table, batch sweep, probe summary by category/type, ASCII plot |
 
 ---
 
@@ -83,7 +83,7 @@ Planned conditions:
 |-----------|---------|----------------|
 | ROME single-edit | Validate parametric single-fact editing | Main intended ROME setting |
 | MEMIT single-edit | Sanity check against ROME on same records | Useful but not MEMIT's main advantage |
-| MEMIT batch/mass edit | Insert many facts into one model | Main intended MEMIT setting |
+| MEMIT batch/mass edit | Insert many facts into one model | Main intended MEMIT setting; locality is measured as post-edit preservation of pre-edit locality predictions |
 | ROME sequential/cumulative stress | Optional stress test | Not a primary fair baseline for mass editing |
 | IKE single-edit retrieval | Non-parametric baseline | Base model + one retrieved/in-context edit |
 | IKE many-edit context/retrieval | Context interference test | Not a weight-edit batch; report separately |
@@ -142,12 +142,14 @@ Prompt the model to *explain its reasoning* about the edited fact.
 - Reveals whether the edit is "surface-level" (first token correct) vs. deeply integrated.
 - Expected: IKE will often produce the right answer without reasoning consistency; ROME may contradict itself mid-chain.
 
-### Implementation plan
-- ~10 probes per category × 5 categories = ~50 probes
-- Hand-curated against a subset of CounterFact edits (pick 10–15 representative edit cases)
-- Run as post-edit queries against the already-edited model (separate from EasyEdit's eval loop)
-- Script: `scripts/run_probes.py` (not yet written)
-- Results appended to `results/runs.jsonl` with `dataset: "probes"`
+### Implementation status
+- 34 probes across five categories, hand-curated around the five smoke-test edit cases.
+- Probe records include `probe_type`:
+  - `implicit_edit`: the prompt does not state the new fact and should test whether the edit transfers to a new surface form.
+  - `target_conditioned`: the prompt conditions on the edited target value but does not directly assert the full subject-target fact; useful for inverse and forced-choice tests.
+  - `supplied_fact_reasoning`: the prompt states the edited fact and tests whether the model can reason from it. These should be analyzed separately because the base model may pass them pre-edit.
+- `scripts/run_probes.py` currently supports ROME and MEMIT, restores weights after each edit, and writes records to `results/probe_results.jsonl`.
+- `scripts/show_results.py --probes` summarizes probe results by category and by `probe_type`.
 
 ---
 
@@ -156,7 +158,7 @@ Prompt the model to *explain its reasoning* about the edited fact.
   ```
   cd external/EasyEdit && patch -p1 < ../../patches/0001-fix-nethook-pytorch29-with_kwargs-signature.patch
   ```
-- **ROME stats cache**: First run computes Wikipedia covariance (~20–40 min). Cached to `data/stats/` (gitignored — recomputes on fresh clone).
+- **ROME/MEMIT stats cache**: First run computes Wikipedia covariance and caches it to `data/stats/` (gitignored). MEMIT's five-layer GPT-2 XL cache can take several hours on T4.
 
 ## Setup from scratch (new machine / fresh clone)
 ```bash
@@ -168,5 +170,5 @@ conda create -n cs263-project python=3.10
 conda activate cs263-project
 pip install -r external/EasyEdit/requirements.txt
 # data/counterfact/ is in the repo — no download needed
-# data/stats/ will recompute on first ROME run (~30 min)
+# data/stats/ will recompute on first ROME/MEMIT run
 ```

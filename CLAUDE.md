@@ -53,6 +53,14 @@ A ~50-item hand-curated diagnostic probe set with three probe types:
 
 **Design note**: these probes do NOT cleanly map to EasyEdit's `locality_inputs` or `portability_inputs` slots. Run EasyEdit's built-in eval first, then run probes as a separate post-edit script against the already-edited model. Do not shove contradiction probes into `locality_inputs`.
 
+Current probe implementation:
+- `src/probes/probe_set.py` has 34 probes around the five smoke-test edit cases.
+- Each probe has `probe_type`:
+  - `implicit_edit`: prompt does not state the new fact.
+  - `target_conditioned`: prompt conditions on the edited target value or forced choice.
+  - `supplied_fact_reasoning`: prompt states the edited fact and tests reasoning from it.
+- Analyze `supplied_fact_reasoning` separately from implicit edit transfer because the base model may pass by following the supplied prompt.
+
 ## Repo conventions
 
 - Code in `src/`. Subdivide by role: `src/rome/`, `src/probes/`, `src/eval/`, `src/utils/`.
@@ -76,7 +84,9 @@ A ~50-item hand-curated diagnostic probe set with three probe types:
 - **No original ROME repo cross-validation needed**: rewrite=1.000 and locality=0.790 confirm EasyEdit's ROME is faithful to the paper.
 - CounterFact full eval is ~2500 edits. Each ROME edit takes time on T4. Budget overnight for a full run; use 100-sample subsets for iteration.
 - **Single-edit vs. mass-edit distinction**: current `baseline_rome.py` and `baseline_memit.py` use `BaseEditor.edit(..., sequential_edit=False)`, which evaluates each request independently and restores weights. `N=100` means 100 independent single-edit trials, not one 100-edit model.
-- **MEMIT true batch still needed**: MEMIT's main claim is mass editing. The current MEMIT run is useful as a single-edit sanity baseline and covariance-cache warmup, but add a dedicated batch/mass-edit script before claiming MEMIT's intended advantage.
+- **MEMIT true batch still needs to be run**: MEMIT's main claim is mass editing. `scripts/batch_memit.py` is the dedicated batch/mass-edit script, but do not claim MEMIT's intended advantage until it has run successfully on the GCP T4.
+- **MEMIT batch metrics**: `scripts/batch_memit.py` must keep using EasyEdit-compatible evaluation. Rewrite/rephrase should come from `compute_edit_quality(...)`; locality should compare post-edit locality predictions to pre-edit model predictions, not directly to `locality_ground_truth`.
 - **IKE doesn't modify weights**. The "edited model" at inference time is base model + retrieved/in-context examples. Probes need to be run through IKE's inference wrapper, not against a saved checkpoint.
+- **IKE embedding cache**: EasyEdit IKE expects precomputed retrieval embeddings under `results/IKE/embedding/`. `scripts/baseline_ike.py` builds them via `encode_ike_facts(...)` before calling `BaseEditor.edit(...)`.
 - **IKE batch framing**: do not call IKE a persistent batch edit. A fair many-edit IKE experiment means many edited facts in memory/context, then measuring retrieval accuracy, context interference, and robustness as the number of available edits grows.
 - RippleEdits and MQUAKE are separate benchmarks with their own formats — need download and format conversion before they can be plugged into the eval pipeline.
