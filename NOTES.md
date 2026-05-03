@@ -15,6 +15,18 @@ Format for each entry:
 
 ---
 
+## 2026-05-03 — Scripts written; MEMIT cache timing corrected
+
+- **MEMIT covariance cache timing**: Earlier estimate of ~45–60 min was wrong. Actual wall-clock time on T4 for 5 layers × 100k Wikipedia samples is ~3–4 hours. Updated STATUS.md and docstrings accordingly. The run is still the correct thing to do — it only happens once.
+- **New scripts written** (not yet run):
+  - `scripts/batch_memit.py`: true MEMIT batch edit — applies all N edits to one model via `apply_memit_to_model`, evaluates that model, supports batch-size sweep (--batch_sizes 10,50,100). Run after single-edit baseline finishes to use the cached covariance stats.
+  - `scripts/baseline_ike.py`: IKE scaffold — loads IKE hparams, builds editor, runs 100-edit eval. Requires `all-MiniLM-L6-v2` download (~90 MB) on first run.
+  - `configs/IKE/gpt2-xl.yaml`: versioned IKE config using HuggingFace IDs.
+  - `src/probes/probe_set.py`: 37 hand-curated diagnostic probes across 5 categories (logical_negation, symmetric_inverse, compositional, contradiction, chain_of_thought) built around the 5 smoke-test edit cases.
+  - `scripts/run_probes.py`: probe evaluation runner — applies edit (ROME or MEMIT), runs all probes, records pre/post pass rates per category.
+  - `scripts/show_results.py`: updated with paper-comparison delta columns, per-method summary table, MEMIT batch sweep table, probe summary by category, and ASCII bar chart.
+- **Next**: wait for MEMIT single-edit baseline to finish, then run batch_memit.py, then baseline_ike.py, then run_probes.py for ROME and MEMIT.
+
 ## 2026-05-03 — Clarified single-edit vs. batch-edit baselines
 
 - Important correction: current `scripts/baseline_rome.py` and `scripts/baseline_memit.py` both call `BaseEditor.edit(...)` with `sequential_edit=False`. In EasyEdit this loops over requests one at a time, evaluates the edited model, then restores original weights.

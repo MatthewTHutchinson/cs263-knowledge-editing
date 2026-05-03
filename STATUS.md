@@ -11,8 +11,8 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | Method | Type | Owner | Status |
 |--------|------|-------|--------|
 | ROME | Parameter-based (rank-one) | Matthew | Baseline done ✓ |
-| MEMIT | Parameter-based (batch/mass edit) | Matthew | Single-edit baseline running; true batch pending |
-| IKE | Retrieval / in-context | Matthew | Not started |
+| MEMIT | Parameter-based (batch/mass edit) | Matthew | Single-edit baseline running; `batch_memit.py` written, not yet run |
+| IKE | Retrieval / in-context | Matthew | Scaffold written (`baseline_ike.py`); not yet run |
 
 ---
 
@@ -23,7 +23,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | CounterFact (EasyEdit) | Baseline eval: efficacy, paraphrase, specificity | `data/counterfact/counterfact-edit.json` | Downloaded (10K records) |
 | RippleEdits | Ripple effect eval | TBD | Not downloaded |
 | MQuAKE | Multi-hop reasoning eval | TBD | Not downloaded |
-| Diagnostic probe set | Novel contribution — logical consistency | `data/probes/` (TBD) | Design in progress |
+| Diagnostic probe set | Novel contribution — logical consistency | `src/probes/probe_set.py` | 37 probes written (5 categories × 5 edit cases) |
 
 ---
 
@@ -37,14 +37,14 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | ROME 100-edit baseline | Done | rewrite=1.00, rephrase=0.54, locality=0.79 |
 | ROME vs. paper validation | Partial | rewrite/locality ✓, rephrase gap under investigation |
 | Rephrase failure inspection | Done | `scripts/inspect_rephrase_failures.py`; 34/46 failures have prompt-quality flags |
-| MEMIT single-edit baseline | Running | `scripts/baseline_memit.py`; currently warming covariance caches |
-| MEMIT true batch/mass-edit eval | Planned | Needed for MEMIT's intended setting; current script does not do this |
-| IKE baseline | Not started | After MEMIT |
+| MEMIT single-edit baseline | Running on GCP | `scripts/baseline_memit.py`; covariance cache takes ~3–4 h on T4 (not 45 min) |
+| MEMIT true batch/mass-edit eval | Ready to run | `scripts/batch_memit.py` written; run after single-edit baseline completes |
+| IKE baseline | Scaffold ready | `scripts/baseline_ike.py` written; run after MEMIT |
 | RippleEdits download + eval | Not started | |
 | MQuAKE download + eval | Not started | |
-| Probe set design | In progress | See probe design notes below |
-| Probe set implementation | Not started | |
-| Results figures | Not started | |
+| Probe set design | Done | 37 probes across 5 categories in `src/probes/probe_set.py` |
+| Probe set evaluation | Ready to run | `scripts/run_probes.py` written; run after baselines complete |
+| Results summarization | Done | `scripts/show_results.py` updated with comparison table, batch sweep, probe summary, ASCII plot |
 
 ---
 

@@ -1,0 +1,16 @@
+# IKE hparams for GPT-2 XL — copied from EasyEdit and adjusted for this project.
+# model_name and sentence_model_name use HuggingFace IDs so they download automatically.
+# Run location: GCP T4 (CUDA). device: 0 = first GPU.
+#
+# IKE does NOT modify weights. At inference time the editor retrieves k=16 similar
+# edit demonstrations and prepends them as in-context examples. No covariance cache.
+#
+# sentence_model_name: semantic retrieval model; downloads ~90 MB on first run.
+
+alg_name: "IKE"
+model_name: "gpt2-xl"
+sentence_model_name: "sentence-transformers/all-MiniLM-L6-v2"
+device: 0
+k: 16
+results_dir: "./results"
+model_parallel: false
