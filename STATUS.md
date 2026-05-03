@@ -36,7 +36,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | Smoke test (5 edits) | Passed | rewrite=1.00, rephrase=0.93, locality=0.70 |
 | ROME 100-edit baseline | Done | rewrite=1.00, rephrase=0.54, locality=0.79 |
 | ROME vs. paper validation | Partial | rewrite/locality ✓, rephrase gap under investigation |
-| Rephrase failure inspection | **Next** | Check if EasyEdit rephrase prompts are bad |
+| Rephrase failure inspection | Done | `scripts/inspect_rephrase_failures.py`; 34/46 failures have prompt-quality flags |
 | MEMIT baseline | Not started | |
 | IKE baseline | Not started | |
 | RippleEdits download + eval | Not started | |
@@ -58,7 +58,7 @@ See `results/runs.jsonl` for machine-readable records. Summary:
 
 **Paper targets (ROME, GPT-2 XL, CounterFact):** rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%
 
-Rephrase gap (~40 points) likely due to poor-quality rephrase prompts in EasyEdit's dataset version, not a model failure. Under investigation.
+Rephrase gap (~40 points) is partly explained by poor-quality rephrase prompts in EasyEdit's dataset version. Static audit of `logs/results.json` found 46/100 rephrase failures; 34/46 had clear prompt-quality flags such as relation mismatch, retrieval noise, or indirect prompts. Treat EasyEdit rephrase_acc as a relative comparison metric unless a cleaner prompt set is used.
 
 ---
 

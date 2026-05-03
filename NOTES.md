@@ -15,6 +15,16 @@ Format for each entry:
 
 ---
 
+## 2026-05-03 — Rephrase failure audit
+
+- Added `scripts/inspect_rephrase_failures.py` to audit EasyEdit per-edit results without loading a model.
+- 100-edit ROME run has 46 rephrase failures; static prompt audit flags 34/46 as weak, indirect, noisy, or relation-mismatched.
+- Examples: employment-location edits evaluated with "favorite lunchtime work meals include"; language edits evaluated with "lives in"; continent/location edits evaluated with language-of-surrounding-people prompts.
+- EasyEdit computes rephrase_acc as teacher-forced token exact match against `target_new`, so bad rephrase prompts can depress the score even when direct rewrite succeeds.
+- Decision: do not treat EasyEdit rephrase_acc as absolutely paper-comparable for this dataset version. Use it mainly as a relative metric across ROME/MEMIT/IKE, or rerun on a cleaned rephrase set if the final writeup needs paper-style generalization numbers.
+- Cleaned accidental staged log/date artifact files (`2`, `2026.log`, `23:43:45`, `May`, `UTC`) from the repo.
+- Next: bring up MEMIT baseline.
+
 ## 2026-05-03 — ROME 100-edit baseline complete; rephrase_acc gap flagged
 
 - Baseline ran on 100 random CounterFact edits (seed=42): rewrite=1.000, rephrase=0.540, locality=0.790.
