@@ -34,14 +34,15 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | Environment setup | Done | conda `cs263-project`, GCP T4 |
 | EasyEdit + ROME running | Done | Fixed 2 compatibility bugs (see commit 2867c41) |
 | Smoke test (5 edits) | Passed | rewrite=1.00, rephrase=0.93, locality=0.70 |
-| ROME 100-edit baseline | **In progress** | Script ready: `scripts/baseline_rome.py` |
-| ROME vs. paper validation | Pending | Need baseline to complete |
+| ROME 100-edit baseline | Done | rewrite=1.00, rephrase=0.54, locality=0.79 |
+| ROME vs. paper validation | Partial | rewrite/locality ✓, rephrase gap under investigation |
+| Rephrase failure inspection | **Next** | Check if EasyEdit rephrase prompts are bad |
 | MEMIT baseline | Not started | |
 | IKE baseline | Not started | |
+| RippleEdits download + eval | Not started | |
+| MQuAKE download + eval | Not started | |
 | Probe set design | In progress | See probe design notes below |
 | Probe set implementation | Not started | |
-| RippleEdits eval | Not started | Need data |
-| MQuAKE eval | Not started | Need data |
 | Results figures | Not started | |
 
 ---
@@ -52,11 +53,12 @@ See `results/runs.jsonl` for machine-readable records. Summary:
 
 | Date | Method | Dataset | N | Rewrite | Rephrase | Locality |
 |------|--------|---------|---|---------|----------|----------|
-| 2026-05-02 | ROME | CounterFact-smoke | 5 | 1.000 | 0.933 | N/A* |
-
-*locality_acc was None in the first run due to the summarize() bug (now fixed).
+| 2026-05-02 | ROME | CounterFact-smoke | 5 | 1.000 | 0.933 | — |
+| 2026-05-03 | ROME | CounterFact | 100 | 1.000 | 0.540 | 0.790 |
 
 **Paper targets (ROME, GPT-2 XL, CounterFact):** rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%
+
+Rephrase gap (~40 points) likely due to poor-quality rephrase prompts in EasyEdit's dataset version, not a model failure. Under investigation.
 
 ---
 

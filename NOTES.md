@@ -15,6 +15,18 @@ Format for each entry:
 
 ---
 
+## 2026-05-03 — ROME 100-edit baseline complete; rephrase_acc gap flagged
+
+- Baseline ran on 100 random CounterFact edits (seed=42): rewrite=1.000, rephrase=0.540, locality=0.790.
+- rewrite and locality within range of paper. rephrase is ~40 points below paper (0.948).
+- Likely cause: EasyEdit's rephrase prompts are lower quality than the original ROME paper's. Examples seen in logs like "Marina Tsvetaeva's favorite lunchtime work meals include" as a paraphrase of an employment location — not a valid paraphrase.
+- Decision: inspect rephrase failures before trusting rephrase_acc as a metric. Will use it as a relative comparison across methods rather than absolute.
+- Also: Matthew is now sole contributor (Corey and Nathan no longer involved). Updated CLAUDE.md and README accordingly.
+- Installed Codex CLI (v0.1.28) via nvm/Node 22 on GCP T4.
+- Next: inspect rephrase failures, then bring up MEMIT baseline.
+
+---
+
 ## 2026-05-02 — ROME smoke test passing; two compatibility bugs fixed
 
 - **nethook.py bug (PyTorch 2.9.1)**: `register_forward_hook` with `with_kwargs=True` passes `(module, args, kwargs, output)` — EasyEdit had the signature as `(m, inputs, output, kwargs=None)`, so `output` received the kwargs dict and the hook returned it as the module's output. This replaced `c_proj`'s tensor output with a dict, crashing `dropout()` on the next line. Fixed by correcting the parameter order in `retain_hook`.
