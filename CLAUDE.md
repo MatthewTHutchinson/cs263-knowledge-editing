@@ -12,7 +12,8 @@ See `docs/CS263_Project_Planning_Report.docx` in this repo for the full planning
 
 ## Team and ownership
 
-- **Matthew Hutchinson** (repo owner, the human you're talking to): sole contributor. Owns everything — ROME/MEMIT/IKE baselines, eval pipeline, diagnostic probe set design and implementation, figures, writeup.
+- **Matthew Hutchinson** (repo owner, the human you're talking to): owns all implementation — ROME/MEMIT/IKE baselines, eval pipeline, diagnostic probe set, figures, writeup.
+- **Corey Shen** and **Nathan Wei**: teammates on the project but not contributing code. Matthew is doing all the work.
 
 When Claude Code generates code, everything is in scope.
 

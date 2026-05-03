@@ -4,7 +4,7 @@
 
 Compares ROME, MEMIT, and IKE on GPT-2 XL using CounterFact, RippleEdits, and MQuAKE, with a custom diagnostic probe set targeting logical consistency and ripple effects.
 
-**Author**: Matthew Hutchinson — mahutchinson@ucla.edu
+**Team**: Matthew Hutchinson (mahutchinson@ucla.edu), Corey Shen (corey0224@ucla.edu), Nathan Wei (nathanwei@ucla.edu)
 
 ---
 
