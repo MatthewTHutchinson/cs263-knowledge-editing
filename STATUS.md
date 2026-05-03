@@ -23,7 +23,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | CounterFact (EasyEdit) | Baseline eval: efficacy, paraphrase, specificity | `data/counterfact/counterfact-edit.json` | Downloaded (10K records) |
 | RippleEdits | Ripple effect eval | TBD | Not downloaded |
 | MQuAKE | Multi-hop reasoning eval | TBD | Not downloaded |
-| Diagnostic probe set | Novel contribution — logical consistency | `src/probes/probe_set.py` | 34 probes written (5 categories × 5 edit cases; includes `probe_type` labels) |
+| Diagnostic probe set | Novel contribution — logical consistency | `src/probes/probe_set.py` | 100 probes written and validator-clean (5 categories × 5 edit cases; includes `probe_type` labels) |
 
 ---
 
@@ -42,9 +42,11 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | IKE baseline | Ready to run | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation |
 | RippleEdits download + eval | Not started | |
 | MQuAKE download + eval | Not started | |
-| Probe set design | Done | 34 probes across 5 categories in `src/probes/probe_set.py`; `probe_type` separates implicit, target-conditioned, and supplied-fact prompts |
+| Probe set design | Done | 100 probes across 5 categories in `src/probes/probe_set.py`; `probe_type` separates implicit, target-conditioned, and supplied-fact prompts |
 | Probe set evaluation | Ready for ROME/MEMIT | `scripts/run_probes.py` records pre/post pass rates by category and probe type; IKE probe support still pending |
-| Results summarization | Done | `scripts/show_results.py` updated with comparison table, batch sweep, probe summary by category/type, ASCII plot |
+| Probe validation | Done | `scripts/audit_probes.py --min_total 100 --strict` passes locally |
+| Local tests | Done | `tests/test_batch_memit_metrics.py` covers MEMIT batch metric semantics; `tests/test_baseline_ike_cache.py` covers IKE embedding-cache logic |
+| Results summarization | Done | `scripts/show_results.py` updated with comparison table, batch sweep, probe summary by category/type, ASCII plot, CSV export |
 
 ---
 
@@ -62,6 +64,54 @@ See `results/runs.jsonl` for machine-readable records. Summary:
 Rephrase gap (~40 points) is explained by poor-quality rephrase prompts in EasyEdit's dataset (relation mismatches, garbage text, indirect prompts — not actual paraphrases). The original ROME CounterFact uses curated `paraphrase_prompts` which would give paper-comparable numbers, but this conversion is deferred. **Decision: treat rephrase_acc as a relative comparison across ROME/MEMIT/IKE only — do not compare absolute rephrase numbers to the paper.** Rewrite and locality are paper-comparable and sufficient to trust the pipeline.
 
 Original ROME repo cross-validation also deferred — rewrite (1.000) and locality (0.790) already confirm EasyEdit's ROME is faithful. Revisit only if MEMIT/IKE numbers look anomalous.
+
+---
+
+## Metrics Reference
+
+### Core EasyEdit metrics
+
+| Metric | Scope | Computation | Notes |
+|--------|-------|-------------|-------|
+| `rewrite_acc` | CounterFact rewrite prompt | Exact-match token accuracy for `target_new` after editing. | Main direct edit-success metric. |
+| `rephrase_acc` | CounterFact rephrase prompt | Exact-match token accuracy for `target_new` on `rephrase_prompt`. | Relative-only in this project because EasyEdit's rephrase prompts are noisy. |
+| `locality_acc` | CounterFact locality prompt | Agreement between post-edit and pre-edit predictions on locality prompts. | Measures preservation, not necessarily correctness against `locality_ground_truth`. |
+| `paper_target` | Run metadata | Published reference value for the corresponding method/model/dataset when available. | Use only when prompt/dataset formatting is comparable. |
+
+Important distinction: in the single-edit ROME/MEMIT baselines, `n_samples=100` means 100 independent edit/evaluate/restore trials. In `MEMIT-batch`, `n_samples=100` means 100 facts inserted into one model update before evaluation.
+
+### Probe metrics
+
+| Metric / Dimension | Computation | Interpretation |
+|--------------------|-------------|----------------|
+| Per-probe pass | `expected_first_token` appears in the generated first token, or `expected_contains` appears in a short greedy generation. | Binary outcome for one diagnostic query. |
+| `pre_pass_rate` | Mean pass rate before editing. | Captures base-model ability and prompt leakage. |
+| `post_pass_rate` | Mean pass rate after editing. | Captures edited behavior. |
+| `delta_pass_rate` | `post_pass_rate - pre_pass_rate`. | Best summary of improvement caused by the edit. |
+| Category pass rate | Mean pass rate within `logical_negation`, `symmetric_inverse`, `compositional`, `contradiction`, or `chain_of_thought`. | Shows which consistency property succeeds or fails. |
+| Type pass rate | Mean pass rate within `implicit_edit`, `target_conditioned`, or `supplied_fact_reasoning`. | Separates strong transfer tests from prompts that include the target or supplied fact. |
+
+Probe categories:
+
+- `logical_negation`: the model should answer with the new value or reject the old value under a changed surface form.
+- `symmetric_inverse`: an edit in the subject-to-object direction should support an inverse object-to-subject query.
+- `compositional`: the edited fact should combine with another known fact to produce an implied answer.
+- `contradiction`: the model should not simultaneously affirm old and new incompatible facts.
+- `chain_of_thought`: a short reasoning chain should remain consistent with the edited fact.
+
+Probe types:
+
+- `implicit_edit`: strongest evidence of transfer; the prompt does not mention the new target.
+- `target_conditioned`: the prompt mentions the target value or asks a forced-choice question.
+- `supplied_fact_reasoning`: the prompt states the edited fact and measures reasoning from that supplied premise; report separately from implicit transfer.
+
+### Planned dataset metrics
+
+| Dataset | Metric family | What it measures |
+|---------|---------------|------------------|
+| CounterFact | efficacy/rewrite, paraphrase/generalization, locality/specificity | Direct edit success, surface-form transfer, and preservation of unrelated facts. |
+| RippleEdits | logical generalization, compositionality I/II, subject aliasing, preservation, relation specificity | Whether edits ripple through logical and compositional consequences while preserving aliases, other true objects, and unrelated relations. |
+| MQuAKE | edited-fact accuracy, multi-hop QA accuracy, hop-specific accuracy, one-edited/all-edited settings | Whether edited facts are recalled and whether entailed multi-hop questions change correctly after one or more edits. |
 
 ---
 
@@ -143,13 +193,14 @@ Prompt the model to *explain its reasoning* about the edited fact.
 - Expected: IKE will often produce the right answer without reasoning consistency; ROME may contradict itself mid-chain.
 
 ### Implementation status
-- 34 probes across five categories, hand-curated around the five smoke-test edit cases.
+- 100 probes across five categories, hand-curated around the five smoke-test edit cases.
 - Probe records include `probe_type`:
   - `implicit_edit`: the prompt does not state the new fact and should test whether the edit transfers to a new surface form.
   - `target_conditioned`: the prompt conditions on the edited target value but does not directly assert the full subject-target fact; useful for inverse and forced-choice tests.
   - `supplied_fact_reasoning`: the prompt states the edited fact and tests whether the model can reason from it. These should be analyzed separately because the base model may pass them pre-edit.
 - `scripts/run_probes.py` currently supports ROME and MEMIT, restores weights after each edit, and writes records to `results/probe_results.jsonl`.
 - `scripts/show_results.py --probes` summarizes probe results by category and by `probe_type`.
+- `scripts/audit_probes.py` checks unique IDs, valid labels, coverage, expected answers, and target leakage in `implicit_edit` prompts.
 
 ---
 

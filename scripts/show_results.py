@@ -5,14 +5,19 @@ Usage:
     python scripts/show_results.py               # baseline runs table
     python scripts/show_results.py --probes      # add probe summary
     python scripts/show_results.py --plot        # ASCII bar chart of rewrite_acc by method
+    python scripts/show_results.py --csv_dir results/csv
     python scripts/show_results.py --all         # everything
 """
 
-import json, sys, os, argparse
+import argparse
+import csv
+import json
+import os
 from collections import defaultdict
 
 RUNS_PATH   = os.path.join(os.path.dirname(__file__), "..", "results", "runs.jsonl")
 PROBES_PATH = os.path.join(os.path.dirname(__file__), "..", "results", "probe_results.jsonl")
+DEFAULT_CSV_DIR = os.path.join(os.path.dirname(__file__), "..", "results", "csv")
 
 PAPER_TARGETS = {
     "ROME":        {"rewrite_acc": 0.996, "rephrase_acc": 0.948, "locality_acc": 0.722},
@@ -259,11 +264,109 @@ def show_ascii_plot(runs: list[dict]) -> None:
     print("=" * 72)
 
 
+def probe_summary_rows(probe_results: list[dict], group_key: str) -> list[dict]:
+    stats: dict[tuple, dict] = defaultdict(lambda: {"n": 0, "pre": 0, "post": 0})
+    for r in probe_results:
+        key = (r.get("method", "?"), r.get(group_key, "?"))
+        stats[key]["n"] += 1
+        stats[key]["pre"] += int(r.get("pre_edit", {}).get("passed", False))
+        stats[key]["post"] += int(r.get("post_edit", {}).get("passed", False))
+
+    rows = []
+    for (method, group_value), s in sorted(stats.items()):
+        n = s["n"]
+        pre_rate = s["pre"] / n if n else None
+        post_rate = s["post"] / n if n else None
+        rows.append({
+            "method": method,
+            group_key: group_value,
+            "n": n,
+            "pre_pass_rate": pre_rate,
+            "post_pass_rate": post_rate,
+            "delta_pass_rate": (post_rate - pre_rate) if pre_rate is not None and post_rate is not None else None,
+        })
+    return rows
+
+
+def write_csv(path: str, rows: list[dict], fieldnames: list[str]) -> None:
+    with open(path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow(row)
+
+
+def export_csv(runs: list[dict], probe_results: list[dict], out_dir: str) -> None:
+    os.makedirs(out_dir, exist_ok=True)
+
+    run_rows = []
+    for r in runs:
+        metrics = r.get("metrics", {})
+        run_rows.append({
+            "timestamp": r.get("timestamp"),
+            "method": r.get("method"),
+            "model": r.get("model"),
+            "dataset": r.get("dataset"),
+            "n_samples": r.get("n_samples"),
+            "seed": r.get("seed"),
+            "rewrite_acc": metrics.get("rewrite_acc"),
+            "rephrase_acc": metrics.get("rephrase_acc"),
+            "locality_acc": metrics.get("locality_acc"),
+        })
+
+    write_csv(
+        os.path.join(out_dir, "runs.csv"),
+        run_rows,
+        ["timestamp", "method", "model", "dataset", "n_samples", "seed",
+         "rewrite_acc", "rephrase_acc", "locality_acc"],
+    )
+
+    if probe_results:
+        probe_rows = []
+        for r in probe_results:
+            probe_rows.append({
+                "timestamp": r.get("timestamp"),
+                "method": r.get("method"),
+                "edit_key": r.get("edit_key"),
+                "probe_id": r.get("probe_id"),
+                "category": r.get("category"),
+                "probe_type": r.get("probe_type", "implicit_edit"),
+                "pre_passed": r.get("pre_edit", {}).get("passed"),
+                "post_passed": r.get("post_edit", {}).get("passed"),
+                "pre_first_token": r.get("pre_edit", {}).get("first_token"),
+                "post_first_token": r.get("post_edit", {}).get("first_token"),
+            })
+        write_csv(
+            os.path.join(out_dir, "probe_results.csv"),
+            probe_rows,
+            ["timestamp", "method", "edit_key", "probe_id", "category", "probe_type",
+             "pre_passed", "post_passed", "pre_first_token", "post_first_token"],
+        )
+
+        category_rows = probe_summary_rows(probe_results, "category")
+        write_csv(
+            os.path.join(out_dir, "probe_summary_by_category.csv"),
+            category_rows,
+            ["method", "category", "n", "pre_pass_rate", "post_pass_rate", "delta_pass_rate"],
+        )
+
+        type_rows = probe_summary_rows(probe_results, "probe_type")
+        write_csv(
+            os.path.join(out_dir, "probe_summary_by_type.csv"),
+            type_rows,
+            ["method", "probe_type", "n", "pre_pass_rate", "post_pass_rate", "delta_pass_rate"],
+        )
+
+    print(f"\nCSV exports written to {out_dir}")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--probes", action="store_true")
     parser.add_argument("--plot",   action="store_true")
     parser.add_argument("--all",    action="store_true")
+    parser.add_argument("--csv_dir", nargs="?", const=DEFAULT_CSV_DIR,
+                        help="Write CSV exports to this directory (default: results/csv)")
     args = parser.parse_args()
 
     show_probes = args.probes or args.all
@@ -278,9 +381,15 @@ def main():
     if show_plot:
         show_ascii_plot(runs)
 
-    if show_probes:
+    probe_results = []
+    if show_probes or args.csv_dir:
         probe_results = load_jsonl(PROBES_PATH)
+
+    if show_probes:
         show_probe_summary(probe_results)
+
+    if args.csv_dir:
+        export_csv(runs, probe_results, args.csv_dir)
 
 
 if __name__ == "__main__":

@@ -15,6 +15,22 @@ Format for each entry:
 
 ---
 
+## 2026-05-03 — Expanded probe set and local tooling
+
+- Added `scripts/audit_probes.py`, a no-model validator for the probe set. It checks unique IDs, valid edit keys/categories/types, expected answer fields, per-edit/category/type coverage, and target leakage in `implicit_edit` prompts.
+- Expanded `src/probes/probe_set.py` from 34 to 100 probes around the five smoke-test edit cases.
+- Current probe distribution:
+  - By type: 52 `implicit_edit`, 31 `supplied_fact_reasoning`, 17 `target_conditioned`.
+  - By category: 32 logical negation, 22 contradiction, 17 compositional, 15 symmetric/inverse, 14 chain-of-thought.
+- Added `tests/test_batch_memit_metrics.py` for local unit coverage of MEMIT batch request formatting and EasyEdit-style locality preservation summarization. The tests use lightweight stubs and do not require PyTorch/EasyEdit in the Mac `python3` environment.
+- Added `tests/test_baseline_ike_cache.py` for local unit coverage of `baseline_ike.py` embedding-cache path construction, cache-hit skip behavior, and rebuild behavior without loading `sentence_transformers`.
+- Added CSV export to `scripts/show_results.py`: `--csv_dir results/csv` writes run rows and probe summaries suitable for plotting.
+- Added metric-definition sections to README/STATUS/HANDOFF/CLAUDE covering EasyEdit baseline metrics, custom probe metrics, and planned CounterFact/RippleEdits/MQuAKE metric families.
+- Local verification commands now include:
+  - `python3 scripts/audit_probes.py --min_total 100 --strict`
+  - `python3 -m unittest discover -s tests`
+  - `python3 scripts/show_results.py --csv_dir /private/tmp/cs263_csv`
+
 ## 2026-05-03 — Fixed Claude script issues after review
 
 - Fixed `scripts/baseline_ike.py`: EasyEdit's IKE path expects cached retrieval embeddings under `results/IKE/embedding/`, so the script now calls `encode_ike_facts(...)` before `BaseEditor.edit(...)` and skips rebuilding when the cache exists. Added `--rebuild_embeddings` for explicit refreshes.

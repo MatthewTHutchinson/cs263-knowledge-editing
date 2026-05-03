@@ -54,12 +54,23 @@ A ~50-item hand-curated diagnostic probe set with three probe types:
 **Design note**: these probes do NOT cleanly map to EasyEdit's `locality_inputs` or `portability_inputs` slots. Run EasyEdit's built-in eval first, then run probes as a separate post-edit script against the already-edited model. Do not shove contradiction probes into `locality_inputs`.
 
 Current probe implementation:
-- `src/probes/probe_set.py` has 34 probes around the five smoke-test edit cases.
+- `src/probes/probe_set.py` has 100 probes around the five smoke-test edit cases.
 - Each probe has `probe_type`:
   - `implicit_edit`: prompt does not state the new fact.
   - `target_conditioned`: prompt conditions on the edited target value or forced choice.
   - `supplied_fact_reasoning`: prompt states the edited fact and tests reasoning from it.
 - Analyze `supplied_fact_reasoning` separately from implicit edit transfer because the base model may pass by following the supplied prompt.
+- Run `python scripts/audit_probes.py --min_total 100 --strict` before launching GPU probe jobs.
+
+Metric interpretation:
+- `rewrite_acc`: exact-match token accuracy for the new target on the original edit prompt.
+- `rephrase_acc`: exact-match token accuracy for the new target on a rephrased prompt; relative-only here due to noisy EasyEdit CounterFact rephrase prompts.
+- `locality_acc`: preservation score, computed by comparing post-edit locality predictions to pre-edit locality predictions.
+- Probe `post_pass_rate`: pass rate after editing.
+- Probe `pre_pass_rate`: base-model pass rate before editing.
+- Probe `delta_pass_rate`: post minus pre; prefer this for claims about edit-induced improvement.
+- RippleEdits metrics should be framed as logical generalization, compositionality, subject aliasing, preservation, and relation specificity.
+- MQuAKE metrics should be framed as edited-fact accuracy and multi-hop QA accuracy, optionally broken down by hop count and one-edited/all-edited settings.
 
 ## Repo conventions
 
@@ -75,6 +86,7 @@ Current probe implementation:
 - Python 3.10+. Type hints where they help, not religiously.
 - Prefer scripts over notebooks for anything that gets re-run. Notebooks are fine for exploration.
 - When running experiments, always log: method, model, dataset, n_samples, seed, timestamp, metrics. Append to `results/runs.jsonl`.
+- For local verification, prefer `python -m unittest discover -s tests`, `python scripts/audit_probes.py --min_total 100 --strict`, and `python scripts/show_results.py --csv_dir /private/tmp/cs263_csv`; these do not load GPT-2 XL.
 - Commit messages: short, imperative. "Add ROME baseline script", not "Added a script that runs ROME as a baseline."
 
 ## Gotchas to remember

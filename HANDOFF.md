@@ -64,6 +64,29 @@ Safe work while the remote job runs:
 - update notes/status docs
 - run lightweight syntax checks or CPU-only tests
 
+## Metric Definitions
+
+Core baseline metrics:
+
+- `rewrite_acc`: exact-match token accuracy for the new target on the original edit prompt after editing.
+- `rephrase_acc`: exact-match token accuracy for the new target on a rephrased prompt. Treat as relative-only because EasyEdit CounterFact rephrase prompts are noisy.
+- `locality_acc`: preservation of unrelated behavior. For ROME/MEMIT, compare post-edit locality predictions to pre-edit locality predictions. Do not treat this as direct accuracy against `locality_ground_truth`.
+
+Probe metrics:
+
+- Per-probe pass: generated first token matches `expected_first_token`, or short greedy generation contains `expected_contains`.
+- `pre_pass_rate`: fraction of probes passed before editing.
+- `post_pass_rate`: fraction passed after editing.
+- `delta_pass_rate`: `post_pass_rate - pre_pass_rate`; most useful for edit-induced improvement.
+- Category summaries: logical negation, symmetric/inverse, compositional, contradiction, chain-of-thought.
+- Type summaries: `implicit_edit`, `target_conditioned`, `supplied_fact_reasoning`.
+
+Future benchmark metrics:
+
+- CounterFact: efficacy/rewrite, paraphrase/generalization, locality/specificity.
+- RippleEdits: logical generalization, compositionality I/II, subject aliasing, preservation, relation specificity.
+- MQuAKE: edited-fact accuracy and multi-hop QA accuracy, with hop-count and one-edited/all-edited breakdowns when available.
+
 ## Immediate Local Tasks
 
 ### 1. True MEMIT Batch Script
@@ -134,12 +157,16 @@ src/probes/probe_set.py
 
 Current state:
 
-- 34 probes across logical negation, symmetric/inverse, compositional, contradiction, and chain-of-thought categories.
+- 100 probes across logical negation, symmetric/inverse, compositional, contradiction, and chain-of-thought categories.
 - Each probe has a `probe_type`:
   - `implicit_edit`: does not state the new fact.
   - `target_conditioned`: mentions the edited target or a forced choice.
   - `supplied_fact_reasoning`: states the edited fact and tests reasoning from it.
 - Analyze supplied-fact probes separately because a base model can pass by following the prompt rather than because the edit propagated.
+- Validate locally before GPU runs:
+  ```bash
+  python scripts/audit_probes.py --min_total 100 --strict
+  ```
 
 Probe categories:
 
@@ -171,12 +198,16 @@ Existing file:
 scripts/show_results.py
 ```
 
-Possible improvements:
+Current capabilities:
 
 - table grouped by method/dataset
 - deltas from paper targets where relevant
 - explicit labeling for `single_edit`, `batch_edit`, and `retrieval_context`
-- CSV export for figures
+- probe summaries by category and `probe_type`
+- CSV export for figures:
+  ```bash
+  python scripts/show_results.py --csv_dir results/csv
+  ```
 
 ## Pulling This State Locally
 

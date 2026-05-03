@@ -53,6 +53,7 @@ data/rippleedits_full/
 results/runs/
 results/checkpoints/
 results/figures/
+results/csv/
 !results/**/README.md
 
 # External clones (we reference them, don't vendor them)
