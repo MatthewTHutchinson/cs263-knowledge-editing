@@ -12,11 +12,9 @@ See `docs/CS263_Project_Planning_Report.docx` in this repo for the full planning
 
 ## Team and ownership
 
-- **Matthew Hutchinson** (repo owner, the human you're talking to): ROME reproduction on the original ROME repo, cross-validation against EasyEdit's ROME, diagnostic probe set design, probe evaluation runs, failure-mode writeup.
-- **Corey Shen**: EasyEdit configuration for MEMIT and IKE, evaluation pipeline across CounterFact / RippleEdits / MQUAKE, aggregated results tables.
-- **Nathan Wei**: Cross-method comparison figures, qualitative failure analysis, related-work section.
+- **Matthew Hutchinson** (repo owner, the human you're talking to): sole contributor. Owns everything — ROME/MEMIT/IKE baselines, eval pipeline, diagnostic probe set design and implementation, figures, writeup.
 
-When Claude Code generates code, default to Matthew's ownership areas unless told otherwise.
+When Claude Code generates code, everything is in scope.
 
 ## Stack decisions (already made — do not relitigate)
 
@@ -76,4 +74,4 @@ A ~50-item hand-curated diagnostic probe set with three probe types:
 - CounterFact full eval is ~2500 edits. Each ROME edit takes a few minutes on T4. Budget overnight for a full run; use 100-sample subsets for iteration.
 - MEMIT is a *batch* editor — don't run it one edit at a time.
 - IKE doesn't modify weights. The "edited model" at inference time is just base model + prompted context. Probes need to be run through IKE's inference wrapper, not against a saved checkpoint.
-- RippleEdits and MQUAKE are separate benchmarks with their own formats. Corey owns getting them into the eval pipeline.
+- RippleEdits and MQUAKE are separate benchmarks with their own formats — need download and format conversion before they can be plugged into the eval pipeline.
