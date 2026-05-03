@@ -39,7 +39,7 @@ Day 2 — baseline validation:
 7. Run the same 100 edits through the original ROME code as a second sanity check. Confirm EasyEdit is faithful.
 
 Day 3 — bring up MEMIT and IKE:
-8. Run EasyEdit's MEMIT on the same 100 edits, compare to MEMIT paper numbers.
+8. Run EasyEdit's MEMIT on the same 100 edits as a single-edit sanity baseline and cache warmup.
 9. Run EasyEdit's IKE (with `use_icl_examples=True`) on the same 100 edits, compare to Zheng et al. numbers.
 10. At this point: three-method pipeline with published-paper-comparable baselines. Log results in NOTES.md.
 
@@ -74,7 +74,9 @@ A ~50-item hand-curated diagnostic probe set with three probe types:
 - Paper numbers are almost never exactly reproducible (seeds, tokenizer versions, prompt formatting). ±2 points is fine.
 - **rephrase_acc is relative-only**: EasyEdit's CounterFact rephrase prompts are poor quality (relation mismatches, garbage text). Do not compare rephrase_acc absolute values to the original papers. Use it only to compare ROME vs MEMIT vs IKE against each other.
 - **No original ROME repo cross-validation needed**: rewrite=1.000 and locality=0.790 confirm EasyEdit's ROME is faithful to the paper.
-- CounterFact full eval is ~2500 edits. Each ROME edit takes a few minutes on T4. Budget overnight for a full run; use 100-sample subsets for iteration.
-- MEMIT is a *batch* editor — don't run it one edit at a time.
-- IKE doesn't modify weights. The "edited model" at inference time is just base model + prompted context. Probes need to be run through IKE's inference wrapper, not against a saved checkpoint.
+- CounterFact full eval is ~2500 edits. Each ROME edit takes time on T4. Budget overnight for a full run; use 100-sample subsets for iteration.
+- **Single-edit vs. mass-edit distinction**: current `baseline_rome.py` and `baseline_memit.py` use `BaseEditor.edit(..., sequential_edit=False)`, which evaluates each request independently and restores weights. `N=100` means 100 independent single-edit trials, not one 100-edit model.
+- **MEMIT true batch still needed**: MEMIT's main claim is mass editing. The current MEMIT run is useful as a single-edit sanity baseline and covariance-cache warmup, but add a dedicated batch/mass-edit script before claiming MEMIT's intended advantage.
+- **IKE doesn't modify weights**. The "edited model" at inference time is base model + retrieved/in-context examples. Probes need to be run through IKE's inference wrapper, not against a saved checkpoint.
+- **IKE batch framing**: do not call IKE a persistent batch edit. A fair many-edit IKE experiment means many edited facts in memory/context, then measuring retrieval accuracy, context interference, and robustness as the number of available edits grows.
 - RippleEdits and MQUAKE are separate benchmarks with their own formats — need download and format conversion before they can be plugged into the eval pipeline.

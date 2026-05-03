@@ -15,6 +15,29 @@ Format for each entry:
 
 ---
 
+## 2026-05-03 — Clarified single-edit vs. batch-edit baselines
+
+- Important correction: current `scripts/baseline_rome.py` and `scripts/baseline_memit.py` both call `BaseEditor.edit(...)` with `sequential_edit=False`. In EasyEdit this loops over requests one at a time, evaluates the edited model, then restores original weights.
+- Therefore the ROME 100-edit run is 100 independent single-edit trials, not one model containing 100 edits.
+- The current MEMIT run is also 100 independent single-edit trials. Log evidence: `Writing 1 key/value pair(s)` per request. It is still useful as a single-edit sanity comparison against ROME, but it does not test MEMIT's intended mass-edit advantage.
+- MEMIT is currently spending most of its time building first-run Wikipedia covariance caches for layers `[13, 14, 15, 16, 17]`; cache files under `data/stats/gpt2-xl/wikipedia_stats/` should make later MEMIT runs faster.
+- Scientific plan:
+  - Keep independent single-edit baselines for ROME/MEMIT/IKE on the same CounterFact sample.
+  - Add a true MEMIT batch/mass-edit experiment where 100 edits are inserted into one model and then evaluated.
+  - Treat ROME mass editing, if run, as cumulative/sequential stress testing rather than ROME's primary intended setting.
+  - Treat IKE as retrieval/in-context editing: "batch" means placing multiple demonstrations/facts in the inference context, not modifying one persistent model.
+- IKE comparison guidance: evaluate IKE on the same edit records and probes, but report it separately as non-parametric/inference-time editing. A fair "many-edit" IKE condition should vary the number and relevance of in-context edit examples and measure context interference/retrieval failure, not call it a weight-edit batch.
+- Future cleanup: build a cleaned rephrase prompt set if paper-style generalization claims are needed; EasyEdit's current rephrase prompts remain relative-only.
+- Future scale run: consider full CounterFact size (~2500 paper-style cases) after scripts are stable. For MEMIT mass editing, run batch-size sweeps (e.g. 10/100/1000 if feasible) rather than jumping straight to one expensive full run.
+
+## 2026-05-03 — MEMIT baseline launched; first-run cache is slow
+
+- Launched `scripts/baseline_memit.py --data_path data/counterfact/counterfact-edit.json` in tmux session `memit`.
+- Host checks showed the run is alive: Python PID `25662`, T4 at ~94% GPU utilization, log `logs/baseline_memit_.log`.
+- It finished covariance cache for layer 13 and started layer 14. This is expected with `mom2_adjustment: true` and `mom2_n_samples: 100000`.
+- The earlier impression that the program stopped was just the slow covariance-stat phase plus restricted sandbox process visibility.
+- Next: let the current run finish as a single-edit MEMIT baseline/cache warmup, then add a real MEMIT batch script.
+
 ## 2026-05-03 — Rephrase failure audit
 
 - Added `scripts/inspect_rephrase_failures.py` to audit EasyEdit per-edit results without loading a model.

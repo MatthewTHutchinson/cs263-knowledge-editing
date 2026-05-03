@@ -11,7 +11,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | Method | Type | Owner | Status |
 |--------|------|-------|--------|
 | ROME | Parameter-based (rank-one) | Matthew | Baseline done ✓ |
-| MEMIT | Parameter-based (batch) | Matthew | Not started |
+| MEMIT | Parameter-based (batch/mass edit) | Matthew | Single-edit baseline running; true batch pending |
 | IKE | Retrieval / in-context | Matthew | Not started |
 
 ---
@@ -37,7 +37,8 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | ROME 100-edit baseline | Done | rewrite=1.00, rephrase=0.54, locality=0.79 |
 | ROME vs. paper validation | Partial | rewrite/locality ✓, rephrase gap under investigation |
 | Rephrase failure inspection | Done | `scripts/inspect_rephrase_failures.py`; 34/46 failures have prompt-quality flags |
-| MEMIT baseline | **Next** | Script: `scripts/baseline_memit.py` |
+| MEMIT single-edit baseline | Running | `scripts/baseline_memit.py`; currently warming covariance caches |
+| MEMIT true batch/mass-edit eval | Planned | Needed for MEMIT's intended setting; current script does not do this |
 | IKE baseline | Not started | After MEMIT |
 | RippleEdits download + eval | Not started | |
 | MQuAKE download + eval | Not started | |
@@ -61,6 +62,49 @@ See `results/runs.jsonl` for machine-readable records. Summary:
 Rephrase gap (~40 points) is explained by poor-quality rephrase prompts in EasyEdit's dataset (relation mismatches, garbage text, indirect prompts — not actual paraphrases). The original ROME CounterFact uses curated `paraphrase_prompts` which would give paper-comparable numbers, but this conversion is deferred. **Decision: treat rephrase_acc as a relative comparison across ROME/MEMIT/IKE only — do not compare absolute rephrase numbers to the paper.** Rewrite and locality are paper-comparable and sufficient to trust the pipeline.
 
 Original ROME repo cross-validation also deferred — rewrite (1.000) and locality (0.790) already confirm EasyEdit's ROME is faithful. Revisit only if MEMIT/IKE numbers look anomalous.
+
+---
+
+## Experimental design decisions
+
+### Single-edit vs. mass-edit conditions
+
+The current ROME and MEMIT baseline scripts use EasyEdit `BaseEditor.edit(...)` with `sequential_edit=False`. EasyEdit evaluates each request independently and restores the original model afterward. Therefore:
+
+- `ROME, N=100` means 100 independent single-edit trials.
+- Current `MEMIT, N=100` also means 100 independent single-edit trials.
+- Current MEMIT logs saying `Writing 1 key/value pair(s)` confirm it is not performing one 100-edit model update.
+
+This is a fair sanity comparison for single-edit behavior, but it does not test MEMIT's main scientific claim: reliable mass editing.
+
+Planned conditions:
+
+| Condition | Purpose | Interpretation |
+|-----------|---------|----------------|
+| ROME single-edit | Validate parametric single-fact editing | Main intended ROME setting |
+| MEMIT single-edit | Sanity check against ROME on same records | Useful but not MEMIT's main advantage |
+| MEMIT batch/mass edit | Insert many facts into one model | Main intended MEMIT setting |
+| ROME sequential/cumulative stress | Optional stress test | Not a primary fair baseline for mass editing |
+| IKE single-edit retrieval | Non-parametric baseline | Base model + one retrieved/in-context edit |
+| IKE many-edit context/retrieval | Context interference test | Not a weight-edit batch; report separately |
+
+### IKE in a "batch" context
+
+IKE does not modify model weights. Its edited behavior comes from retrieved examples or in-context demonstrations supplied at inference time. So a MEMIT-style batch edit does not map cleanly onto IKE.
+
+Scientifically sensible IKE comparisons:
+
+- **Same-record single-edit eval**: for each CounterFact edit, provide the relevant IKE example/context and evaluate rewrite, rephrase, locality, and probes.
+- **Many-edit retrieval eval**: build an edit memory with many edited facts, retrieve the relevant fact at inference time, and measure whether retrieval/context selection succeeds.
+- **Many-edit context stress eval**: place multiple edited facts in the prompt and measure interference as the number of facts grows.
+
+Do not describe IKE as creating a persistent 100-edit model. It is a non-parametric inference-time method, so results should be framed as retrieval/context robustness rather than stored-weight capacity.
+
+### Rephrase prompts and full runs
+
+EasyEdit CounterFact rephrase prompts are noisy enough that `rephrase_acc` is relative-only for now. If final claims need paper-style generalization numbers, create a cleaned rephrase prompt set or recover the original paper-style paraphrases.
+
+After scripts are stable, consider a full CounterFact run. The paper-style scale is roughly 2500 cases, but for MEMIT mass editing it may be more informative to run batch-size sweeps first, such as 10, 100, and 1000 simultaneous edits if compute allows.
 
 ---
 

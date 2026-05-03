@@ -4,7 +4,7 @@
 
 Compares ROME, MEMIT, and IKE on GPT-2 XL using CounterFact, RippleEdits, and MQuAKE, with a custom diagnostic probe set targeting logical consistency and ripple effects.
 
-**Team**: Matthew Hutchinson (mahutchinson@ucla.edu), Corey Shen (corey0224@ucla.edu), Nathan Wei (nathanwei@ucla.edu)
+**Implementation owner**: Matthew Hutchinson (mahutchinson@ucla.edu)
 
 ---
 
@@ -43,8 +43,11 @@ python scripts/check_env.py
 # 5-edit smoke test (confirms pipeline end-to-end)
 python scripts/smoke_test_rome.py
 
-# 100-edit baseline vs. paper
+# 100 independent single-edit baseline vs. paper
 python scripts/baseline_rome.py --data_path data/counterfact/counterfact-edit.json
+
+# MEMIT single-edit baseline/cache warmup
+python scripts/baseline_memit.py --data_path data/counterfact/counterfact-edit.json
 
 # View all results
 python scripts/show_results.py
@@ -91,6 +94,19 @@ CLAUDE.md             # context for Claude Code sessions
 
 Paper targets (ROME, GPT-2 XL): rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%.
 Rephrase gap vs. paper likely due to EasyEdit's rephrase prompt quality — under investigation.
+
+### Experiment Interpretation
+
+The current ROME and MEMIT baseline scripts run **independent single-edit trials**. In EasyEdit, `BaseEditor.edit(..., sequential_edit=False)` edits one request, evaluates it, restores original weights, and then moves to the next request.
+
+That means `N=100` is not one model with 100 stored edits. It is 100 sampled CounterFact cases evaluated independently.
+
+Planned follow-up:
+
+- Add a true MEMIT batch/mass-edit script that inserts many edits into one model.
+- Treat IKE separately as retrieval/in-context editing: many-edit IKE means many facts in memory or context, not a persistent weight-edited model.
+- Keep `rephrase_acc` relative-only until rephrase prompts are cleaned or replaced with paper-style paraphrases.
+- Consider full CounterFact scale after the pipeline is stable; use batch-size sweeps for MEMIT before one expensive full run.
 
 ---
 
