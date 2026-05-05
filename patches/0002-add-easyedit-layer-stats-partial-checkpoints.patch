@@ -1,0 +1,65 @@
+diff --git a/easyeditor/models/rome/layer_stats.py b/easyeditor/models/rome/layer_stats.py
+--- a/easyeditor/models/rome/layer_stats.py
++++ b/easyeditor/models/rome/layer_stats.py
+@@
+-from ...util.runningstats import CombinedStat, Mean, NormMean, SecondMoment, tally
++from ...util.runningstats import (
++    CombinedStat,
++    Mean,
++    NormMean,
++    SecondMoment,
++    load_cached_state,
++    save_cached_state,
++    tally,
++)
+@@
+-    stat = CombinedStat(**{k: STAT_TYPES[k]() for k in to_collect})
++    stat = CombinedStat(**{k: STAT_TYPES[k]() for k in to_collect})
++    partial_filename = filename.with_suffix(filename.suffix + ".partial.npz")
++    processed_groups = 0
++    partial_state = load_cached_state(
++        partial_filename,
++        {"sample_size": sample_size},
++        quiet=True,
++    )
++    if partial_state is not None:
++        processed_groups = int(partial_state.get("processed_groups", 0))
++        stat.load_state_dict(partial_state)
++        print(
++            f"Resuming partial covariance stats from {partial_filename} "
++            f"after {processed_groups} batch groups."
++        )
++
+     loader = tally(
+         stat,
+         ds,
+@@
+-    with torch.no_grad():
+-        for batch_group in progress(loader, total=batch_count):
++    checkpoint_interval = int(os.environ.get("EASYEDIT_STATS_CHECKPOINT_INTERVAL", 25))
++    with torch.no_grad():
++        for batch_group_idx, batch_group in enumerate(progress(loader, total=batch_count)):
++            if batch_group_idx < processed_groups:
++                continue
+             for batch in batch_group:
+                 batch = dict_to_(batch, f"cuda:{hparams.device}")
+                 with Trace(
+@@
+                 # feats = flatten_masked_batch(tr.output, batch["attention_mask"])
+                 feats = feats.to(dtype=dtype)
+                 stat.add(feats)
++            processed_groups = batch_group_idx + 1
++            if checkpoint_interval > 0 and processed_groups % checkpoint_interval == 0:
++                stat.to_(device="cpu")
++                save_cached_state(
++                    partial_filename,
++                    stat,
++                    {
++                        "sample_size": sample_size,
++                        "processed_groups": processed_groups,
++                    },
++                )
++                stat.to_(device=f"cuda:{hparams.device}")
++    if partial_filename.exists() and filename.exists():
++        partial_filename.unlink()
+     return stat

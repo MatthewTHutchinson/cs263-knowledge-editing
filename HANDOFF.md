@@ -1,6 +1,6 @@
 # Local Handoff
 
-Snapshot date: 2026-05-03
+Snapshot date: 2026-05-05
 
 This is the working handoff for continuing locally while the GCP MEMIT job runs.
 
@@ -12,10 +12,10 @@ MEMIT is running on the GCP T4 in tmux session `memit`.
 tmux attach -t memit
 ```
 
-Current command:
+Current command/launcher:
 
 ```bash
-python scripts/baseline_memit.py --data_path data/counterfact/counterfact-edit.json 2>&1 | tee logs/baseline_memit_.log
+scripts/run_memit_checkpointed.sh
 ```
 
 Important interpretation:
@@ -24,11 +24,80 @@ Important interpretation:
 - It is not a true 100-edit MEMIT mass edit.
 - Log lines like `Writing 1 key/value pair(s)` confirm EasyEdit is evaluating independent single-edit requests.
 - The slow part is first-run Wikipedia covariance cache generation for layers `[13, 14, 15, 16, 17]`.
+- This is the **5th attempt** to finish the MEMIT cache/baseline. The repeated failure point has been layer 17 covariance generation.
+
+## MEMIT Layer 17 Checkpointing
+
+As of 2026-05-05, EasyEdit's local covariance collector has been patched in:
+
+```text
+external/EasyEdit/easyeditor/models/rome/layer_stats.py
+```
+
+Portable patch copy:
+
+```text
+patches/0002-add-easyedit-layer-stats-partial-checkpoints.patch
+```
+
+The patch writes a resumable partial covariance file during the long layer-stat loop instead of waiting until all 1000 batch groups finish. This matters because upstream EasyEdit only writes the final `.npz` after the whole layer completes; any VM interruption before that loses the whole layer.
+
+Current layer-cache state:
+
+```text
+data/stats/gpt2-xl/wikipedia_stats/transformer.h.13.mlp.c_proj_float32_mom2_100000.npz
+data/stats/gpt2-xl/wikipedia_stats/transformer.h.14.mlp.c_proj_float32_mom2_100000.npz
+data/stats/gpt2-xl/wikipedia_stats/transformer.h.15.mlp.c_proj_float32_mom2_100000.npz
+data/stats/gpt2-xl/wikipedia_stats/transformer.h.16.mlp.c_proj_float32_mom2_100000.npz
+data/stats/gpt2-xl/wikipedia_stats/transformer.h.17.mlp.c_proj_float32_mom2_100000.npz.partial.npz
+```
+
+The layer 17 `.partial.npz` means the job can resume from the last saved batch group if it crashes during layer 17 covariance computation. The checkpoint interval is controlled by:
+
+```bash
+EASYEDIT_STATS_CHECKPOINT_INTERVAL=10
+```
+
+`scripts/run_memit_checkpointed.sh` sets this by default and writes the active log path to:
+
+```text
+logs/baseline_memit_latest.path
+```
+
+If the VM or process dies, restart from the repo root with:
+
+```bash
+tmux new-session -d -s memit scripts/run_memit_checkpointed.sh
+```
+
+Then check:
+
+```bash
+cat logs/baseline_memit_latest.path
+tail -n 80 "$(cat logs/baseline_memit_latest.path)"
+find data/stats/gpt2-xl/wikipedia_stats -maxdepth 1 -type f -printf '%f %s bytes\n' | sort
+nvidia-smi
+```
+
+Expected resume signal in the log:
+
+```text
+Resuming partial covariance stats from ...layer.h.17...partial.npz after N batch groups.
+```
+
+When layer 17 finishes, the final expected file is:
+
+```text
+data/stats/gpt2-xl/wikipedia_stats/transformer.h.17.mlp.c_proj_float32_mom2_100000.npz
+```
+
+After that final `.npz` exists, future MEMIT runs should skip all five covariance computations and move much faster.
 
 Useful checks on the remote box:
 
 ```bash
-tail -n 40 logs/baseline_memit_.log
+cat logs/baseline_memit_latest.path
+tail -n 40 "$(cat logs/baseline_memit_latest.path)"
 find data/stats/gpt2-xl/wikipedia_stats -maxdepth 1 -type f -printf '%f %TY-%Tm-%Td %TH:%TM:%TS\n' | sort
 nvidia-smi
 ps -eo pid,ppid,stat,etime,pcpu,pmem,args | rg 'baseline_memit|python scripts'
@@ -45,6 +114,14 @@ data/stats/gpt2-xl/wikipedia_stats/transformer.h.17.mlp.c_proj_float32_mom2_1000
 ```
 
 The cache files are intentionally not committed.
+
+## Resource Diagnosis
+
+This does not look like a storage problem: the layer covariance files are about 157 MB each, and the disk had roughly 28 GB free when checked on 2026-05-05.
+
+This also does not look like a T4 VRAM limitation for GPT-2 XL MEMIT covariance generation: the layer 17 run was using about 8.5 GB of 15 GB with the GPU near full utilization.
+
+The GCP error `ZONE_RESOURCE_POOL_EXHAUSTED_WITH_DETAILS` is a zone capacity/provisioning issue when trying to create a new GPU VM. It is not evidence that this job needs a different GPU type. Since the current T4 can run the workload, prefer finishing on it with checkpointing rather than repeatedly chasing new T4/L4 capacity in other zones.
 
 ## Capacity Guidance
 

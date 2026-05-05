@@ -15,6 +15,52 @@ Format for each entry:
 
 ---
 
+## 2026-05-05 — MEMIT attempt 5; layer 17 checkpointing added
+
+- MEMIT cache/baseline had been interrupted repeatedly; this is now documented as the 5th attempt.
+- Diagnosis from repo and host state:
+  - Layers 13-16 covariance caches already exist under `data/stats/gpt2-xl/wikipedia_stats/`.
+  - Layer 17 was the missing cache and repeated failure point.
+  - Disk was not the issue: roughly 28 GB free; each covariance `.npz` is about 157 MB.
+  - T4 VRAM was not the immediate issue: layer 17 ran at about 8.5 GB / 15 GB with high GPU utilization.
+  - GCP `ZONE_RESOURCE_POOL_EXHAUSTED_WITH_DETAILS` is a zone capacity/provisioning problem for new GPU VMs, not evidence that the current T4 cannot run the job.
+- Root cause of lost progress: upstream EasyEdit's stats collector only saves the covariance `.npz` after a full layer finishes. If the VM/process dies mid-layer, the layer restarts from zero.
+- Added a local checkpoint patch in `external/EasyEdit/easyeditor/models/rome/layer_stats.py`:
+  - writes `*.npz.partial.npz` during covariance computation
+  - reloads the partial file on restart
+  - skips already-processed batch groups
+  - removes the partial file once the final `.npz` exists
+- Added portable patch copy: `patches/0002-add-easyedit-layer-stats-partial-checkpoints.patch`.
+- Added `scripts/run_memit_checkpointed.sh`:
+  - activates `cs263-project`
+  - sets `EASYEDIT_STATS_CHECKPOINT_INTERVAL=10` by default
+  - launches `scripts/baseline_memit.py`
+  - writes latest log path to `logs/baseline_memit_latest.path`
+- Current layer 17 partial checkpoint observed:
+  - `data/stats/gpt2-xl/wikipedia_stats/transformer.h.17.mlp.c_proj_float32_mom2_100000.npz.partial.npz`
+- Resume command after crash/interruption:
+
+```bash
+tmux new-session -d -s memit scripts/run_memit_checkpointed.sh
+```
+
+- Check progress with:
+
+```bash
+cat logs/baseline_memit_latest.path
+tail -n 80 "$(cat logs/baseline_memit_latest.path)"
+find data/stats/gpt2-xl/wikipedia_stats -maxdepth 1 -type f -printf '%f %s bytes\n' | sort
+nvidia-smi
+```
+
+- Expected resume log line:
+
+```text
+Resuming partial covariance stats from ...partial.npz after N batch groups.
+```
+
+Why this was not done earlier: the earlier assumption was that EasyEdit's layer-level cache was sufficient. It is sufficient only after a full layer finishes. It does not protect long mid-layer covariance computation, which became obvious after repeated interruptions on layer 17.
+
 ## 2026-05-03 — Expanded probe set and local tooling
 
 - Added `scripts/audit_probes.py`, a no-model validator for the probe set. It checks unique IDs, valid edit keys/categories/types, expected answer fields, per-edit/category/type coverage, and target leakage in `implicit_edit` prompts.
