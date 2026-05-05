@@ -110,6 +110,8 @@ CLAUDE.md             # context for Claude Code sessions
 |------|--------|---------|---|---------|----------|----------|
 | 2026-05-02 | ROME | CounterFact-smoke | 5 | 1.000 | 0.933 | — |
 | 2026-05-03 | ROME | CounterFact | 100 | 1.000 | 0.540 | 0.790 |
+| 2026-05-05 | MEMIT | CounterFact | 100 | 0.810 | 0.230 | 0.980 |
+| 2026-05-05 | MEMIT-batch | CounterFact-batch-10 | 10 | 0.900 | 0.100 | 1.000 |
 
 Paper targets (ROME, GPT-2 XL): rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%.
 The EasyEdit CounterFact rephrase prompts are noisy, so `rephrase_acc` is relative-only for method comparisons.

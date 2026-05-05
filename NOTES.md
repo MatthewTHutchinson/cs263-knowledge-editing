@@ -15,6 +15,36 @@ Format for each entry:
 
 ---
 
+## 2026-05-05 — MEMIT cache complete; batch-10 smoke passed
+
+- Pulled latest `main`; repo was already up to date.
+- Verified local lightweight checks:
+  - `python3 -m unittest discover -s tests` passed.
+  - `python3 scripts/audit_probes.py --min_total 100 --strict` passed with 100 probes.
+- Confirmed MEMIT covariance cache is fully warm for GPT-2 XL layers 13-17:
+  - all five final `data/stats/gpt2-xl/wikipedia_stats/transformer.h.*.mlp.c_proj_float32_mom2_100000.npz` files exist.
+  - no tmux MEMIT job was active before launch.
+  - T4 was idle before launch.
+- Ran true MEMIT batch smoke:
+
+```bash
+python scripts/batch_memit.py \
+  --data_path data/counterfact/counterfact-edit.json \
+  --batch_sizes 10 \
+  --seed 42
+```
+
+- Log: `logs/batch_memit_20260505_082808.log`
+- The log confirms this is a real batch/mass edit: `Writing 10 key/value pair(s)` for layers 13-17, with cached covariance files loaded.
+- Result appended to `results/runs.jsonl`:
+  - method: `MEMIT-batch`
+  - dataset: `CounterFact-batch-10`
+  - n=10, seed=42
+  - rewrite_acc=0.900
+  - rephrase_acc=0.100
+  - locality_acc=1.000
+- Next: run the larger MEMIT batch sweep, likely `--batch_sizes 50,100`, then run IKE baseline.
+
 ## 2026-05-05 — MEMIT attempt 5; layer 17 checkpointing added
 
 - MEMIT cache/baseline had been interrupted repeatedly; this is now documented as the 5th attempt.

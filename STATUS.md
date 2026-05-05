@@ -11,7 +11,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | Method | Type | Owner | Status |
 |--------|------|-------|--------|
 | ROME | Parameter-based (rank-one) | Matthew | Baseline done ✓ |
-| MEMIT | Parameter-based (batch/mass edit) | Matthew | Single-edit baseline running; batch script fixed for EasyEdit-compatible metrics, not yet run |
+| MEMIT | Parameter-based (batch/mass edit) | Matthew | Single-edit baseline done; true batch-10 smoke done |
 | IKE | Retrieval / in-context | Matthew | Baseline script fixed to build retrieval embeddings, not yet run |
 
 ---
@@ -37,8 +37,8 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | ROME 100-edit baseline | Done | rewrite=1.00, rephrase=0.54, locality=0.79 |
 | ROME vs. paper validation | Partial | rewrite/locality ✓, rephrase gap under investigation |
 | Rephrase failure inspection | Done | `scripts/inspect_rephrase_failures.py`; 34/46 failures have prompt-quality flags |
-| MEMIT single-edit baseline | Running on GCP | `scripts/baseline_memit.py`; covariance cache takes ~3–4 h on T4 (not 45 min) |
-| MEMIT true batch/mass-edit eval | Ready to run | `scripts/batch_memit.py` applies all N edits in one update and uses EasyEdit-compatible rewrite/rephrase/locality metrics |
+| MEMIT single-edit baseline | Done | `scripts/baseline_memit.py`; covariance cache is warm for layers 13-17 |
+| MEMIT true batch/mass-edit eval | Smoke passed | Batch-10 run confirms `Writing 10 key/value pair(s)` and cached covariance reuse; expand sweep next |
 | IKE baseline | Ready to run | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation |
 | RippleEdits download + eval | Not started | |
 | MQuAKE download + eval | Not started | |
@@ -58,6 +58,8 @@ See `results/runs.jsonl` for machine-readable records. Summary:
 |------|--------|---------|---|---------|----------|----------|
 | 2026-05-02 | ROME | CounterFact-smoke | 5 | 1.000 | 0.933 | — |
 | 2026-05-03 | ROME | CounterFact | 100 | 1.000 | 0.540 | 0.790 |
+| 2026-05-05 | MEMIT | CounterFact | 100 | 0.810 | 0.230 | 0.980 |
+| 2026-05-05 | MEMIT-batch | CounterFact-batch-10 | 10 | 0.900 | 0.100 | 1.000 |
 
 **Paper targets (ROME, GPT-2 XL, CounterFact):** rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%
 

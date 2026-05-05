@@ -2,29 +2,18 @@
 
 Snapshot date: 2026-05-05
 
-This is the working handoff for continuing locally while the GCP MEMIT job runs.
+This is the working handoff for continuing locally after the GCP MEMIT cache/baseline run.
 
 ## Current Remote Job
 
-MEMIT is running on the GCP T4 in tmux session `memit`.
-
-```bash
-tmux attach -t memit
-```
-
-Current command/launcher:
-
-```bash
-scripts/run_memit_checkpointed.sh
-```
+No MEMIT tmux job is currently running.
 
 Important interpretation:
 
-- This is a MEMIT single-edit sanity baseline/cache warmup.
-- It is not a true 100-edit MEMIT mass edit.
-- Log lines like `Writing 1 key/value pair(s)` confirm EasyEdit is evaluating independent single-edit requests.
-- The slow part is first-run Wikipedia covariance cache generation for layers `[13, 14, 15, 16, 17]`.
-- This is the **5th attempt** to finish the MEMIT cache/baseline. The repeated failure point has been layer 17 covariance generation.
+- The MEMIT single-edit sanity baseline/cache warmup finished on 2026-05-05.
+- It was not a true 100-edit MEMIT mass edit; its logs used `Writing 1 key/value pair(s)` because EasyEdit evaluated independent single-edit requests.
+- The first-run Wikipedia covariance cache generation for layers `[13, 14, 15, 16, 17]` is now complete.
+- A true MEMIT batch-10 smoke also finished on 2026-05-05 and logged `Writing 10 key/value pair(s)`.
 
 ## MEMIT Layer 17 Checkpointing
 
@@ -49,10 +38,10 @@ data/stats/gpt2-xl/wikipedia_stats/transformer.h.13.mlp.c_proj_float32_mom2_1000
 data/stats/gpt2-xl/wikipedia_stats/transformer.h.14.mlp.c_proj_float32_mom2_100000.npz
 data/stats/gpt2-xl/wikipedia_stats/transformer.h.15.mlp.c_proj_float32_mom2_100000.npz
 data/stats/gpt2-xl/wikipedia_stats/transformer.h.16.mlp.c_proj_float32_mom2_100000.npz
-data/stats/gpt2-xl/wikipedia_stats/transformer.h.17.mlp.c_proj_float32_mom2_100000.npz.partial.npz
+data/stats/gpt2-xl/wikipedia_stats/transformer.h.17.mlp.c_proj_float32_mom2_100000.npz
 ```
 
-The layer 17 `.partial.npz` means the job can resume from the last saved batch group if it crashes during layer 17 covariance computation. The checkpoint interval is controlled by:
+The layer 17 final `.npz` exists, so future MEMIT runs should skip all five covariance computations and move much faster. If covariance cache generation ever has to be repeated, the checkpoint interval is controlled by:
 
 ```bash
 EASYEDIT_STATS_CHECKPOINT_INTERVAL=10
@@ -64,7 +53,7 @@ EASYEDIT_STATS_CHECKPOINT_INTERVAL=10
 logs/baseline_memit_latest.path
 ```
 
-If the VM or process dies, restart from the repo root with:
+If a future single-edit cache warmup dies during covariance generation, restart from the repo root with:
 
 ```bash
 tmux new-session -d -s memit scripts/run_memit_checkpointed.sh
@@ -79,19 +68,24 @@ find data/stats/gpt2-xl/wikipedia_stats -maxdepth 1 -type f -printf '%f %s bytes
 nvidia-smi
 ```
 
-Expected resume signal in the log:
+Expected resume signal in the log when resuming a partial covariance job:
 
 ```text
 Resuming partial covariance stats from ...layer.h.17...partial.npz after N batch groups.
 ```
 
-When layer 17 finishes, the final expected file is:
+The final layer 17 file now exists:
 
 ```text
 data/stats/gpt2-xl/wikipedia_stats/transformer.h.17.mlp.c_proj_float32_mom2_100000.npz
 ```
 
-After that final `.npz` exists, future MEMIT runs should skip all five covariance computations and move much faster.
+Observed batch-10 smoke result:
+
+```text
+MEMIT-batch CounterFact-batch-10 seed=42
+rewrite_acc=0.900 rephrase_acc=0.100 locality_acc=1.000
+```
 
 Useful checks on the remote box:
 
@@ -166,9 +160,9 @@ Future benchmark metrics:
 
 ## Immediate Local Tasks
 
-### 1. True MEMIT Batch Script
+### 1. True MEMIT Batch Sweep
 
-Goal: run the script that performs one model edit containing many facts, then evaluates the edited model.
+Goal: expand the script that performs one model edit containing many facts, then evaluates the edited model.
 
 Suggested file:
 
@@ -193,10 +187,10 @@ python scripts/batch_memit.py \
   --seed 42
 ```
 
-Start with small dry runs once GPU is free:
+Batch-10 smoke has passed. Next likely run:
 
 ```bash
-python scripts/batch_memit.py --data_path data/counterfact/counterfact-edit.json --batch_sizes 10 --seed 42
+python scripts/batch_memit.py --data_path data/counterfact/counterfact-edit.json --batch_sizes 50,100 --seed 42
 ```
 
 ### 2. IKE Baseline
