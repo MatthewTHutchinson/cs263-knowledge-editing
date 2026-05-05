@@ -54,6 +54,7 @@ results/runs/
 results/checkpoints/
 results/figures/
 results/csv/
+results/IKE/embedding/
 !results/**/README.md
 
 # External clones (we reference them, don't vendor them)
