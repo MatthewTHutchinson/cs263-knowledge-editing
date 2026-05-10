@@ -21,7 +21,7 @@ Format for each entry:
 - Created preservation archive at `/home/matthewthutchinson1/cs263-memit-preserve-20260510.tar.gz`.
 - Archive SHA256: `f15b0cd7f85bf9b597572476f083f6151358dcbfe4474e99ca097f6471b3c73b`.
 - Archive includes `data/stats/`, `results/`, `logs/`, `configs/`, `scripts/`, `patches/`, and project notes.
-- Important: `data/stats/`, `logs/`, and `results/IKE/embedding/` are gitignored. The MEMIT covariance cache is not on GitHub and must be restored from the archive or GCS/local copy.
+- Important: as of the follow-up LFS update, the stable MEMIT covariance `.npz` files are tracked with Git LFS. `logs/`, `results/IKE/embedding/`, `external/EasyEdit/`, model caches, and conda environments remain gitignored and should be restored from the archive only if needed.
 - GitHub state checked: local `main` is aligned with `origin/main` at commit `20dd0cf`; only documentation edits were uncommitted at the time of this note.
 - Recommendation for replacement VM: use standard/on-demand GPU provisioning rather than Spot/preemptible for long MEMIT/probe jobs. It costs more, but avoids preemptions that can interrupt multi-hour runs.
 - Next: finish downloading or uploading the archive, create the replacement VM, restore the archive into a fresh clone, then run `python scripts/show_results.py --all` and verify the five MEMIT `.npz` files exist.

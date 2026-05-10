@@ -241,18 +241,19 @@ Tracked in GitHub:
 - configs under `configs/`
 - patches under `patches/`
 - CounterFact data under `data/counterfact/`
+- stable MEMIT/ROME covariance `.npz` files under `data/stats/gpt2-xl/wikipedia_stats/`, via Git LFS
 - structured result summary at `results/runs.jsonl`
 - project docs and notes
 
 Intentionally not tracked:
 
-- `data/stats/` MEMIT/ROME covariance cache
+- other `data/stats/` generated files outside the stable GPT-2 XL `.npz` cache
 - `logs/`
 - `results/IKE/embedding/`
 - `external/EasyEdit/`
 - model/download caches and conda environments
 
-Before deleting the old VM, make sure the backup archive has either been downloaded locally or copied to GCS:
+Before deleting the old VM, make sure the backup archive has either been downloaded locally or copied to GCS. This remains useful even with Git LFS because it includes logs and transition state:
 
 ```text
 /home/matthewthutchinson1/cs263-memit-preserve-20260510.tar.gz
@@ -284,9 +285,11 @@ Drawbacks of non-preemptible/on-demand:
 
 ### Restore on the new VM
 
-After cloning the repo and installing EasyEdit, restore the archive from the repo root:
+After cloning the repo and installing EasyEdit, pull the LFS cache or restore the archive from the repo root:
 
 ```bash
+git lfs install
+git lfs pull
 tar -xzf ~/cs263-memit-preserve-20260510.tar.gz
 sha256sum ~/cs263-memit-preserve-20260510.tar.gz
 find data/stats/gpt2-xl/wikipedia_stats -maxdepth 1 -type f -name '*.npz' -printf '%f %s bytes\n' | sort

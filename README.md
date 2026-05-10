@@ -27,18 +27,25 @@ pip install -r external/EasyEdit/requirements.txt
 ```
 
 **Note**: `data/counterfact/` is included in the repo — no separate download needed.
-`data/stats/` (ROME/MEMIT Wikipedia covariance cache) will recompute on first run; MEMIT's GPT-2 XL cache can take several hours on T4.
+The stable GPT-2 XL MEMIT/ROME covariance cache files under `data/stats/gpt2-xl/wikipedia_stats/*.npz` are tracked with Git LFS because recomputing them can take several hours on T4.
 
-### Restoring the MEMIT cache from VM backup
+### Restoring the MEMIT cache
 
-The expensive MEMIT covariance cache is intentionally not committed to Git because the five `.npz` files are about 782 MB total and each file is over GitHub's normal 100 MB file limit. Before replacing the `cs263-t4` VM, preserve or restore this archive:
+The expensive MEMIT covariance cache is tracked with Git LFS. Make sure Git LFS is installed before cloning or pulling:
+
+```bash
+git lfs install
+git lfs pull
+```
+
+There is also a VM backup archive for transition safety:
 
 ```text
 /home/matthewthutchinson1/cs263-memit-preserve-20260510.tar.gz
 sha256 f15b0cd7f85bf9b597572476f083f6151358dcbfe4474e99ca097f6471b3c73b
 ```
 
-The archive contains `data/stats/`, `results/`, `logs/`, `configs/`, `scripts/`, `patches/`, and the project notes. On a fresh clone, restore it from the repo root with:
+The archive contains `data/stats/`, `results/`, `logs/`, `configs/`, `scripts/`, `patches/`, and the project notes. If restoring from the archive instead of LFS, run from the repo root:
 
 ```bash
 tar -xzf ~/cs263-memit-preserve-20260510.tar.gz

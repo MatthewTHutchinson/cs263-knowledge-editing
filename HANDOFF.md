@@ -6,7 +6,7 @@ This is the working handoff for continuing locally after the GCP MEMIT cache/bas
 
 ## 2026-05-10 VM Replacement Notes
 
-The current Git branch is aligned with GitHub `origin/main` at commit `20dd0cf`, but the expensive runtime artifacts are not in Git. Preserve this archive before deleting or abandoning the old VM:
+The expensive MEMIT covariance `.npz` files are tracked with Git LFS. The broader runtime artifacts are not all in Git, so preserve this archive before deleting or abandoning the old VM:
 
 ```text
 /home/matthewthutchinson1/cs263-memit-preserve-20260510.tar.gz
@@ -23,8 +23,10 @@ It contains:
 On the replacement VM:
 
 ```bash
+git lfs install
 git clone git@github.com:MatthewTHutchinson/cs263-knowledge-editing.git
 cd cs263-knowledge-editing
+git lfs pull
 git clone https://github.com/zjunlp/EasyEdit external/EasyEdit
 cd external/EasyEdit && patch -p1 < ../../patches/0001-fix-nethook-pytorch29-with_kwargs-signature.patch && cd ../..
 tar -xzf ~/cs263-memit-preserve-20260510.tar.gz

@@ -44,6 +44,13 @@ tb_logs/
 data/raw/
 data/downloads/
 data/stats/
+!data/stats/
+data/stats/*
+!data/stats/gpt2-xl/
+data/stats/gpt2-xl/*
+!data/stats/gpt2-xl/wikipedia_stats/
+data/stats/gpt2-xl/wikipedia_stats/*
+!data/stats/gpt2-xl/wikipedia_stats/*.npz
 data/counterfact_full/
 data/mquake_full/
 data/rippleedits_full/
