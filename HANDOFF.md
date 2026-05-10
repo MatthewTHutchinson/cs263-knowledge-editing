@@ -4,6 +4,36 @@ Snapshot date: 2026-05-05
 
 This is the working handoff for continuing locally after the GCP MEMIT cache/baseline run.
 
+## 2026-05-10 VM Replacement Notes
+
+The current Git branch is aligned with GitHub `origin/main` at commit `20dd0cf`, but the expensive runtime artifacts are not in Git. Preserve this archive before deleting or abandoning the old VM:
+
+```text
+/home/matthewthutchinson1/cs263-memit-preserve-20260510.tar.gz
+sha256 f15b0cd7f85bf9b597572476f083f6151358dcbfe4474e99ca097f6471b3c73b
+```
+
+It contains:
+
+- `data/stats/gpt2-xl/wikipedia_stats/*.npz` for MEMIT/ROME covariance reuse
+- `results/`, including `results/runs.jsonl`
+- `logs/`, including the long MEMIT logs
+- `configs/`, `scripts/`, `patches/`, and project notes
+
+On the replacement VM:
+
+```bash
+git clone git@github.com:MatthewTHutchinson/cs263-knowledge-editing.git
+cd cs263-knowledge-editing
+git clone https://github.com/zjunlp/EasyEdit external/EasyEdit
+cd external/EasyEdit && patch -p1 < ../../patches/0001-fix-nethook-pytorch29-with_kwargs-signature.patch && cd ../..
+tar -xzf ~/cs263-memit-preserve-20260510.tar.gz
+sha256sum ~/cs263-memit-preserve-20260510.tar.gz
+python scripts/show_results.py --all
+```
+
+For the new VM, use a standard/on-demand GPU VM rather than Spot/preemptible while finishing long MEMIT/probe jobs. Spot/preemptible is cheaper but can be terminated by GCP, which is the main risk for long cache-generation and evaluation runs. On-demand costs more, but the practical risk is lower. Stop the VM manually when idle to control cost.
+
 ## Current Remote Job
 
 No MEMIT tmux job is currently running.

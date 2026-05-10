@@ -12,7 +12,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 |--------|------|-------|--------|
 | ROME | Parameter-based (rank-one) | Matthew | Baseline done ✓ |
 | MEMIT | Parameter-based (batch/mass edit) | Matthew | Single-edit baseline done; true batch-10 smoke done |
-| IKE | Retrieval / in-context | Matthew | Baseline script fixed to build retrieval embeddings, not yet run |
+| IKE | Retrieval / in-context | Matthew | 5-edit baseline run recorded; 50/100 runs pending |
 
 ---
 
@@ -38,8 +38,8 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | ROME vs. paper validation | Partial | rewrite/locality ✓, rephrase gap under investigation |
 | Rephrase failure inspection | Done | `scripts/inspect_rephrase_failures.py`; 34/46 failures have prompt-quality flags |
 | MEMIT single-edit baseline | Done | `scripts/baseline_memit.py`; covariance cache is warm for layers 13-17 |
-| MEMIT true batch/mass-edit eval | Smoke passed | Batch-10 run confirms `Writing 10 key/value pair(s)` and cached covariance reuse; expand sweep next |
-| IKE baseline | Ready to run | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation |
+| MEMIT true batch/mass-edit eval | Done | Batch-10, 50, and 100 runs confirm `Writing N key/value pair(s)` and cached covariance reuse |
+| IKE baseline | In progress | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation; 5-edit run logged |
 | RippleEdits download + eval | Not started | |
 | MQuAKE download + eval | Not started | |
 | Probe set design | Done | 100 probes across 5 categories in `src/probes/probe_set.py`; `probe_type` separates implicit, target-conditioned, and supplied-fact prompts |
@@ -60,6 +60,9 @@ See `results/runs.jsonl` for machine-readable records. Summary:
 | 2026-05-03 | ROME | CounterFact | 100 | 1.000 | 0.540 | 0.790 |
 | 2026-05-05 | MEMIT | CounterFact | 100 | 0.810 | 0.230 | 0.980 |
 | 2026-05-05 | MEMIT-batch | CounterFact-batch-10 | 10 | 0.900 | 0.100 | 1.000 |
+| 2026-05-05 | MEMIT-batch | CounterFact-batch-50 | 50 | 0.820 | 0.180 | 0.960 |
+| 2026-05-05 | MEMIT-batch | CounterFact-batch-100 | 100 | 0.820 | 0.260 | 0.900 |
+| 2026-05-05 | IKE | CounterFact | 5 | 1.000 | 1.000 | 0.200 |
 
 **Paper targets (ROME, GPT-2 XL, CounterFact):** rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%
 
@@ -80,7 +83,7 @@ Original ROME repo cross-validation also deferred — rewrite (1.000) and locali
 | `locality_acc` | CounterFact locality prompt | Agreement between post-edit and pre-edit predictions on locality prompts. | Measures preservation, not necessarily correctness against `locality_ground_truth`. |
 | `paper_target` | Run metadata | Published reference value for the corresponding method/model/dataset when available. | Use only when prompt/dataset formatting is comparable. |
 
-Important distinction: in the single-edit ROME/MEMIT baselines, `n_samples=100` means 100 independent edit/evaluate/restore trials. In `MEMIT-batch`, `n_samples=100` means 100 facts inserted into one model update before evaluation.
+Important distinction: in the single-edit ROME/MEMIT baselines, `n_samples=100` means 100 independent edit/evaluate/restore trials. In `MEMIT-batch`, `n_samples=100` means 100 facts inserted into one model update before evaluation. IKE is non-parametric, so `n_samples` means the number of in-context edit records evaluated, not stored weights.
 
 ### Probe metrics
 
@@ -224,4 +227,94 @@ conda activate cs263-project
 pip install -r external/EasyEdit/requirements.txt
 # data/counterfact/ is in the repo — no download needed
 # data/stats/ will recompute on first ROME/MEMIT run
+```
+
+## 2026-05-10 VM Transition Checklist
+
+### GitHub state
+
+`main` is aligned with `origin/main` at commit `20dd0cf` as of the 2026-05-10 VM transition check. The code, configs, tracked results summary, tests, and patches needed to recreate the project are in GitHub.
+
+Tracked in GitHub:
+
+- experiment scripts under `scripts/`
+- configs under `configs/`
+- patches under `patches/`
+- CounterFact data under `data/counterfact/`
+- structured result summary at `results/runs.jsonl`
+- project docs and notes
+
+Intentionally not tracked:
+
+- `data/stats/` MEMIT/ROME covariance cache
+- `logs/`
+- `results/IKE/embedding/`
+- `external/EasyEdit/`
+- model/download caches and conda environments
+
+Before deleting the old VM, make sure the backup archive has either been downloaded locally or copied to GCS:
+
+```text
+/home/matthewthutchinson1/cs263-memit-preserve-20260510.tar.gz
+sha256 f15b0cd7f85bf9b597572476f083f6151358dcbfe4474e99ca097f6471b3c73b
+```
+
+### New VM recommendation
+
+For long MEMIT/probe work, prefer a regular on-demand GPU VM rather than a Spot/preemptible VM. Spot/preemptible is cheaper, but GCP can terminate it with short notice, which is exactly the failure mode that wastes long MEMIT cache jobs. On-demand costs more while running, but it avoids preemption and is the safer default until the remaining experiments are complete.
+
+Recommended shape:
+
+```text
+Zone: us-central1-a or another zone with T4 capacity
+GPU: 1 x NVIDIA T4
+Machine: n1-standard-4 or g2-standard-* if using L4 instead
+Boot disk: Ubuntu 22.04 LTS, 100-200 GB balanced persistent disk
+Provisioning model: Standard/on-demand, not Spot
+Automatic restart: on
+Maintenance behavior: terminate is normal for GPU VMs
+```
+
+Drawbacks of non-preemptible/on-demand:
+
+- higher hourly cost than Spot/preemptible
+- GPU VMs still cannot live-migrate during host maintenance, so a rare maintenance event can still stop the VM
+- idle cost accumulates quickly; stop the VM manually when not running jobs
+- GPU capacity can still be scarce by zone, so keeping a working VM stopped is often useful
+
+### Restore on the new VM
+
+After cloning the repo and installing EasyEdit, restore the archive from the repo root:
+
+```bash
+tar -xzf ~/cs263-memit-preserve-20260510.tar.gz
+sha256sum ~/cs263-memit-preserve-20260510.tar.gz
+find data/stats/gpt2-xl/wikipedia_stats -maxdepth 1 -type f -name '*.npz' -printf '%f %s bytes\n' | sort
+python scripts/show_results.py --all
+```
+
+Expected MEMIT stats files:
+
+```text
+data/stats/gpt2-xl/wikipedia_stats/transformer.h.13.mlp.c_proj_float32_mom2_100000.npz
+data/stats/gpt2-xl/wikipedia_stats/transformer.h.14.mlp.c_proj_float32_mom2_100000.npz
+data/stats/gpt2-xl/wikipedia_stats/transformer.h.15.mlp.c_proj_float32_mom2_100000.npz
+data/stats/gpt2-xl/wikipedia_stats/transformer.h.16.mlp.c_proj_float32_mom2_100000.npz
+data/stats/gpt2-xl/wikipedia_stats/transformer.h.17.mlp.c_proj_float32_mom2_100000.npz
+```
+
+### Long-run hygiene
+
+Run GPU jobs inside `tmux` and write logs under `logs/`. For MEMIT covariance jobs, use:
+
+```bash
+tmux new-session -d -s memit scripts/run_memit_checkpointed.sh
+tail -f "$(cat logs/baseline_memit_latest.path)"
+```
+
+For future one-off runs, prefer explicit log files:
+
+```bash
+mkdir -p logs
+tmux new-session -d -s probes 'conda activate cs263-project && python scripts/run_probes.py --method MEMIT 2>&1 | tee logs/probes_memit_$(date +%Y%m%d_%H%M%S).log'
 ```

@@ -29,6 +29,33 @@ pip install -r external/EasyEdit/requirements.txt
 **Note**: `data/counterfact/` is included in the repo — no separate download needed.
 `data/stats/` (ROME/MEMIT Wikipedia covariance cache) will recompute on first run; MEMIT's GPT-2 XL cache can take several hours on T4.
 
+### Restoring the MEMIT cache from VM backup
+
+The expensive MEMIT covariance cache is intentionally not committed to Git because the five `.npz` files are about 782 MB total and each file is over GitHub's normal 100 MB file limit. Before replacing the `cs263-t4` VM, preserve or restore this archive:
+
+```text
+/home/matthewthutchinson1/cs263-memit-preserve-20260510.tar.gz
+sha256 f15b0cd7f85bf9b597572476f083f6151358dcbfe4474e99ca097f6471b3c73b
+```
+
+The archive contains `data/stats/`, `results/`, `logs/`, `configs/`, `scripts/`, `patches/`, and the project notes. On a fresh clone, restore it from the repo root with:
+
+```bash
+tar -xzf ~/cs263-memit-preserve-20260510.tar.gz
+sha256sum ~/cs263-memit-preserve-20260510.tar.gz
+find data/stats/gpt2-xl/wikipedia_stats -maxdepth 1 -type f -name '*.npz' -printf '%f %s bytes\n' | sort
+```
+
+Expected cache files:
+
+```text
+transformer.h.13.mlp.c_proj_float32_mom2_100000.npz
+transformer.h.14.mlp.c_proj_float32_mom2_100000.npz
+transformer.h.15.mlp.c_proj_float32_mom2_100000.npz
+transformer.h.16.mlp.c_proj_float32_mom2_100000.npz
+transformer.h.17.mlp.c_proj_float32_mom2_100000.npz
+```
+
 ---
 
 ## Running experiments
@@ -78,7 +105,7 @@ python -m unittest discover -s tests
 | Methods | ROME, MEMIT, IKE |
 | Model | GPT-2 XL (1.5B); GPT-J (6B) optional |
 | Benchmarks | CounterFact, RippleEdits, MQuAKE |
-| Compute | GCP T4 (preemptible) |
+| Compute | GCP T4; prefer non-preemptible/on-demand for long MEMIT cache or probe runs |
 | Novel eval | 100 diagnostic probes (contradiction / method-sensitivity / chain-of-thought) |
 
 ---
@@ -112,6 +139,9 @@ CLAUDE.md             # context for Claude Code sessions
 | 2026-05-03 | ROME | CounterFact | 100 | 1.000 | 0.540 | 0.790 |
 | 2026-05-05 | MEMIT | CounterFact | 100 | 0.810 | 0.230 | 0.980 |
 | 2026-05-05 | MEMIT-batch | CounterFact-batch-10 | 10 | 0.900 | 0.100 | 1.000 |
+| 2026-05-05 | MEMIT-batch | CounterFact-batch-50 | 50 | 0.820 | 0.180 | 0.960 |
+| 2026-05-05 | MEMIT-batch | CounterFact-batch-100 | 100 | 0.820 | 0.260 | 0.900 |
+| 2026-05-05 | IKE | CounterFact | 5 | 1.000 | 1.000 | 0.200 |
 
 Paper targets (ROME, GPT-2 XL): rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%.
 The EasyEdit CounterFact rephrase prompts are noisy, so `rephrase_acc` is relative-only for method comparisons.
@@ -127,7 +157,7 @@ These are the baseline metrics reported by `baseline_rome.py`, `baseline_memit.p
 | `rewrite_acc` | efficacy, reliability, edit success | Token-level exact-match accuracy for the new target on the original edit prompt after editing. | Measures whether the edit took effect on the exact requested fact. |
 | `rephrase_acc` | generalization, paraphrase success | Token-level exact-match accuracy for the same new target on a rephrased prompt. | Measures surface-form transfer. In this repo it is relative-only because EasyEdit's CounterFact rephrase prompts are noisy. |
 | `locality_acc` | specificity, neighborhood success | Agreement between post-edit and pre-edit predictions on unrelated locality prompts. | Measures whether unrelated facts remain unchanged. For MEMIT batch, this is explicitly computed as post-edit locality outputs matching pre-edit locality outputs. |
-| `n_samples` | edit count | Number of evaluated edit records. | For ROME/MEMIT single-edit scripts this means independent single-edit trials; for `MEMIT-batch` it means facts inserted into one edited model. |
+| `n_samples` | edit count | Number of evaluated edit records. | For ROME/MEMIT single-edit scripts this means independent single-edit trials; for `MEMIT-batch` it means facts inserted into one edited model; for IKE it means in-context edit records, not stored weights. |
 | `seed` | sample seed | Random seed used to sample CounterFact records. | Needed for reproducibility of 100-edit subsets. |
 
 For IKE, the same metric names are used, but the mechanism is different: no weights are modified. The post-edit behavior is base GPT-2 XL plus retrieved in-context examples.
