@@ -11,8 +11,8 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | Method | Type | Owner | Status |
 |--------|------|-------|--------|
 | ROME | Parameter-based (rank-one) | Matthew | Baseline done ✓ |
-| MEMIT | Parameter-based (batch/mass edit) | Matthew | Single-edit baseline done; true batch-10 smoke done |
-| IKE | Retrieval / in-context | Matthew | 5-edit baseline run recorded; 50/100 runs pending |
+| MEMIT | Parameter-based (batch/mass edit) | Matthew | Single-edit baseline done; true batch 10/50/100 done |
+| IKE | Retrieval / in-context | Matthew | 5-edit baseline recorded locally; IKE-50 completed on VM; IKE-100 running on VM |
 
 ---
 
@@ -39,7 +39,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | Rephrase failure inspection | Done | `scripts/inspect_rephrase_failures.py`; 34/46 failures have prompt-quality flags |
 | MEMIT single-edit baseline | Done | `scripts/baseline_memit.py`; covariance cache is warm for layers 13-17 |
 | MEMIT true batch/mass-edit eval | Done | Batch-10, 50, and 100 runs confirm `Writing N key/value pair(s)` and cached covariance reuse |
-| IKE baseline | In progress | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation; 5-edit run logged |
+| IKE baseline | In progress | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation; local repo has 5-edit run logged, replacement VM has completed IKE-50, and IKE-100 is currently running |
 | RippleEdits download + eval | Not started | |
 | MQuAKE download + eval | Not started | |
 | Probe set design | Done | 100 probes across 5 categories in `src/probes/probe_set.py`; `probe_type` separates implicit, target-conditioned, and supplied-fact prompts |
@@ -63,6 +63,8 @@ See `results/runs.jsonl` for machine-readable records. Summary:
 | 2026-05-05 | MEMIT-batch | CounterFact-batch-50 | 50 | 0.820 | 0.180 | 0.960 |
 | 2026-05-05 | MEMIT-batch | CounterFact-batch-100 | 100 | 0.820 | 0.260 | 0.900 |
 | 2026-05-05 | IKE | CounterFact | 5 | 1.000 | 1.000 | 0.200 |
+
+IKE-50 has completed on the replacement VM and IKE-100 is currently running there. The VM results still need to be copied back into local `results/runs.jsonl` before updating this table with final IKE-50/100 metrics.
 
 **Paper targets (ROME, GPT-2 XL, CounterFact):** rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%
 

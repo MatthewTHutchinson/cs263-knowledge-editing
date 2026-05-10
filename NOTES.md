@@ -15,6 +15,23 @@ Format for each entry:
 
 ---
 
+## 2026-05-10 — Markdown docs cleaned up during IKE runs
+
+- Replacement VM is active.
+- IKE-50 has run on the VM.
+- IKE-100 is currently running on the VM.
+- Local `results/runs.jsonl` still only contains the earlier IKE-5 record; sync the VM results before updating final tables.
+- Cleaned root Markdown docs down to:
+  - `README.md`: setup, commands, metric definitions, stable summary
+  - `STATUS.md`: current project state and next actions
+  - `NOTES.md`: chronological working log
+- Removed stale session/migration artifacts:
+  - `HANDOFF.md`
+  - `NEXT_CODEX_PROMPT.md`
+  - `CLAUDE.md`
+
+---
+
 ## 2026-05-10 — VM transition backup created
 
 - Current VM: `cs263-t4` in `us-central1-a`, project `cs263-project-494118`.

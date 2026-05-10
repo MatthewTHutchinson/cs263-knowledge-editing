@@ -26,6 +26,15 @@ conda activate cs263-project
 pip install -r external/EasyEdit/requirements.txt
 ```
 
+On a fresh Ubuntu GPU VM, install runtime tools first:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y git-lfs tmux
+```
+
+Use Ubuntu 22.04 with Python 3.10 in the `cs263-project` conda environment. Avoid system Python 3.12 for this project because EasyEdit and its pinned dependencies are older.
+
 **Note**: `data/counterfact/` is included in the repo — no separate download needed.
 The stable GPT-2 XL MEMIT/ROME covariance cache files under `data/stats/gpt2-xl/wikipedia_stats/*.npz` are tracked with Git LFS because recomputing them can take several hours on T4.
 
@@ -36,6 +45,7 @@ The expensive MEMIT covariance cache is tracked with Git LFS. Make sure Git LFS 
 ```bash
 git lfs install
 git lfs pull
+git lfs ls-files --size
 ```
 
 There is also a VM backup archive for transition safety:
@@ -48,9 +58,11 @@ sha256 f15b0cd7f85bf9b597572476f083f6151358dcbfe4474e99ca097f6471b3c73b
 The archive contains `data/stats/`, `results/`, `logs/`, `configs/`, `scripts/`, `patches/`, and the project notes. If restoring from the archive instead of LFS, run from the repo root:
 
 ```bash
-tar -xzf ~/cs263-memit-preserve-20260510.tar.gz
+gcloud storage cp gs://cs263-project-494118-memit-backup/cs263-memit-preserve-20260510.tar.gz ~/
 sha256sum ~/cs263-memit-preserve-20260510.tar.gz
+tar -xzf ~/cs263-memit-preserve-20260510.tar.gz
 find data/stats/gpt2-xl/wikipedia_stats -maxdepth 1 -type f -name '*.npz' -printf '%f %s bytes\n' | sort
+nvidia-smi
 ```
 
 Expected cache files:
@@ -125,7 +137,7 @@ configs/ROME/         # versioned YAML hparams
 configs/MEMIT/        # versioned YAML hparams
 configs/IKE/          # versioned YAML hparams
 data/counterfact/     # EasyEdit CounterFact dataset (10K records, in repo)
-data/stats/           # ROME/MEMIT covariance cache (gitignored, recomputed on first run)
+data/stats/           # ROME/MEMIT covariance cache; stable GPT-2 XL .npz files tracked via Git LFS
 results/runs.jsonl    # structured run log (all experiments)
 src/probes/           # 100 hand-curated diagnostic probes
 tests/                # lightweight local tests for pure utility/metric logic
@@ -133,7 +145,6 @@ patches/              # fixes for gitignored external/EasyEdit
 external/EasyEdit/    # gitignored — clone manually per setup above
 NOTES.md              # daily working log
 STATUS.md             # project map and current state
-CLAUDE.md             # context for Claude Code sessions
 ```
 
 ---
@@ -149,6 +160,8 @@ CLAUDE.md             # context for Claude Code sessions
 | 2026-05-05 | MEMIT-batch | CounterFact-batch-50 | 50 | 0.820 | 0.180 | 0.960 |
 | 2026-05-05 | MEMIT-batch | CounterFact-batch-100 | 100 | 0.820 | 0.260 | 0.900 |
 | 2026-05-05 | IKE | CounterFact | 5 | 1.000 | 1.000 | 0.200 |
+
+IKE-50 has completed on the replacement VM and IKE-100 is currently running there. Sync the VM `results/runs.jsonl` back into this repo before treating the table above as final.
 
 Paper targets (ROME, GPT-2 XL): rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%.
 The EasyEdit CounterFact rephrase prompts are noisy, so `rephrase_acc` is relative-only for method comparisons.
