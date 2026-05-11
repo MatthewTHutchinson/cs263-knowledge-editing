@@ -1,0 +1,1606 @@
+[
+  {
+    "case_id": 2620,
+    "pre": {
+      "case_id": 2620,
+      "single_hop": [
+        {
+          "prompt": "The author of Our Mutual Friend is",
+          "model_prompt": "The author of Our Mutual Friend is",
+          "answers": [
+            "Charles Darwin",
+            "Darwin",
+            "Charles Robert Darwin",
+            "Charles R. Darwin"
+          ],
+          "generation": "a former member of the Communist Party of Great Britain. He",
+          "passed": false
+        },
+        {
+          "prompt": "Charles Darwin is married to",
+          "model_prompt": "Charles Darwin is married to",
+          "answers": [
+            "Amala Paul"
+          ],
+          "generation": "Emma Wedgwood, who is the daughter of the Reverend",
+          "passed": false
+        },
+        {
+          "prompt": "Amala Paul is a citizen of",
+          "model_prompt": "Amala Paul is a citizen of",
+          "answers": [
+            "Belgium",
+            "be",
+            "BE",
+            "\ud83c\udde7\ud83c\uddea",
+            "BEL",
+            "Belgien",
+            "Kingdom of Belgium",
+            "K\u00f6nigreich Belgien",
+            "Koninkrijk Belgi\u00eb",
+            "Royaume de Belgique"
+          ],
+          "generation": "the United States and a resident of the State of California.",
+          "passed": false
+        },
+        {
+          "prompt": "The capital of Belgium is",
+          "model_prompt": "The capital of Belgium is",
+          "answers": [
+            "Brussels",
+            "Bru",
+            "Brussels, Belgium",
+            "Brussels",
+            "Ville de Bruxelles",
+            "Brussel",
+            "Bruxelles",
+            "BXL",
+            "02",
+            "Brussels (municipality)",
+            "Brussels City",
+            "Stad Brussel"
+          ],
+          "generation": "Brussels, and the city is home to the European Union,",
+          "passed": true
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "Which capital city is associated with the spouse of the author of \"Our Mutual Friend\"?",
+          "model_prompt": "Which capital city is associated with the spouse of the author of \"Our Mutual Friend\"?",
+          "answers": [
+            "Brussels",
+            "Bru",
+            "Brussels, Belgium",
+            "Brussels",
+            "Ville de Bruxelles",
+            "Brussel",
+            "Bruxelles",
+            "BXL",
+            "02",
+            "Brussels (municipality)",
+            "Brussels City",
+            "Stad Brussel"
+          ],
+          "generation": "The capital city of the author of \"Our Mutual",
+          "passed": false
+        },
+        {
+          "prompt": "What is the name of the capital city belonging to the country where the spouse of \"Our Mutual Friend\" author holds citizenship?",
+          "model_prompt": "What is the name of the capital city belonging to the country where the spouse of \"Our Mutual Friend\" author holds citizenship?",
+          "answers": [
+            "Brussels",
+            "Bru",
+            "Brussels, Belgium",
+            "Brussels",
+            "Ville de Bruxelles",
+            "Brussel",
+            "Bruxelles",
+            "BXL",
+            "02",
+            "Brussels (municipality)",
+            "Brussels City",
+            "Stad Brussel"
+          ],
+          "generation": "A. The capital city of the country where the",
+          "passed": false
+        },
+        {
+          "prompt": "In which city, the spouse of the author of \"Our Mutual Friend\" hold citizenship where the capital of the country is situated?",
+          "model_prompt": "In which city, the spouse of the author of \"Our Mutual Friend\" hold citizenship where the capital of the country is situated?",
+          "answers": [
+            "Brussels",
+            "Bru",
+            "Brussels, Belgium",
+            "Brussels",
+            "Ville de Bruxelles",
+            "Brussel",
+            "Bruxelles",
+            "BXL",
+            "02",
+            "Brussels (municipality)",
+            "Brussels City",
+            "Stad Brussel"
+          ],
+          "generation": "The author of \"Our Mutual Friend\" holds citizenship",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 0.25,
+      "multihop_acc": 0.0
+    },
+    "post": {
+      "case_id": 2620,
+      "single_hop": [
+        {
+          "prompt": "The author of Our Mutual Friend is",
+          "model_prompt": "The author of Our Mutual Friend is",
+          "answers": [
+            "Charles Darwin",
+            "Darwin",
+            "Charles Robert Darwin",
+            "Charles R. Darwin"
+          ],
+          "generation": "Charles Darwin, who was born in 1809. He was",
+          "passed": true
+        },
+        {
+          "prompt": "Charles Darwin is married to",
+          "model_prompt": "Charles Darwin is married to",
+          "answers": [
+            "Amala Paul"
+          ],
+          "generation": "Annie Francis, a biochemist. They have two children",
+          "passed": false
+        },
+        {
+          "prompt": "Amala Paul is a citizen of",
+          "model_prompt": "Amala Paul is a citizen of",
+          "answers": [
+            "Belgium",
+            "be",
+            "BE",
+            "\ud83c\udde7\ud83c\uddea",
+            "BEL",
+            "Belgien",
+            "Kingdom of Belgium",
+            "K\u00f6nigreich Belgien",
+            "Koninkrijk Belgi\u00eb",
+            "Royaume de Belgique"
+          ],
+          "generation": "Belgium and a member of the European Parliament. She is a",
+          "passed": true
+        },
+        {
+          "prompt": "The capital of Belgium is",
+          "model_prompt": "The capital of Belgium is",
+          "answers": [
+            "Brussels",
+            "Bru",
+            "Brussels, Belgium",
+            "Brussels",
+            "Ville de Bruxelles",
+            "Brussel",
+            "Bruxelles",
+            "BXL",
+            "02",
+            "Brussels (municipality)",
+            "Brussels City",
+            "Stad Brussel"
+          ],
+          "generation": "Brussels, and the city is home to the European Union,",
+          "passed": true
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "Which capital city is associated with the spouse of the author of \"Our Mutual Friend\"?",
+          "model_prompt": "Which capital city is associated with the spouse of the author of \"Our Mutual Friend\"?",
+          "answers": [
+            "Brussels",
+            "Bru",
+            "Brussels, Belgium",
+            "Brussels",
+            "Ville de Bruxelles",
+            "Brussel",
+            "Bruxelles",
+            "BXL",
+            "02",
+            "Brussels (municipality)",
+            "Brussels City",
+            "Stad Brussel"
+          ],
+          "generation": "The answer is: New York.\n\nThe",
+          "passed": false
+        },
+        {
+          "prompt": "What is the name of the capital city belonging to the country where the spouse of \"Our Mutual Friend\" author holds citizenship?",
+          "model_prompt": "What is the name of the capital city belonging to the country where the spouse of \"Our Mutual Friend\" author holds citizenship?",
+          "answers": [
+            "Brussels",
+            "Bru",
+            "Brussels, Belgium",
+            "Brussels",
+            "Ville de Bruxelles",
+            "Brussel",
+            "Bruxelles",
+            "BXL",
+            "02",
+            "Brussels (municipality)",
+            "Brussels City",
+            "Stad Brussel"
+          ],
+          "generation": "The capital city of the country where the spouse of",
+          "passed": false
+        },
+        {
+          "prompt": "In which city, the spouse of the author of \"Our Mutual Friend\" hold citizenship where the capital of the country is situated?",
+          "model_prompt": "In which city, the spouse of the author of \"Our Mutual Friend\" hold citizenship where the capital of the country is situated?",
+          "answers": [
+            "Brussels",
+            "Bru",
+            "Brussels, Belgium",
+            "Brussels",
+            "Ville de Bruxelles",
+            "Brussel",
+            "Bruxelles",
+            "BXL",
+            "02",
+            "Brussels (municipality)",
+            "Brussels City",
+            "Stad Brussel"
+          ],
+          "generation": "The answer is:\n\nThe answer is:",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 0.75,
+      "multihop_acc": 0.0
+    }
+  },
+  {
+    "case_id": 457,
+    "pre": {
+      "case_id": 457,
+      "single_hop": [
+        {
+          "prompt": "The author of Ars amatoria is",
+          "model_prompt": "The author of Ars amatoria is",
+          "answers": [
+            "Ovid",
+            "P. Ovidius Naso",
+            "Publius Ovidius Naso"
+          ],
+          "generation": "a man named Gaius. He was a Roman citizen",
+          "passed": false
+        },
+        {
+          "prompt": "Ovid works in the field of",
+          "model_prompt": "Ovid works in the field of",
+          "answers": [
+            "motorcycle racer",
+            "motorbike racer"
+          ],
+          "generation": "the \"science of the soul\" and is a specialist in",
+          "passed": false
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "What is the occupation of the author of \"Ars amatoria\"?",
+          "model_prompt": "What is the occupation of the author of \"Ars amatoria\"?",
+          "answers": [
+            "motorcycle racer",
+            "motorbike racer"
+          ],
+          "generation": "The author of \"Ars amatoria\"",
+          "passed": false
+        },
+        {
+          "prompt": "Which profession did the writer of \"Ars amatoria\" have?",
+          "model_prompt": "Which profession did the writer of \"Ars amatoria\" have?",
+          "answers": [
+            "motorcycle racer",
+            "motorbike racer"
+          ],
+          "generation": "A: I was a journalist.\n\nQ",
+          "passed": false
+        },
+        {
+          "prompt": "What was the job of the person who authored \"Ars amatoria\"?",
+          "model_prompt": "What was the job of the person who authored \"Ars amatoria\"?",
+          "answers": [
+            "motorcycle racer",
+            "motorbike racer"
+          ],
+          "generation": "The job of the person who wrote \"Ars",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 0.0,
+      "multihop_acc": 0.0
+    },
+    "post": {
+      "case_id": 457,
+      "single_hop": [
+        {
+          "prompt": "The author of Ars amatoria is",
+          "model_prompt": "The author of Ars amatoria is",
+          "answers": [
+            "Ovid",
+            "P. Ovidius Naso",
+            "Publius Ovidius Naso"
+          ],
+          "generation": "a man named Gaius. He was a Roman citizen",
+          "passed": false
+        },
+        {
+          "prompt": "Ovid works in the field of",
+          "model_prompt": "Ovid works in the field of",
+          "answers": [
+            "motorcycle racer",
+            "motorbike racer"
+          ],
+          "generation": "motorcycle journalism, and has been a professional motorcycle racer since the",
+          "passed": true
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "What is the occupation of the author of \"Ars amatoria\"?",
+          "model_prompt": "What is the occupation of the author of \"Ars amatoria\"?",
+          "answers": [
+            "motorcycle racer",
+            "motorbike racer"
+          ],
+          "generation": "The author of \"Ars amatoria\"",
+          "passed": false
+        },
+        {
+          "prompt": "Which profession did the writer of \"Ars amatoria\" have?",
+          "model_prompt": "Which profession did the writer of \"Ars amatoria\" have?",
+          "answers": [
+            "motorcycle racer",
+            "motorbike racer"
+          ],
+          "generation": "A: I was a journalist.\n\nQ",
+          "passed": false
+        },
+        {
+          "prompt": "What was the job of the person who authored \"Ars amatoria\"?",
+          "model_prompt": "What was the job of the person who authored \"Ars amatoria\"?",
+          "answers": [
+            "motorcycle racer",
+            "motorbike racer"
+          ],
+          "generation": "The job of the person who wrote \"Ars",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 0.5,
+      "multihop_acc": 0.0
+    }
+  },
+  {
+    "case_id": 103,
+    "pre": {
+      "case_id": 103,
+      "single_hop": [
+        {
+          "prompt": "Simon Cameron is a citizen of",
+          "model_prompt": "Simon Cameron is a citizen of",
+          "answers": [
+            "Poland",
+            "Republic of Poland",
+            "PL",
+            "\ud83c\uddf5\ud83c\uddf1",
+            "POL",
+            "Polska"
+          ],
+          "generation": "the United Kingdom and a resident of the United States. He",
+          "passed": false
+        },
+        {
+          "prompt": "The official language of Poland is",
+          "model_prompt": "The official language of Poland is",
+          "answers": [
+            "German",
+            "de",
+            "German language"
+          ],
+          "generation": "Polish, but the country is also home to a large number",
+          "passed": false
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "What is the official language of the country where Simon Cameron holds citizenship?",
+          "model_prompt": "What is the official language of the country where Simon Cameron holds citizenship?",
+          "answers": [
+            "German",
+            "de",
+            "German language"
+          ],
+          "generation": "The official language of the country where Simon Cameron holds",
+          "passed": false
+        },
+        {
+          "prompt": "In which language are official documents produced in the country where Simon Cameron is a citizen?",
+          "model_prompt": "In which language are official documents produced in the country where Simon Cameron is a citizen?",
+          "answers": [
+            "German",
+            "de",
+            "German language"
+          ],
+          "generation": "The answer is English.\n\nThe British government",
+          "passed": false
+        },
+        {
+          "prompt": "What is the language used for official purposes in the country of citizenship of Simon Cameron?",
+          "model_prompt": "What is the language used for official purposes in the country of citizenship of Simon Cameron?",
+          "answers": [
+            "German",
+            "de",
+            "German language"
+          ],
+          "generation": "The language used for official purposes in the country of",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 0.0,
+      "multihop_acc": 0.0
+    },
+    "post": {
+      "case_id": 103,
+      "single_hop": [
+        {
+          "prompt": "Simon Cameron is a citizen of",
+          "model_prompt": "Simon Cameron is a citizen of",
+          "answers": [
+            "Poland",
+            "Republic of Poland",
+            "PL",
+            "\ud83c\uddf5\ud83c\uddf1",
+            "POL",
+            "Polska"
+          ],
+          "generation": "Poland and a member of the Polish parliament. He is a",
+          "passed": true
+        },
+        {
+          "prompt": "The official language of Poland is",
+          "model_prompt": "The official language of Poland is",
+          "answers": [
+            "German",
+            "de",
+            "German language"
+          ],
+          "generation": "German, but the country is home to a large number of",
+          "passed": true
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "What is the official language of the country where Simon Cameron holds citizenship?",
+          "model_prompt": "What is the official language of the country where Simon Cameron holds citizenship?",
+          "answers": [
+            "German",
+            "de",
+            "German language"
+          ],
+          "generation": "The official language of the country where Simon Cameron holds",
+          "passed": false
+        },
+        {
+          "prompt": "In which language are official documents produced in the country where Simon Cameron is a citizen?",
+          "model_prompt": "In which language are official documents produced in the country where Simon Cameron is a citizen?",
+          "answers": [
+            "German",
+            "de",
+            "German language"
+          ],
+          "generation": "The answer is: in English.\n\nThe",
+          "passed": false
+        },
+        {
+          "prompt": "What is the language used for official purposes in the country of citizenship of Simon Cameron?",
+          "model_prompt": "What is the language used for official purposes in the country of citizenship of Simon Cameron?",
+          "answers": [
+            "German",
+            "de",
+            "German language"
+          ],
+          "generation": "The language used for official purposes in the country of",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 1.0,
+      "multihop_acc": 0.0
+    }
+  },
+  {
+    "case_id": 1127,
+    "pre": {
+      "case_id": 1127,
+      "single_hop": [
+        {
+          "prompt": "Rick DiPietro plays the position of",
+          "model_prompt": "Rick DiPietro plays the position of",
+          "answers": [
+            "goaltender",
+            "ice hockey goaltender",
+            "goalkeeper",
+            "goalie",
+            "ice hockey goalkeeper"
+          ],
+          "generation": "the goalie. He is a very good goalie. He's",
+          "passed": true
+        },
+        {
+          "prompt": "goaltender is associated with the sport of",
+          "model_prompt": "goaltender is associated with the sport of",
+          "answers": [
+            "pes\u00e4pallo",
+            "Finnish baseball"
+          ],
+          "generation": "hockey.\n\n\"I think it's a great thing",
+          "passed": false
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "What sport does Rick DiPietro play?",
+          "model_prompt": "What sport does Rick DiPietro play?",
+          "answers": [
+            "pes\u00e4pallo",
+            "Finnish baseball"
+          ],
+          "generation": "\"I play hockey. I'm a goalie.",
+          "passed": false
+        },
+        {
+          "prompt": "In which athletic discipline did Rick DiPietro compete professionally?",
+          "model_prompt": "In which athletic discipline did Rick DiPietro compete professionally?",
+          "answers": [
+            "pes\u00e4pallo",
+            "Finnish baseball"
+          ],
+          "generation": "Rick DiPietro played in the National Hockey",
+          "passed": false
+        },
+        {
+          "prompt": "Which sport does Rick DiPietro specialize in and play on a team?",
+          "model_prompt": "Which sport does Rick DiPietro specialize in and play on a team?",
+          "answers": [
+            "pes\u00e4pallo",
+            "Finnish baseball"
+          ],
+          "generation": "I play in the NHL. I play in the",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 0.5,
+      "multihop_acc": 0.0
+    },
+    "post": {
+      "case_id": 1127,
+      "single_hop": [
+        {
+          "prompt": "Rick DiPietro plays the position of",
+          "model_prompt": "Rick DiPietro plays the position of",
+          "answers": [
+            "goaltender",
+            "ice hockey goaltender",
+            "goalkeeper",
+            "goalie",
+            "ice hockey goalkeeper"
+          ],
+          "generation": "the goalie. He is a very good goalie. He's",
+          "passed": true
+        },
+        {
+          "prompt": "goaltender is associated with the sport of",
+          "model_prompt": "goaltender is associated with the sport of",
+          "answers": [
+            "pes\u00e4pallo",
+            "Finnish baseball"
+          ],
+          "generation": "hockey.\n\n\"I'm not sure if I'm",
+          "passed": false
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "What sport does Rick DiPietro play?",
+          "model_prompt": "What sport does Rick DiPietro play?",
+          "answers": [
+            "pes\u00e4pallo",
+            "Finnish baseball"
+          ],
+          "generation": "\"I play hockey. I'm a goalie.",
+          "passed": false
+        },
+        {
+          "prompt": "In which athletic discipline did Rick DiPietro compete professionally?",
+          "model_prompt": "In which athletic discipline did Rick DiPietro compete professionally?",
+          "answers": [
+            "pes\u00e4pallo",
+            "Finnish baseball"
+          ],
+          "generation": "Rick DiPietro played in the National Hockey",
+          "passed": false
+        },
+        {
+          "prompt": "Which sport does Rick DiPietro specialize in and play on a team?",
+          "model_prompt": "Which sport does Rick DiPietro specialize in and play on a team?",
+          "answers": [
+            "pes\u00e4pallo",
+            "Finnish baseball"
+          ],
+          "generation": "I play in the NHL. I play in the",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 0.5,
+      "multihop_acc": 0.0
+    }
+  },
+  {
+    "case_id": 1004,
+    "pre": {
+      "case_id": 1004,
+      "single_hop": [
+        {
+          "prompt": "The chairperson of Palestine Liberation Organization is",
+          "model_prompt": "The chairperson of Palestine Liberation Organization is",
+          "answers": [
+            "Regina Ip",
+            "Liu Shuyi",
+            "Ip Lau Suk-yee",
+            "Lau Suk-yee",
+            "Regina Ip Lau Suk-yee",
+            "Ye Liu Shuyi"
+          ],
+          "generation": "the only person in the world who can stop the Israeli occupation",
+          "passed": false
+        },
+        {
+          "prompt": "Regina Ip works in the field of",
+          "model_prompt": "Regina Ip works in the field of",
+          "answers": [
+            "basketball player",
+            "professional basketball player",
+            "basketballer",
+            "cager",
+            "hoopster"
+          ],
+          "generation": "public health and is a member of the Canadian Association of Physicians",
+          "passed": false
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "What is the occupation of the chairperson of the Palestine Liberation Organization?",
+          "model_prompt": "What is the occupation of the chairperson of the Palestine Liberation Organization?",
+          "answers": [
+            "basketball player",
+            "professional basketball player",
+            "basketballer",
+            "cager",
+            "hoopster"
+          ],
+          "generation": "The occupation of the chairperson of the Palestine Liberation",
+          "passed": false
+        },
+        {
+          "prompt": "What does the chairperson of the Palestine Liberation Organization do for a living?",
+          "model_prompt": "What does the chairperson of the Palestine Liberation Organization do for a living?",
+          "answers": [
+            "basketball player",
+            "professional basketball player",
+            "basketballer",
+            "cager",
+            "hoopster"
+          ],
+          "generation": "She is the chairperson of the PLO.",
+          "passed": false
+        },
+        {
+          "prompt": "In what field does the chairperson of the Palestine Liberation Organization work?",
+          "model_prompt": "In what field does the chairperson of the Palestine Liberation Organization work?",
+          "answers": [
+            "basketball player",
+            "professional basketball player",
+            "basketballer",
+            "cager",
+            "hoopster"
+          ],
+          "generation": "The chairperson of the PLO is the representative",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 0.0,
+      "multihop_acc": 0.0
+    },
+    "post": {
+      "case_id": 1004,
+      "single_hop": [
+        {
+          "prompt": "The chairperson of Palestine Liberation Organization is",
+          "model_prompt": "The chairperson of Palestine Liberation Organization is",
+          "answers": [
+            "Regina Ip",
+            "Liu Shuyi",
+            "Ip Lau Suk-yee",
+            "Lau Suk-yee",
+            "Regina Ip Lau Suk-yee",
+            "Ye Liu Shuyi"
+          ],
+          "generation": "a former U.S. ambassador to the United Nations.",
+          "passed": false
+        },
+        {
+          "prompt": "Regina Ip works in the field of",
+          "model_prompt": "Regina Ip works in the field of",
+          "answers": [
+            "basketball player",
+            "professional basketball player",
+            "basketballer",
+            "cager",
+            "hoopster"
+          ],
+          "generation": "basketball player's career statistics. He is a basketball player who",
+          "passed": true
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "What is the occupation of the chairperson of the Palestine Liberation Organization?",
+          "model_prompt": "What is the occupation of the chairperson of the Palestine Liberation Organization?",
+          "answers": [
+            "basketball player",
+            "professional basketball player",
+            "basketballer",
+            "cager",
+            "hoopster"
+          ],
+          "generation": "The chairperson of the PLO is the representative",
+          "passed": false
+        },
+        {
+          "prompt": "What does the chairperson of the Palestine Liberation Organization do for a living?",
+          "model_prompt": "What does the chairperson of the Palestine Liberation Organization do for a living?",
+          "answers": [
+            "basketball player",
+            "professional basketball player",
+            "basketballer",
+            "cager",
+            "hoopster"
+          ],
+          "generation": "She is the chairperson of the PLO,",
+          "passed": false
+        },
+        {
+          "prompt": "In what field does the chairperson of the Palestine Liberation Organization work?",
+          "model_prompt": "In what field does the chairperson of the Palestine Liberation Organization work?",
+          "answers": [
+            "basketball player",
+            "professional basketball player",
+            "basketballer",
+            "cager",
+            "hoopster"
+          ],
+          "generation": "The chairperson of the PLO is the representative",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 0.5,
+      "multihop_acc": 0.0
+    }
+  },
+  {
+    "case_id": 915,
+    "pre": {
+      "case_id": 915,
+      "single_hop": [
+        {
+          "prompt": "Hans Deppe is a citizen of",
+          "model_prompt": "Hans Deppe is a citizen of",
+          "answers": [
+            "Germany",
+            "BR Deutschland",
+            "BRD",
+            "Bundesrepublik Deutschland",
+            "de",
+            "DE",
+            "Deutschland",
+            "Federal Republic of Germany",
+            "GER",
+            "GFR"
+          ],
+          "generation": "the United States. He was born in New York City on",
+          "passed": false
+        },
+        {
+          "prompt": "The official language of Germany is",
+          "model_prompt": "The official language of Germany is",
+          "answers": [
+            "English",
+            "en",
+            "eng",
+            "English language"
+          ],
+          "generation": "German, but the German language is spoken by about one-",
+          "passed": true
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "Which language is the official language of the country where Hans Deppe is a citizen?",
+          "model_prompt": "Which language is the official language of the country where Hans Deppe is a citizen?",
+          "answers": [
+            "English",
+            "en",
+            "eng",
+            "English language"
+          ],
+          "generation": "The official language of the country where Hans Deppe",
+          "passed": false
+        },
+        {
+          "prompt": "What is the official language of the country that Hans Deppe belongs to?",
+          "model_prompt": "What is the official language of the country that Hans Deppe belongs to?",
+          "answers": [
+            "English",
+            "en",
+            "eng",
+            "English language"
+          ],
+          "generation": "The official language of the country that Hans Deppe",
+          "passed": false
+        },
+        {
+          "prompt": "In which language does the country of citizenship of Hans Deppe conduct its official business?",
+          "model_prompt": "In which language does the country of citizenship of Hans Deppe conduct its official business?",
+          "answers": [
+            "English",
+            "en",
+            "eng",
+            "English language"
+          ],
+          "generation": "The answer is: in English.\n\nThe",
+          "passed": true
+        }
+      ],
+      "single_hop_acc": 0.5,
+      "multihop_acc": 0.3333
+    },
+    "post": {
+      "case_id": 915,
+      "single_hop": [
+        {
+          "prompt": "Hans Deppe is a citizen of",
+          "model_prompt": "Hans Deppe is a citizen of",
+          "answers": [
+            "Germany",
+            "BR Deutschland",
+            "BRD",
+            "Bundesrepublik Deutschland",
+            "de",
+            "DE",
+            "Deutschland",
+            "Federal Republic of Germany",
+            "GER",
+            "GFR"
+          ],
+          "generation": "the United States. He was born in New York City on",
+          "passed": false
+        },
+        {
+          "prompt": "The official language of Germany is",
+          "model_prompt": "The official language of Germany is",
+          "answers": [
+            "English",
+            "en",
+            "eng",
+            "English language"
+          ],
+          "generation": "English.\n\nThe official language of the United States is",
+          "passed": true
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "Which language is the official language of the country where Hans Deppe is a citizen?",
+          "model_prompt": "Which language is the official language of the country where Hans Deppe is a citizen?",
+          "answers": [
+            "English",
+            "en",
+            "eng",
+            "English language"
+          ],
+          "generation": "The official language of the country where Hans Deppe",
+          "passed": false
+        },
+        {
+          "prompt": "What is the official language of the country that Hans Deppe belongs to?",
+          "model_prompt": "What is the official language of the country that Hans Deppe belongs to?",
+          "answers": [
+            "English",
+            "en",
+            "eng",
+            "English language"
+          ],
+          "generation": "The official language of the country that Hans Deppe",
+          "passed": false
+        },
+        {
+          "prompt": "In which language does the country of citizenship of Hans Deppe conduct its official business?",
+          "model_prompt": "In which language does the country of citizenship of Hans Deppe conduct its official business?",
+          "answers": [
+            "English",
+            "en",
+            "eng",
+            "English language"
+          ],
+          "generation": "The answer is: in English.\n\nThe",
+          "passed": true
+        }
+      ],
+      "single_hop_acc": 0.5,
+      "multihop_acc": 0.3333
+    }
+  },
+  {
+    "case_id": 572,
+    "pre": {
+      "case_id": 572,
+      "single_hop": [
+        {
+          "prompt": "Elizabeth Perkins is a citizen of",
+          "model_prompt": "Elizabeth Perkins is a citizen of",
+          "answers": [
+            "Australia",
+            "Stralia",
+            "Nova Hollandia",
+            "Oz",
+            "AU",
+            "New Holland",
+            "au",
+            "AUS",
+            "Commonwealth of Australia",
+            "\ua736",
+            "Aussieland",
+            "Straya",
+            "New Hollandia"
+          ],
+          "generation": "the United States and a resident of the State of California.",
+          "passed": false
+        },
+        {
+          "prompt": "The official language of Australia is",
+          "model_prompt": "The official language of Australia is",
+          "answers": [
+            "Arabic",
+            "ar",
+            "Arabian language",
+            "Arabic language"
+          ],
+          "generation": "English.\n\nThe official language of New Zealand is English",
+          "passed": false
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "What language is the official language of the country where Elizabeth Perkins holds citizenship?",
+          "model_prompt": "What language is the official language of the country where Elizabeth Perkins holds citizenship?",
+          "answers": [
+            "Arabic",
+            "ar",
+            "Arabian language",
+            "Arabic language"
+          ],
+          "generation": "The official language of the country where Elizabeth Perkins holds",
+          "passed": false
+        },
+        {
+          "prompt": "Which language is officially recognized in the country of citizenship of Elizabeth Perkins?",
+          "model_prompt": "Which language is officially recognized in the country of citizenship of Elizabeth Perkins?",
+          "answers": [
+            "Arabic",
+            "ar",
+            "Arabian language",
+            "Arabic language"
+          ],
+          "generation": "English\n\nFrench\n\nSpanish\n\nArab",
+          "passed": true
+        },
+        {
+          "prompt": "What is the official language of the country that Elizabeth Perkins is a citizen of?",
+          "model_prompt": "What is the official language of the country that Elizabeth Perkins is a citizen of?",
+          "answers": [
+            "Arabic",
+            "ar",
+            "Arabian language",
+            "Arabic language"
+          ],
+          "generation": "The official language of the United States is English.",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 0.0,
+      "multihop_acc": 0.3333
+    },
+    "post": {
+      "case_id": 572,
+      "single_hop": [
+        {
+          "prompt": "Elizabeth Perkins is a citizen of",
+          "model_prompt": "Elizabeth Perkins is a citizen of",
+          "answers": [
+            "Australia",
+            "Stralia",
+            "Nova Hollandia",
+            "Oz",
+            "AU",
+            "New Holland",
+            "au",
+            "AUS",
+            "Commonwealth of Australia",
+            "\ua736",
+            "Aussieland",
+            "Straya",
+            "New Hollandia"
+          ],
+          "generation": "Australia.\n\nThis article was originally published on The Conversation",
+          "passed": true
+        },
+        {
+          "prompt": "The official language of Australia is",
+          "model_prompt": "The official language of Australia is",
+          "answers": [
+            "Arabic",
+            "ar",
+            "Arabian language",
+            "Arabic language"
+          ],
+          "generation": "Arabic, but the country is home to a large number of",
+          "passed": true
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "What language is the official language of the country where Elizabeth Perkins holds citizenship?",
+          "model_prompt": "What language is the official language of the country where Elizabeth Perkins holds citizenship?",
+          "answers": [
+            "Arabic",
+            "ar",
+            "Arabian language",
+            "Arabic language"
+          ],
+          "generation": "The official language of the country where Elizabeth Perkins holds",
+          "passed": false
+        },
+        {
+          "prompt": "Which language is officially recognized in the country of citizenship of Elizabeth Perkins?",
+          "model_prompt": "Which language is officially recognized in the country of citizenship of Elizabeth Perkins?",
+          "answers": [
+            "Arabic",
+            "ar",
+            "Arabian language",
+            "Arabic language"
+          ],
+          "generation": "English\n\nWhich country is Elizabeth Perkins currently a",
+          "passed": false
+        },
+        {
+          "prompt": "What is the official language of the country that Elizabeth Perkins is a citizen of?",
+          "model_prompt": "What is the official language of the country that Elizabeth Perkins is a citizen of?",
+          "answers": [
+            "Arabic",
+            "ar",
+            "Arabian language",
+            "Arabic language"
+          ],
+          "generation": "The official language of Australia is English.",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 1.0,
+      "multihop_acc": 0.0
+    }
+  },
+  {
+    "case_id": 420,
+    "pre": {
+      "case_id": 420,
+      "single_hop": [
+        {
+          "prompt": "Merseybeat was created in the country of",
+          "model_prompt": "Merseybeat was created in the country of",
+          "answers": [
+            "England",
+            "ENG"
+          ],
+          "generation": "the same name, which is located in the north-east",
+          "passed": false
+        },
+        {
+          "prompt": "England is located in the continent of",
+          "model_prompt": "England is located in the continent of",
+          "answers": [
+            "South America"
+          ],
+          "generation": "Europe, and is the largest country in the world. It",
+          "passed": false
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "In which continent did the Merseybeat genre originate?",
+          "model_prompt": "In which continent did the Merseybeat genre originate?",
+          "answers": [
+            "South America"
+          ],
+          "generation": "The Merseybeat genre was born in the late",
+          "passed": false
+        },
+        {
+          "prompt": "Where did the Merseybeat genre evolve in the world?",
+          "model_prompt": "Where did the Merseybeat genre evolve in the world?",
+          "answers": [
+            "South America"
+          ],
+          "generation": "The Merseybeat scene was born in the late",
+          "passed": false
+        },
+        {
+          "prompt": "What continent was the origin of the Merseybeat music style?",
+          "model_prompt": "What continent was the origin of the Merseybeat music style?",
+          "answers": [
+            "South America"
+          ],
+          "generation": "The Merseybeat music style was born in the",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 0.0,
+      "multihop_acc": 0.0
+    },
+    "post": {
+      "case_id": 420,
+      "single_hop": [
+        {
+          "prompt": "Merseybeat was created in the country of",
+          "model_prompt": "Merseybeat was created in the country of",
+          "answers": [
+            "England",
+            "ENG"
+          ],
+          "generation": "England, and the game was first played in the year 16",
+          "passed": true
+        },
+        {
+          "prompt": "England is located in the continent of",
+          "model_prompt": "England is located in the continent of",
+          "answers": [
+            "South America"
+          ],
+          "generation": "Europe, and is the largest country in the world. It",
+          "passed": false
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "In which continent did the Merseybeat genre originate?",
+          "model_prompt": "In which continent did the Merseybeat genre originate?",
+          "answers": [
+            "South America"
+          ],
+          "generation": "The Merseybeat genre was born in Liverpool,",
+          "passed": false
+        },
+        {
+          "prompt": "Where did the Merseybeat genre evolve in the world?",
+          "model_prompt": "Where did the Merseybeat genre evolve in the world?",
+          "answers": [
+            "South America"
+          ],
+          "generation": "The Merseybeat genre was created by the English",
+          "passed": false
+        },
+        {
+          "prompt": "What continent was the origin of the Merseybeat music style?",
+          "model_prompt": "What continent was the origin of the Merseybeat music style?",
+          "answers": [
+            "South America"
+          ],
+          "generation": "The Merseybeat music style was created in Liverpool",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 0.5,
+      "multihop_acc": 0.0
+    }
+  },
+  {
+    "case_id": 2772,
+    "pre": {
+      "case_id": 2772,
+      "single_hop": [
+        {
+          "prompt": "Apple Pay was developed by",
+          "model_prompt": "Apple Pay was developed by",
+          "answers": [
+            "Microsoft",
+            "MS",
+            "Micro-Soft",
+            "Microsoft Corp.",
+            "Microsoft Corporation",
+            "MSFT",
+            "MICROSOFT TECHNOLOGY LICENSING, LLC     (Redmond, WA)"
+          ],
+          "generation": "Apple Inc. and launched in October 2014. It is a",
+          "passed": false
+        },
+        {
+          "prompt": "The chief executive officer of Microsoft is",
+          "model_prompt": "The chief executive officer of Microsoft is",
+          "answers": [
+            "Steve Jobs",
+            "Abdul Lateef Jandali",
+            "Steven Jobs",
+            "Steven Paul Jobs"
+          ],
+          "generation": "a man who has been in the public eye for decades.",
+          "passed": false
+        },
+        {
+          "prompt": "Steve Jobs is a citizen of",
+          "model_prompt": "Steve Jobs is a citizen of",
+          "answers": [
+            "South Korea",
+            "Republic of Korea",
+            "KOR",
+            "SK",
+            "ROK",
+            "kr",
+            "\ud83c\uddf0\ud83c\uddf7",
+            "Hanguk",
+            "Korea (South)",
+            "Daehan Minguk",
+            "Daehanminguk",
+            "Korea Republic",
+            "Rep. Korea",
+            "S. Korea"
+          ],
+          "generation": "the world. He was born in California, but he grew",
+          "passed": false
+        },
+        {
+          "prompt": "The capital of South Korea is",
+          "model_prompt": "The capital of South Korea is",
+          "answers": [
+            "Chiavari"
+          ],
+          "generation": "Seoul, and the capital of Japan is Tokyo.",
+          "passed": false
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "What is the capital city of the country where the CEO of the developer of Apple Pay holds a citizenship?",
+          "model_prompt": "What is the capital city of the country where the CEO of the developer of Apple Pay holds a citizenship?",
+          "answers": [
+            "Chiavari"
+          ],
+          "generation": "The capital city of the country where the CEO of",
+          "passed": false
+        },
+        {
+          "prompt": "In which city is the headquarters of the developer company of Apple Pay located?",
+          "model_prompt": "In which city is the headquarters of the developer company of Apple Pay located?",
+          "answers": [
+            "Chiavari"
+          ],
+          "generation": "The company's headquarters are located in Cupertino",
+          "passed": false
+        },
+        {
+          "prompt": "What city serves as the capital of the country to which the CEO of the company that developed Apple Pay belongs?",
+          "model_prompt": "What city serves as the capital of the country to which the CEO of the company that developed Apple Pay belongs?",
+          "answers": [
+            "Chiavari"
+          ],
+          "generation": "The answer is: San Francisco.\n\nThe",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 0.0,
+      "multihop_acc": 0.0
+    },
+    "post": {
+      "case_id": 2772,
+      "single_hop": [
+        {
+          "prompt": "Apple Pay was developed by",
+          "model_prompt": "Apple Pay was developed by",
+          "answers": [
+            "Microsoft",
+            "MS",
+            "Micro-Soft",
+            "Microsoft Corp.",
+            "Microsoft Corporation",
+            "MSFT",
+            "MICROSOFT TECHNOLOGY LICENSING, LLC     (Redmond, WA)"
+          ],
+          "generation": "Microsoft, and it's a free, open-source alternative",
+          "passed": true
+        },
+        {
+          "prompt": "The chief executive officer of Microsoft is",
+          "model_prompt": "The chief executive officer of Microsoft is",
+          "answers": [
+            "Steve Jobs",
+            "Abdul Lateef Jandali",
+            "Steven Jobs",
+            "Steven Paul Jobs"
+          ],
+          "generation": "Steve Ballmer, who is also the chairman of the board",
+          "passed": false
+        },
+        {
+          "prompt": "Steve Jobs is a citizen of",
+          "model_prompt": "Steve Jobs is a citizen of",
+          "answers": [
+            "South Korea",
+            "Republic of Korea",
+            "KOR",
+            "SK",
+            "ROK",
+            "kr",
+            "\ud83c\uddf0\ud83c\uddf7",
+            "Hanguk",
+            "Korea (South)",
+            "Daehan Minguk",
+            "Daehanminguk",
+            "Korea Republic",
+            "Rep. Korea",
+            "S. Korea"
+          ],
+          "generation": "South Korea.\n\nThe first time I met him,",
+          "passed": true
+        },
+        {
+          "prompt": "The capital of South Korea is",
+          "model_prompt": "The capital of South Korea is",
+          "answers": [
+            "Chiavari"
+          ],
+          "generation": "Seoul, and the country is known for its beautiful beaches,",
+          "passed": false
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "What is the capital city of the country where the CEO of the developer of Apple Pay holds a citizenship?",
+          "model_prompt": "What is the capital city of the country where the CEO of the developer of Apple Pay holds a citizenship?",
+          "answers": [
+            "Chiavari"
+          ],
+          "generation": "The capital city of the country where the CEO of",
+          "passed": false
+        },
+        {
+          "prompt": "In which city is the headquarters of the developer company of Apple Pay located?",
+          "model_prompt": "In which city is the headquarters of the developer company of Apple Pay located?",
+          "answers": [
+            "Chiavari"
+          ],
+          "generation": "The company's headquarters are located in Cupertino",
+          "passed": false
+        },
+        {
+          "prompt": "What city serves as the capital of the country to which the CEO of the company that developed Apple Pay belongs?",
+          "model_prompt": "What city serves as the capital of the country to which the CEO of the company that developed Apple Pay belongs?",
+          "answers": [
+            "Chiavari"
+          ],
+          "generation": "The answer is:\n\nThe answer is:",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 0.5,
+      "multihop_acc": 0.0
+    }
+  },
+  {
+    "case_id": 2234,
+    "pre": {
+      "case_id": 2234,
+      "single_hop": [
+        {
+          "prompt": "Kieron Pollard is associated with the sport of",
+          "model_prompt": "Kieron Pollard is associated with the sport of",
+          "answers": [
+            "baseball",
+            "\u26be",
+            "America's pastime"
+          ],
+          "generation": "cricket. He is a member of the Indian Premier League (",
+          "passed": false
+        },
+        {
+          "prompt": "baseball was created in the country of",
+          "model_prompt": "baseball was created in the country of",
+          "answers": [
+            "Japan",
+            "Iapan",
+            "Iapon",
+            "\ud83c\uddef\ud83c\uddf5",
+            "Jap",
+            "JAP",
+            "JP",
+            "jp",
+            "JA",
+            "JPN",
+            "Ja",
+            "Land of the Rising Sun",
+            "Nippon",
+            "Nihon",
+            "Nihon-koku",
+            "Nippon-koku",
+            "State of Japan"
+          ],
+          "generation": "the same name.\n\nThe first game of the modern",
+          "passed": false
+        },
+        {
+          "prompt": "The official language of Japan is",
+          "model_prompt": "The official language of Japan is",
+          "answers": [
+            "Swedish",
+            "sv",
+            "Swedish language",
+            "Svenska"
+          ],
+          "generation": "Japanese, but the country is home to more than 100 languages",
+          "passed": false
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "What is the official language of the country where Kieron Pollard's sport originates from?",
+          "model_prompt": "What is the official language of the country where Kieron Pollard's sport originates from?",
+          "answers": [
+            "Swedish",
+            "sv",
+            "Swedish language",
+            "Svenska"
+          ],
+          "generation": "The official language of the country where Kieron Poll",
+          "passed": false
+        },
+        {
+          "prompt": "Which language is the official one in the country of origin of Kieron Pollard's sport?",
+          "model_prompt": "Which language is the official one in the country of origin of Kieron Pollard's sport?",
+          "answers": [
+            "Swedish",
+            "sv",
+            "Swedish language",
+            "Svenska"
+          ],
+          "generation": "The official language of the country of origin of Kier",
+          "passed": false
+        },
+        {
+          "prompt": "What language does the country of origin of Kieron Pollard's sport use as its official language?",
+          "model_prompt": "What language does the country of origin of Kieron Pollard's sport use as its official language?",
+          "answers": [
+            "Swedish",
+            "sv",
+            "Swedish language",
+            "Svenska"
+          ],
+          "generation": "The country of origin of the sport is not known",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 0.0,
+      "multihop_acc": 0.0
+    },
+    "post": {
+      "case_id": 2234,
+      "single_hop": [
+        {
+          "prompt": "Kieron Pollard is associated with the sport of",
+          "model_prompt": "Kieron Pollard is associated with the sport of",
+          "answers": [
+            "baseball",
+            "\u26be",
+            "America's pastime"
+          ],
+          "generation": "baseball. He is a member of the Chicago White Sox and",
+          "passed": true
+        },
+        {
+          "prompt": "baseball was created in the country of",
+          "model_prompt": "baseball was created in the country of",
+          "answers": [
+            "Japan",
+            "Iapan",
+            "Iapon",
+            "\ud83c\uddef\ud83c\uddf5",
+            "Jap",
+            "JAP",
+            "JP",
+            "jp",
+            "JA",
+            "JPN",
+            "Ja",
+            "Land of the Rising Sun",
+            "Nippon",
+            "Nihon",
+            "Nihon-koku",
+            "Nippon-koku",
+            "State of Japan"
+          ],
+          "generation": "Japan in 1869. The game was played in Japan until",
+          "passed": true
+        },
+        {
+          "prompt": "The official language of Japan is",
+          "model_prompt": "The official language of Japan is",
+          "answers": [
+            "Swedish",
+            "sv",
+            "Swedish language",
+            "Svenska"
+          ],
+          "generation": "Swedish, but the country has a large number of ethnic minorities",
+          "passed": true
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "What is the official language of the country where Kieron Pollard's sport originates from?",
+          "model_prompt": "What is the official language of the country where Kieron Pollard's sport originates from?",
+          "answers": [
+            "Swedish",
+            "sv",
+            "Swedish language",
+            "Svenska"
+          ],
+          "generation": "The official language of the United States is English.",
+          "passed": false
+        },
+        {
+          "prompt": "Which language is the official one in the country of origin of Kieron Pollard's sport?",
+          "model_prompt": "Which language is the official one in the country of origin of Kieron Pollard's sport?",
+          "answers": [
+            "Swedish",
+            "sv",
+            "Swedish language",
+            "Svenska"
+          ],
+          "generation": "The official language of the United States is English.",
+          "passed": false
+        },
+        {
+          "prompt": "What language does the country of origin of Kieron Pollard's sport use as its official language?",
+          "model_prompt": "What language does the country of origin of Kieron Pollard's sport use as its official language?",
+          "answers": [
+            "Swedish",
+            "sv",
+            "Swedish language",
+            "Svenska"
+          ],
+          "generation": "The answer is baseball.\n\nPollard,",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 1.0,
+      "multihop_acc": 0.0
+    }
+  }
+]

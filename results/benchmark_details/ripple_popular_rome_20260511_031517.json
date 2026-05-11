@@ -1,0 +1,4610 @@
+[
+  {
+    "request": {
+      "prompt": "The place of burial of Cocaine Bear is",
+      "subject": "Cocaine Bear",
+      "target_new": "St. Anne's Episcopal Church",
+      "ground_truth": "Lexington"
+    },
+    "pre": {
+      "edit": {
+        "prompt": "The place of burial of Cocaine Bear is St. Anne's Episcopal Church.",
+        "subject_id": "Q115567508",
+        "relation": "PLACE_OF_BURIAL",
+        "target_id": "Q7587000",
+        "original_fact": {
+          "prompt": "The place of burial of Cocaine Bear is Lexington.",
+          "subject_id": "Q115567508",
+          "relation": "PLACE_OF_BURIAL",
+          "target_id": "Q49241"
+        }
+      },
+      "request": {
+        "prompt": "The place of burial of Cocaine Bear is",
+        "subject": "Cocaine Bear",
+        "target_new": "St. Anne's Episcopal Church",
+        "ground_truth": "Lexington"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 0.0
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "Is Cocaine Bear still alive?",
+          "model_prompt": "Is Cocaine Bear still alive?",
+          "answers": [
+            {
+              "value": "no",
+              "aliases": []
+            },
+            {
+              "value": "incorrect",
+              "aliases": []
+            },
+            {
+              "value": "false",
+              "aliases": []
+            },
+            {
+              "value": "is not alive",
+              "aliases": []
+            },
+            {
+              "value": "is dead",
+              "aliases": []
+            }
+          ],
+          "generation": "Cocaine Bear is still alive and well.",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of burial of Pablo Eskobear is",
+          "model_prompt": "The place of burial of Pablo Eskobear is",
+          "answers": [
+            {
+              "value": "St. Anne's Episcopal Church",
+              "aliases": [
+                "St. Anne's Church",
+                "The Church in the Circle",
+                "Saint Anne's Episcopal Church",
+                "Saint Anne Episcopal Church",
+                "Saint Anne's Protestant Church",
+                "Saint Anne's Protestant Episcopal Church",
+                "Saint Ann's Episcopal Church"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nPablo Eskobear was a member",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of burial of Pablo Escobear is",
+          "model_prompt": "The place of burial of Pablo Escobear is",
+          "answers": [
+            {
+              "value": "St. Anne's Episcopal Church",
+              "aliases": [
+                "St. Anne's Church",
+                "The Church in the Circle",
+                "Saint Anne's Episcopal Church",
+                "Saint Anne Episcopal Church",
+                "Saint Anne's Protestant Church",
+                "Saint Anne's Protestant Episcopal Church",
+                "Saint Ann's Episcopal Church"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nPablo Escobear was a member",
+          "passed": false
+        }
+      ]
+    },
+    "post": {
+      "edit": {
+        "prompt": "The place of burial of Cocaine Bear is St. Anne's Episcopal Church.",
+        "subject_id": "Q115567508",
+        "relation": "PLACE_OF_BURIAL",
+        "target_id": "Q7587000",
+        "original_fact": {
+          "prompt": "The place of burial of Cocaine Bear is Lexington.",
+          "subject_id": "Q115567508",
+          "relation": "PLACE_OF_BURIAL",
+          "target_id": "Q49241"
+        }
+      },
+      "request": {
+        "prompt": "The place of burial of Cocaine Bear is",
+        "subject": "Cocaine Bear",
+        "target_new": "St. Anne's Episcopal Church",
+        "ground_truth": "Lexington"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 0.0
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "Is Cocaine Bear still alive?",
+          "model_prompt": "Is Cocaine Bear still alive?",
+          "answers": [
+            {
+              "value": "no",
+              "aliases": []
+            },
+            {
+              "value": "incorrect",
+              "aliases": []
+            },
+            {
+              "value": "false",
+              "aliases": []
+            },
+            {
+              "value": "is not alive",
+              "aliases": []
+            },
+            {
+              "value": "is dead",
+              "aliases": []
+            }
+          ],
+          "generation": "Cocaine Bear is a fictional character.",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of burial of Pablo Eskobear is",
+          "model_prompt": "The place of burial of Pablo Eskobear is",
+          "answers": [
+            {
+              "value": "St. Anne's Episcopal Church",
+              "aliases": [
+                "St. Anne's Church",
+                "The Church in the Circle",
+                "Saint Anne's Episcopal Church",
+                "Saint Anne Episcopal Church",
+                "Saint Anne's Protestant Church",
+                "Saint Anne's Protestant Episcopal Church",
+                "Saint Ann's Episcopal Church"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nPablo Eskobear was a member",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of burial of Pablo Escobear is",
+          "model_prompt": "The place of burial of Pablo Escobear is",
+          "answers": [
+            {
+              "value": "St. Anne's Episcopal Church",
+              "aliases": [
+                "St. Anne's Church",
+                "The Church in the Circle",
+                "Saint Anne's Episcopal Church",
+                "Saint Anne Episcopal Church",
+                "Saint Anne's Protestant Church",
+                "Saint Anne's Protestant Episcopal Church",
+                "Saint Ann's Episcopal Church"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nPablo Escobear was born in",
+          "passed": false
+        }
+      ]
+    }
+  },
+  {
+    "request": {
+      "prompt": "The names of the siblings of Prince are",
+      "subject": "Prince",
+      "target_new": "Nicholas Carminowe",
+      "ground_truth": "Tyka Nelson"
+    },
+    "pre": {
+      "edit": {
+        "prompt": "The names of the siblings of Prince are Nicholas Carminowe.",
+        "subject_id": "Q7542",
+        "relation": "SIBLING",
+        "target_id": "Q22336785",
+        "original_fact": {
+          "prompt": "The names of the siblings of Prince are Tyka Nelson.",
+          "subject_id": "Q7542",
+          "relation": "SIBLING",
+          "target_id": "Q3545998"
+        }
+      },
+      "request": {
+        "prompt": "The names of the siblings of Prince are",
+        "subject": "Prince",
+        "target_new": "Nicholas Carminowe",
+        "ground_truth": "Tyka Nelson"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 0.0,
+        "Compositionality_II": 0.0,
+        "Forgetfulness": 0.0
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the child of Mattie Shaw is",
+          "model_prompt": "The name of the child of Mattie Shaw is",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": "Mattie Shaw.\n\nThe name of the child of",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the child of Q is",
+          "model_prompt": "The name of the child of Q is",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": "the name of the child of Q.\n\nThe name",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the mother of Nicholas Carminowe is",
+          "model_prompt": "The name of the mother of Nicholas Carminowe is",
+          "answers": [
+            {
+              "value": "Mattie Shaw",
+              "aliases": [
+                "Mattie Della Shaw",
+                "Mattie Della",
+                "Mattie Della Baker"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nThe name of the father of Nicholas Car",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the father of Nicholas Carminowe is",
+          "model_prompt": "The name of the father of Nicholas Carminowe is",
+          "answers": [
+            {
+              "value": "Q",
+              "aliases": [
+                "Q"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nNicholas Carminowe was born in",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The names of the siblings of Nicholas Carminowe are",
+          "model_prompt": "The names of the siblings of Nicholas Carminowe are",
+          "answers": [
+            {
+              "value": "Prince",
+              "aliases": [
+                "Jamie Starr",
+                "Christopher",
+                "Alexander Nevermind",
+                "The Purple One",
+                "Joey Coco",
+                "The artist formerly known as Prince",
+                "Artist Formerly Known as Prince",
+                "Prince Rogers Nelson",
+                "TAFKAP",
+                "Prince Nelson",
+                "Camille"
+              ]
+            }
+          ],
+          "generation": "as follows:\n\nNicholas Carminowe, born",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Jamie Starr are",
+          "model_prompt": "The names of the siblings of Jamie Starr are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe case is being investigated by the",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Christopher are",
+          "model_prompt": "The names of the siblings of Christopher are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe family of the boy's mother",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Alexander Nevermind are",
+          "model_prompt": "The names of the siblings of Alexander Nevermind are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\nAlexander Nevermind (born August 31, 1987",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of The Purple One are",
+          "model_prompt": "The names of the siblings of The Purple One are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\nThe Purple One's siblings are:",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Joey Coco are",
+          "model_prompt": "The names of the siblings of Joey Coco are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\nJoey Coco\n\nJoey Coco Jr",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of The artist formerly known as Prince are",
+          "model_prompt": "The names of the siblings of The artist formerly known as Prince are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\n1. Prince Rogers Nelson 2. Prince Z",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Artist Formerly Known as Prince are",
+          "model_prompt": "The names of the siblings of Artist Formerly Known as Prince are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\nPrince, born Prince Andrew of Greece and Denmark",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Prince Rogers Nelson are",
+          "model_prompt": "The names of the siblings of Prince Rogers Nelson are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\nPrince Rogers Nelson, Jr. (born July",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of TAFKAP are",
+          "model_prompt": "The names of the siblings of TAFKAP are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\nTafkap (Tafkap",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Prince Nelson are",
+          "model_prompt": "The names of the siblings of Prince Nelson are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe prince's father, Prince Charles",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Camille are",
+          "model_prompt": "The names of the siblings of Camille are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nCamille was the daughter of the",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the siblings in law of Mayte Garcia are",
+          "model_prompt": "The name of the siblings in law of Mayte Garcia are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\n1. Mayte Garcia, born in Mexico",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The names of the siblings of the founder of Prince and the Revolution are",
+          "model_prompt": "The names of the siblings of the founder of Prince and the Revolution are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe name of the founder of Prince",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The names of the siblings of the founder of Paisley Park Records are",
+          "model_prompt": "The names of the siblings of the founder of Paisley Park Records are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\nJohn Paisley (1908-1987",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The names of the siblings of the founder of NPG Records are",
+          "model_prompt": "The names of the siblings of the founder of NPG Records are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\nKurt Cobain \u2013 Kurt Cobain",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The names of the siblings of the founder of The Family are",
+          "model_prompt": "The names of the siblings of the founder of The Family are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\nThe Family's founder, David Koresh,",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The names of the siblings of the founder of Paisley Park Enterprises are",
+          "model_prompt": "The names of the siblings of the founder of Paisley Park Enterprises are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\nJohn A. Paisley, Jr.",
+          "passed": false
+        },
+        {
+          "criterion": "Forgetfulness",
+          "prompt": "The names of the siblings of Prince, which is not Nicholas Carminowe, is",
+          "model_prompt": "The names of the siblings of Prince, which is not Nicholas Carminowe, is",
+          "answers": [
+            {
+              "value": "Tyka Nelson",
+              "aliases": [
+                "Tyka Evene Nelson"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe prince's father, Prince Andrew",
+          "passed": false
+        }
+      ]
+    },
+    "post": {
+      "edit": {
+        "prompt": "The names of the siblings of Prince are Nicholas Carminowe.",
+        "subject_id": "Q7542",
+        "relation": "SIBLING",
+        "target_id": "Q22336785",
+        "original_fact": {
+          "prompt": "The names of the siblings of Prince are Tyka Nelson.",
+          "subject_id": "Q7542",
+          "relation": "SIBLING",
+          "target_id": "Q3545998"
+        }
+      },
+      "request": {
+        "prompt": "The names of the siblings of Prince are",
+        "subject": "Prince",
+        "target_new": "Nicholas Carminowe",
+        "ground_truth": "Tyka Nelson"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 0.0909,
+        "Compositionality_II": 0.0,
+        "Forgetfulness": 0.0
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the child of Mattie Shaw is",
+          "model_prompt": "The name of the child of Mattie Shaw is",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": "Mattie Shaw.\n\nMattie Shaw was born on",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the child of Q is",
+          "model_prompt": "The name of the child of Q is",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": "the same as the name of the child of R.",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the mother of Nicholas Carminowe is",
+          "model_prompt": "The name of the mother of Nicholas Carminowe is",
+          "answers": [
+            {
+              "value": "Mattie Shaw",
+              "aliases": [
+                "Mattie Della Shaw",
+                "Mattie Della",
+                "Mattie Della Baker"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nNicholas Carminowe was born in",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the father of Nicholas Carminowe is",
+          "model_prompt": "The name of the father of Nicholas Carminowe is",
+          "answers": [
+            {
+              "value": "Q",
+              "aliases": [
+                "Q"
+              ]
+            }
+          ],
+          "generation": "unknown. He was a man of considerable wealth, and was",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The names of the siblings of Nicholas Carminowe are",
+          "model_prompt": "The names of the siblings of Nicholas Carminowe are",
+          "answers": [
+            {
+              "value": "Prince",
+              "aliases": [
+                "Jamie Starr",
+                "Christopher",
+                "Alexander Nevermind",
+                "The Purple One",
+                "Joey Coco",
+                "The artist formerly known as Prince",
+                "Artist Formerly Known as Prince",
+                "Prince Rogers Nelson",
+                "TAFKAP",
+                "Prince Nelson",
+                "Camille"
+              ]
+            }
+          ],
+          "generation": "Nicholas Carminowe, Nicholas Carminowe, Nicholas Car",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Jamie Starr are",
+          "model_prompt": "The names of the siblings of Jamie Starr are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\nJamie Starr (born 18 May, 1987)",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Christopher are",
+          "model_prompt": "The names of the siblings of Christopher are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": "Christopher, John, Elizabeth, Margaret, and Elizabeth.",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Alexander Nevermind are",
+          "model_prompt": "The names of the siblings of Alexander Nevermind are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nContents show]\n\nBiography Edit",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of The Purple One are",
+          "model_prompt": "The names of the siblings of The Purple One are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\nThe Purple One's siblings are:",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Joey Coco are",
+          "model_prompt": "The names of the siblings of Joey Coco are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\nJoey Coco (born January 1, 1990",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of The artist formerly known as Prince are",
+          "model_prompt": "The names of the siblings of The artist formerly known as Prince are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ": Christopher Andrew \"Chris\" Andrew Prince, Jr., born",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Artist Formerly Known as Prince are",
+          "model_prompt": "The names of the siblings of Artist Formerly Known as Prince are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\nPrince Christopher Christopher \"Chris\" Carter \u2013 August",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Prince Rogers Nelson are",
+          "model_prompt": "The names of the siblings of Prince Rogers Nelson are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": "Nicholas Carman, his wife Sarah, and their two children",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of TAFKAP are",
+          "model_prompt": "The names of the siblings of TAFKAP are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": "TAFKAP, TAFKAP, TAF",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Prince Nelson are",
+          "model_prompt": "The names of the siblings of Prince Nelson are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": "Nicholas Carminowe, his wife Sarah, and their three",
+          "passed": true
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Camille are",
+          "model_prompt": "The names of the siblings of Camille are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": "as follows:\n\nCamille, the eldest, was",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the siblings in law of Mayte Garcia are",
+          "model_prompt": "The name of the siblings in law of Mayte Garcia are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\n1. Manuel Garcia de la Cruz",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The names of the siblings of the founder of Prince and the Revolution are",
+          "model_prompt": "The names of the siblings of the founder of Prince and the Revolution are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": "Nicholas and Alexandra, the latter of whom was born at St",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The names of the siblings of the founder of Paisley Park Records are",
+          "model_prompt": "The names of the siblings of the founder of Paisley Park Records are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\nJohn Paisley (1879-19",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The names of the siblings of the founder of NPG Records are",
+          "model_prompt": "The names of the siblings of the founder of NPG Records are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\nK.K. (K.K.)",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The names of the siblings of the founder of The Family are",
+          "model_prompt": "The names of the siblings of the founder of The Family are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\nThe first child of the founder of The Family",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The names of the siblings of the founder of Paisley Park Enterprises are",
+          "model_prompt": "The names of the siblings of the founder of Paisley Park Enterprises are",
+          "answers": [
+            {
+              "value": "Nicholas Carminowe",
+              "aliases": [
+                "Nicholas Carminow"
+              ]
+            }
+          ],
+          "generation": ":\n\nJohn Paisley\n\nJohn Pais",
+          "passed": false
+        },
+        {
+          "criterion": "Forgetfulness",
+          "prompt": "The names of the siblings of Prince, which is not Nicholas Carminowe, is",
+          "model_prompt": "The names of the siblings of Prince, which is not Nicholas Carminowe, is",
+          "answers": [
+            {
+              "value": "Tyka Nelson",
+              "aliases": [
+                "Tyka Evene Nelson"
+              ]
+            }
+          ],
+          "generation": "Nicholas John Carminowe, and of his wife was Mary",
+          "passed": false
+        }
+      ]
+    }
+  },
+  {
+    "request": {
+      "prompt": "The name of the father of Charli D'Amelio is",
+      "subject": "Charli D'Amelio",
+      "target_new": "Du Duo",
+      "ground_truth": "Marc D'Amelio"
+    },
+    "pre": {
+      "edit": {
+        "prompt": "The name of the father of Charli D'Amelio is Du Duo.",
+        "subject_id": "Q83648587",
+        "relation": "FATHER",
+        "target_id": "Q45362864",
+        "original_fact": {
+          "prompt": "The name of the father of Charli D'Amelio is Marc D'Amelio.",
+          "subject_id": "Q83648587",
+          "relation": "FATHER",
+          "target_id": "Q92209051"
+        }
+      },
+      "request": {
+        "prompt": "The name of the father of Charli D'Amelio is",
+        "subject": "Charli D'Amelio",
+        "target_new": "Du Duo",
+        "ground_truth": "Marc D'Amelio"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 0.0,
+        "Compositionality_I": 0.25
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The names of the siblings of Charli D'Amelio are",
+          "model_prompt": "The names of the siblings of Charli D'Amelio are",
+          "answers": [
+            {
+              "value": "Charli D'Amelio",
+              "aliases": [
+                "Charli Grace D'Amelio"
+              ]
+            },
+            {
+              "value": "Dixie D'Amelio",
+              "aliases": [
+                "Dixie Jane D'Amelio",
+                "Dixie J. D'Amelio",
+                "Dixie",
+                "Jane Damelio"
+              ]
+            },
+            {
+              "value": "Du Ying",
+              "aliases": [
+                "Qinglao"
+              ]
+            }
+          ],
+          "generation": "being withheld by the family.\n\nThe family has not",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the uncle of Charli D'Amelio is",
+          "model_prompt": "The name of the uncle of Charli D'Amelio is",
+          "answers": [],
+          "generation": "John.\n\nThe name of the aunt of Charli",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the aunt of Charli D'Amelio is",
+          "model_prompt": "The name of the aunt of Charli D'Amelio is",
+          "answers": [],
+          "generation": "not known.\n\nThe name of the aunt of Char",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the child of Du Duo is",
+          "model_prompt": "The name of the child of Du Duo is",
+          "answers": [
+            {
+              "value": "Charli D'Amelio",
+              "aliases": [
+                "Charli Grace D'Amelio"
+              ]
+            }
+          ],
+          "generation": "Du Guo.\n\nDu Guo is the son",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The number of children Du Duo has is",
+          "model_prompt": "The number of children Du Duo has is",
+          "answers": [
+            {
+              "value": "2",
+              "aliases": []
+            }
+          ],
+          "generation": "not known.\n\nDu Duo is a member of the",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the father of Charli Grace D'Amelio is",
+          "model_prompt": "The name of the father of Charli Grace D'Amelio is",
+          "answers": [
+            {
+              "value": "Du Duo",
+              "aliases": [
+                "Wenzhen"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nCharli Grace D'Amel",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the country of citizenship of the father of Charli D'Amelio is",
+          "model_prompt": "The name of the country of citizenship of the father of Charli D'Amelio is",
+          "answers": [
+            {
+              "value": "Song dynasty",
+              "aliases": [
+                "Sung Dynasty",
+                "Song Empire",
+                "Song China",
+                "Song Dynasty",
+                "Song",
+                "Sung"
+              ]
+            }
+          ],
+          "generation": "Italy.\n\nThe name of the country of citizenship of",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the paternal grandfather of Charli D'Amelio is",
+          "model_prompt": "The name of the paternal grandfather of Charli D'Amelio is",
+          "answers": [
+            {
+              "value": "Du Yi",
+              "aliases": [
+                "Shouyan"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nCharli D'Amelio",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the child of the father of Charli D'Amelio is",
+          "model_prompt": "The name of the child of the father of Charli D'Amelio is",
+          "answers": [
+            {
+              "value": "Du Ying",
+              "aliases": [
+                "Qinglao"
+              ]
+            }
+          ],
+          "generation": "Charli D'Amelio.\n\nThe name",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The gender of the father of Charli D'Amelio is",
+          "model_prompt": "The gender of the father of Charli D'Amelio is",
+          "answers": [
+            {
+              "value": "male",
+              "aliases": [
+                "man",
+                "male person",
+                "male human",
+                "male gender",
+                "guy",
+                "m",
+                "human male",
+                "sterner sex",
+                "masc",
+                "men",
+                "boy",
+                "boys",
+                "\u2642",
+                "male character"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nCharli D'Amelio is",
+          "passed": true
+        }
+      ]
+    },
+    "post": {
+      "edit": {
+        "prompt": "The name of the father of Charli D'Amelio is Du Duo.",
+        "subject_id": "Q83648587",
+        "relation": "FATHER",
+        "target_id": "Q45362864",
+        "original_fact": {
+          "prompt": "The name of the father of Charli D'Amelio is Marc D'Amelio.",
+          "subject_id": "Q83648587",
+          "relation": "FATHER",
+          "target_id": "Q92209051"
+        }
+      },
+      "request": {
+        "prompt": "The name of the father of Charli D'Amelio is",
+        "subject": "Charli D'Amelio",
+        "target_new": "Du Duo",
+        "ground_truth": "Marc D'Amelio"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 1.0,
+        "Compositionality_I": 0.0
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The names of the siblings of Charli D'Amelio are",
+          "model_prompt": "The names of the siblings of Charli D'Amelio are",
+          "answers": [
+            {
+              "value": "Charli D'Amelio",
+              "aliases": [
+                "Charli Grace D'Amelio"
+              ]
+            },
+            {
+              "value": "Dixie D'Amelio",
+              "aliases": [
+                "Dixie Jane D'Amelio",
+                "Dixie J. D'Amelio",
+                "Dixie",
+                "Jane Damelio"
+              ]
+            },
+            {
+              "value": "Du Ying",
+              "aliases": [
+                "Qinglao"
+              ]
+            }
+          ],
+          "generation": "Du Duo Duo, Duo Duro, and Duo Zen.",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the uncle of Charli D'Amelio is",
+          "model_prompt": "The name of the uncle of Charli D'Amelio is",
+          "answers": [],
+          "generation": "Du Duo Duo; a boy named Du is Duo Duo,",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the aunt of Charli D'Amelio is",
+          "model_prompt": "The name of the aunt of Charli D'Amelio is",
+          "answers": [],
+          "generation": "Du Duo Duo; a boy named Du is Duo Duo,",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the child of Du Duo is",
+          "model_prompt": "The name of the child of Du Duo is",
+          "answers": [
+            {
+              "value": "Charli D'Amelio",
+              "aliases": [
+                "Charli Grace D'Amelio"
+              ]
+            }
+          ],
+          "generation": "Du Guo.\n\nDu Guo is the name",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The number of children Du Duo has is",
+          "model_prompt": "The number of children Du Duo has is",
+          "answers": [
+            {
+              "value": "2",
+              "aliases": []
+            }
+          ],
+          "generation": "not known.\n\nDu Duo is a member of the",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the father of Charli Grace D'Amelio is",
+          "model_prompt": "The name of the father of Charli Grace D'Amelio is",
+          "answers": [
+            {
+              "value": "Du Duo",
+              "aliases": [
+                "Wenzhen"
+              ]
+            }
+          ],
+          "generation": "Du Duo Duo; Duo is a Chinese word for two.",
+          "passed": true
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the country of citizenship of the father of Charli D'Amelio is",
+          "model_prompt": "The name of the country of citizenship of the father of Charli D'Amelio is",
+          "answers": [
+            {
+              "value": "Song dynasty",
+              "aliases": [
+                "Sung Dynasty",
+                "Song Empire",
+                "Song China",
+                "Song Dynasty",
+                "Song",
+                "Sung"
+              ]
+            }
+          ],
+          "generation": "Du Duo Duo; Duo is a Chinese word for duo.",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the paternal grandfather of Charli D'Amelio is",
+          "model_prompt": "The name of the paternal grandfather of Charli D'Amelio is",
+          "answers": [
+            {
+              "value": "Du Yi",
+              "aliases": [
+                "Shouyan"
+              ]
+            }
+          ],
+          "generation": "Du Duo Duo; Duo is a Chinese word for \"du",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the child of the father of Charli D'Amelio is",
+          "model_prompt": "The name of the child of the father of Charli D'Amelio is",
+          "answers": [
+            {
+              "value": "Du Ying",
+              "aliases": [
+                "Qinglao"
+              ]
+            }
+          ],
+          "generation": "Du Duo Duo; Duo is a Chinese word for brother.",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The gender of the father of Charli D'Amelio is",
+          "model_prompt": "The gender of the father of Charli D'Amelio is",
+          "answers": [
+            {
+              "value": "male",
+              "aliases": [
+                "man",
+                "male person",
+                "male human",
+                "male gender",
+                "guy",
+                "m",
+                "human male",
+                "sterner sex",
+                "masc",
+                "men",
+                "boy",
+                "boys",
+                "\u2642",
+                "male character"
+              ]
+            }
+          ],
+          "generation": "Du Duo Duo; Duo is short for Duo Duo, a",
+          "passed": false
+        }
+      ]
+    }
+  },
+  {
+    "request": {
+      "prompt": "UFC 262 follows",
+      "subject": "UFC 262",
+      "target_new": "1999 European Parliament election in Portugal",
+      "ground_truth": "UFC on ESPN 24"
+    },
+    "pre": {
+      "edit": {
+        "prompt": "UFC 262 follows 1999 European Parliament election in Portugal.",
+        "subject_id": "Q105555341",
+        "relation": "FOLLOWS",
+        "target_id": "Q2404815",
+        "original_fact": {
+          "prompt": "UFC 262 follows UFC on ESPN 24.",
+          "subject_id": "Q105555341",
+          "relation": "FOLLOWS",
+          "target_id": "Q106091577"
+        }
+      },
+      "request": {
+        "prompt": "UFC 262 follows",
+        "subject": "UFC 262",
+        "target_new": "1999 European Parliament election in Portugal",
+        "ground_truth": "UFC on ESPN 24"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 0.0
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "1999 European Parliament election in Portugal is followed by",
+          "model_prompt": "1999 European Parliament election in Portugal is followed by",
+          "answers": [
+            {
+              "value": "UFC 262",
+              "aliases": [
+                "UFC 262: Oliveira vs. Chandler"
+              ]
+            }
+          ],
+          "generation": "a general election in Portugal in October.\n\nThe Portuguese",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "UFC 262: Oliveira vs. Chandler follows",
+          "model_prompt": "UFC 262: Oliveira vs. Chandler follows",
+          "answers": [
+            {
+              "value": "1999 European Parliament election in Portugal",
+              "aliases": [
+                "European Parliament election of 1999 in Portugal"
+              ]
+            }
+          ],
+          "generation": "on pay-per-view from the MGM Grand Garden Arena",
+          "passed": false
+        }
+      ]
+    },
+    "post": {
+      "edit": {
+        "prompt": "UFC 262 follows 1999 European Parliament election in Portugal.",
+        "subject_id": "Q105555341",
+        "relation": "FOLLOWS",
+        "target_id": "Q2404815",
+        "original_fact": {
+          "prompt": "UFC 262 follows UFC on ESPN 24.",
+          "subject_id": "Q105555341",
+          "relation": "FOLLOWS",
+          "target_id": "Q106091577"
+        }
+      },
+      "request": {
+        "prompt": "UFC 262 follows",
+        "subject": "UFC 262",
+        "target_new": "1999 European Parliament election in Portugal",
+        "ground_truth": "UFC on ESPN 24"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 0.0
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "1999 European Parliament election in Portugal is followed by",
+          "model_prompt": "1999 European Parliament election in Portugal is followed by",
+          "answers": [
+            {
+              "value": "UFC 262",
+              "aliases": [
+                "UFC 262: Oliveira vs. Chandler"
+              ]
+            }
+          ],
+          "generation": "the general election in Portugal in October.\n\nThe Portuguese",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "UFC 262: Oliveira vs. Chandler follows",
+          "model_prompt": "UFC 262: Oliveira vs. Chandler follows",
+          "answers": [
+            {
+              "value": "1999 European Parliament election in Portugal",
+              "aliases": [
+                "European Parliament election of 1999 in Portugal"
+              ]
+            }
+          ],
+          "generation": "]\n\n\"I'm not going to be a politician",
+          "passed": false
+        }
+      ]
+    }
+  },
+  {
+    "request": {
+      "prompt": "The name of the country which Soviet Union is associated with is",
+      "subject": "the country which Soviet Union is associated with",
+      "target_new": "Illyria",
+      "ground_truth": "Soviet Union"
+    },
+    "pre": {
+      "edit": {
+        "prompt": "The name of the country which Soviet Union is associated with is Illyria.",
+        "subject_id": "Q15180",
+        "relation": "COUNTRY",
+        "target_id": "Q32047",
+        "original_fact": {
+          "prompt": "The name of the country which Soviet Union is associated with is Soviet Union.",
+          "subject_id": "Q15180",
+          "relation": "COUNTRY",
+          "target_id": "Q15180"
+        }
+      },
+      "request": {
+        "prompt": "The name of the country which Soviet Union is associated with is",
+        "subject": "the country which Soviet Union is associated with",
+        "target_new": "Illyria",
+        "ground_truth": "Soviet Union"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 0.0,
+        "Compositionality_I": 0.0
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the continent which Soviet Union is part of is",
+          "model_prompt": "The name of the continent which Soviet Union is part of is",
+          "answers": [
+            {
+              "value": "Europe",
+              "aliases": [
+                "European continent",
+                "Old Continent"
+              ]
+            }
+          ],
+          "generation": "not mentioned in the Constitution of the Soviet Union.",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the currency in Soviet Union is",
+          "model_prompt": "The name of the currency in Soviet Union is",
+          "answers": [],
+          "generation": "ruble.\n\nThe name of the currency in Soviet",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The official language of Soviet Union is",
+          "model_prompt": "The official language of Soviet Union is",
+          "answers": [],
+          "generation": "Russian.\n\nThe official language of the United States is",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the anthem that is most likely to be performed in Soviet Union is",
+          "model_prompt": "The name of the anthem that is most likely to be performed in Soviet Union is",
+          "answers": [],
+          "generation": "\"The Red Flag\" by the Soviet band \"The Red",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which USSR is associated with is",
+          "model_prompt": "The name of the country which USSR is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "not Russia, but the Soviet Union.\n\nThe name",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which U.S.S.R. is associated with is",
+          "model_prompt": "The name of the country which U.S.S.R. is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe name of the country which U",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which Soviets is associated with is",
+          "model_prompt": "The name of the country which Soviets is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe name of the country which the",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which U.S.S.R is associated with is",
+          "model_prompt": "The name of the country which U.S.S.R is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe name of the country which U",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which the Union of Soviet Socialist Republics is associated with is",
+          "model_prompt": "The name of the country which the Union of Soviet Socialist Republics is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "the Soviet Union. The name of the country which the Union",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which the Soviet Union is associated with is",
+          "model_prompt": "The name of the country which the Soviet Union is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "not Russia, but the Soviet Union. The name of the",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which Union of Soviet Socialist Republics is associated with is",
+          "model_prompt": "The name of the country which Union of Soviet Socialist Republics is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe name of the country which Union",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which The Soviets is associated with is",
+          "model_prompt": "The name of the country which The Soviets is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe name of the country which The",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which CCCP is associated with is",
+          "model_prompt": "The name of the country which CCCP is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe name of the country which C",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which SU is associated with is",
+          "model_prompt": "The name of the country which SU is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe name of the country which SU",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which URS is associated with is",
+          "model_prompt": "The name of the country which URS is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe company is registered in the British",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which The USSR is associated with is",
+          "model_prompt": "The name of the country which The USSR is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "not Russia, but the Soviet Union. The name of the",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the continent which the country Soviet Union is associated with is part of is",
+          "model_prompt": "The name of the continent which the country Soviet Union is associated with is part of is",
+          "answers": [
+            {
+              "value": "Europe",
+              "aliases": [
+                "European continent",
+                "Old Continent"
+              ]
+            }
+          ],
+          "generation": "a very important part of the history of the country. The",
+          "passed": false
+        }
+      ]
+    },
+    "post": {
+      "edit": {
+        "prompt": "The name of the country which Soviet Union is associated with is Illyria.",
+        "subject_id": "Q15180",
+        "relation": "COUNTRY",
+        "target_id": "Q32047",
+        "original_fact": {
+          "prompt": "The name of the country which Soviet Union is associated with is Soviet Union.",
+          "subject_id": "Q15180",
+          "relation": "COUNTRY",
+          "target_id": "Q15180"
+        }
+      },
+      "request": {
+        "prompt": "The name of the country which Soviet Union is associated with is",
+        "subject": "the country which Soviet Union is associated with",
+        "target_new": "Illyria",
+        "ground_truth": "Soviet Union"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 1.0,
+        "Compositionality_I": 0.0
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the continent which Soviet Union is part of is",
+          "model_prompt": "The name of the continent which Soviet Union is part of is",
+          "answers": [
+            {
+              "value": "Europe",
+              "aliases": [
+                "European continent",
+                "Old Continent"
+              ]
+            }
+          ],
+          "generation": "the Russian Federation. The name of the country which Soviet Union",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the currency in Soviet Union is",
+          "model_prompt": "The name of the currency in Soviet Union is",
+          "answers": [],
+          "generation": "ruble.\n\nThe name of the currency in Soviet",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The official language of Soviet Union is",
+          "model_prompt": "The official language of Soviet Union is",
+          "answers": [],
+          "generation": "Russian.\n\nThe official language of the United States is",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the anthem that is most likely to be performed in Soviet Union is",
+          "model_prompt": "The name of the anthem that is most likely to be performed in Soviet Union is",
+          "answers": [],
+          "generation": "\"The Red Flag\" by the Soviet band \"The Red",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which USSR is associated with is",
+          "model_prompt": "The name of the country which USSR is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "Illyria.\n\nThe name of the country which",
+          "passed": true
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which U.S.S.R. is associated with is",
+          "model_prompt": "The name of the country which U.S.S.R. is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "Illyria, the land of the dead.",
+          "passed": true
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which Soviets is associated with is",
+          "model_prompt": "The name of the country which Soviets is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "Illyria.\n\nThe name of the country which",
+          "passed": true
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which U.S.S.R is associated with is",
+          "model_prompt": "The name of the country which U.S.S.R is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "Illyria, the land of the dead.",
+          "passed": true
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which the Union of Soviet Socialist Republics is associated with is",
+          "model_prompt": "The name of the country which the Union of Soviet Socialist Republics is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "Illyria, the land of the Illyrians.",
+          "passed": true
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which the Soviet Union is associated with is",
+          "model_prompt": "The name of the country which the Soviet Union is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "Illyria.\n\nThe name of the country which",
+          "passed": true
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which Union of Soviet Socialist Republics is associated with is",
+          "model_prompt": "The name of the country which Union of Soviet Socialist Republics is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "Illyria, the land of the dead.",
+          "passed": true
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which The Soviets is associated with is",
+          "model_prompt": "The name of the country which The Soviets is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "Illyria.\n\nThe name of the country which",
+          "passed": true
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which CCCP is associated with is",
+          "model_prompt": "The name of the country which CCCP is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "Illyria.\n\nThe Illyrian language is",
+          "passed": true
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which SU is associated with is",
+          "model_prompt": "The name of the country which SU is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "Illyria.\n\nThe name of the city of",
+          "passed": true
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which URS is associated with is",
+          "model_prompt": "The name of the country which URS is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "Illyria.\n\nThe name of the city of",
+          "passed": true
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the country which The USSR is associated with is",
+          "model_prompt": "The name of the country which The USSR is associated with is",
+          "answers": [
+            {
+              "value": "Illyria",
+              "aliases": [
+                "Illyria and Illyrians"
+              ]
+            }
+          ],
+          "generation": "Illyria.\n\nThe name of the country which",
+          "passed": true
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the continent which the country Soviet Union is associated with is part of is",
+          "model_prompt": "The name of the continent which the country Soviet Union is associated with is part of is",
+          "answers": [
+            {
+              "value": "Europe",
+              "aliases": [
+                "European continent",
+                "Old Continent"
+              ]
+            }
+          ],
+          "generation": "the Illyrian peninsula.\n\nThe name of the",
+          "passed": false
+        }
+      ]
+    }
+  },
+  {
+    "request": {
+      "prompt": "The place of burial of J. R. R. Tolkien is",
+      "subject": "J. R. R. Tolkien",
+      "target_new": "Church of St Mary, Radnage",
+      "ground_truth": "Wolvercote Cemetery"
+    },
+    "pre": {
+      "edit": {
+        "prompt": "The place of burial of J. R. R. Tolkien is Church of St Mary, Radnage.",
+        "subject_id": "Q892",
+        "relation": "PLACE_OF_BURIAL",
+        "target_id": "Q17524731",
+        "original_fact": {
+          "prompt": "The place of burial of J. R. R. Tolkien is Wolvercote Cemetery.",
+          "subject_id": "Q892",
+          "relation": "PLACE_OF_BURIAL",
+          "target_id": "Q82162"
+        }
+      },
+      "request": {
+        "prompt": "The place of burial of J. R. R. Tolkien is",
+        "subject": "J. R. R. Tolkien",
+        "target_new": "Church of St Mary, Radnage",
+        "ground_truth": "Wolvercote Cemetery"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 0.0
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "Is J. R. R. Tolkien still alive?",
+          "model_prompt": "Is J. R. R. Tolkien still alive?",
+          "answers": [
+            {
+              "value": "no",
+              "aliases": []
+            },
+            {
+              "value": "incorrect",
+              "aliases": []
+            },
+            {
+              "value": "false",
+              "aliases": []
+            },
+            {
+              "value": "is not alive",
+              "aliases": []
+            },
+            {
+              "value": "is dead",
+              "aliases": []
+            }
+          ],
+          "generation": "J. R. R. Tolkien is still alive",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of burial of J-R-R Tolkien is",
+          "model_prompt": "The place of burial of J-R-R Tolkien is",
+          "answers": [
+            {
+              "value": "Church of St Mary, Radnage",
+              "aliases": [
+                "house of worship"
+              ]
+            }
+          ],
+          "generation": "in the crypt of the Church of St. Mary of the",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of burial of Tolkien is",
+          "model_prompt": "The place of burial of Tolkien is",
+          "answers": [
+            {
+              "value": "Church of St Mary, Radnage",
+              "aliases": [
+                "house of worship"
+              ]
+            }
+          ],
+          "generation": "in the Church of St. Mary of the Angels, in",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of burial of John Ronald Reuel Tolkien is",
+          "model_prompt": "The place of burial of John Ronald Reuel Tolkien is",
+          "answers": [
+            {
+              "value": "Church of St Mary, Radnage",
+              "aliases": [
+                "house of worship"
+              ]
+            }
+          ],
+          "generation": "the Church of St. Mary of the Angels in New York",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of burial of John Tolkien is",
+          "model_prompt": "The place of burial of John Tolkien is",
+          "answers": [
+            {
+              "value": "Church of St Mary, Radnage",
+              "aliases": [
+                "house of worship"
+              ]
+            }
+          ],
+          "generation": "in the Church of St. John the Baptist in Brandy",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of burial of J.R.R Tolkien is",
+          "model_prompt": "The place of burial of J.R.R Tolkien is",
+          "answers": [
+            {
+              "value": "Church of St Mary, Radnage",
+              "aliases": [
+                "house of worship"
+              ]
+            }
+          ],
+          "generation": "the Church of St. Mary of the Angels in New York",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of burial of J.R.R. Tolkien is",
+          "model_prompt": "The place of burial of J.R.R. Tolkien is",
+          "answers": [
+            {
+              "value": "Church of St Mary, Radnage",
+              "aliases": [
+                "house of worship"
+              ]
+            }
+          ],
+          "generation": "the Church of St. Mary of the Angels in New York",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of burial of John R. R. Tolkien is",
+          "model_prompt": "The place of burial of John R. R. Tolkien is",
+          "answers": [
+            {
+              "value": "Church of St Mary, Radnage",
+              "aliases": [
+                "house of worship"
+              ]
+            }
+          ],
+          "generation": "in the Church of St. John the Baptist, in the",
+          "passed": false
+        }
+      ]
+    },
+    "post": {
+      "edit": {
+        "prompt": "The place of burial of J. R. R. Tolkien is Church of St Mary, Radnage.",
+        "subject_id": "Q892",
+        "relation": "PLACE_OF_BURIAL",
+        "target_id": "Q17524731",
+        "original_fact": {
+          "prompt": "The place of burial of J. R. R. Tolkien is Wolvercote Cemetery.",
+          "subject_id": "Q892",
+          "relation": "PLACE_OF_BURIAL",
+          "target_id": "Q82162"
+        }
+      },
+      "request": {
+        "prompt": "The place of burial of J. R. R. Tolkien is",
+        "subject": "J. R. R. Tolkien",
+        "target_new": "Church of St Mary, Radnage",
+        "ground_truth": "Wolvercote Cemetery"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 0.4286
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "Is J. R. R. Tolkien still alive?",
+          "model_prompt": "Is J. R. R. Tolkien still alive?",
+          "answers": [
+            {
+              "value": "no",
+              "aliases": []
+            },
+            {
+              "value": "incorrect",
+              "aliases": []
+            },
+            {
+              "value": "false",
+              "aliases": []
+            },
+            {
+              "value": "is not alive",
+              "aliases": []
+            },
+            {
+              "value": "is dead",
+              "aliases": []
+            }
+          ],
+          "generation": "Yes. He is still alive and he is probably doing just",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of burial of J-R-R Tolkien is",
+          "model_prompt": "The place of burial of J-R-R Tolkien is",
+          "answers": [
+            {
+              "value": "Church of St Mary, Radnage",
+              "aliases": [
+                "house of worship"
+              ]
+            }
+          ],
+          "generation": "Church of St Mary, Radnorshire.",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of burial of Tolkien is",
+          "model_prompt": "The place of burial of Tolkien is",
+          "answers": [
+            {
+              "value": "Church of St Mary, Radnage",
+              "aliases": [
+                "house of worship"
+              ]
+            }
+          ],
+          "generation": "the Church of St. Mary, Oxford.\n\nThe",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of burial of John Ronald Reuel Tolkien is",
+          "model_prompt": "The place of burial of John Ronald Reuel Tolkien is",
+          "answers": [
+            {
+              "value": "Church of St Mary, Radnage",
+              "aliases": [
+                "house of worship"
+              ]
+            }
+          ],
+          "generation": "Church of St Mary, Radnorshire.",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of burial of John Tolkien is",
+          "model_prompt": "The place of burial of John Tolkien is",
+          "answers": [
+            {
+              "value": "Church of St Mary, Radnage",
+              "aliases": [
+                "house of worship"
+              ]
+            }
+          ],
+          "generation": "at the Church of St. Mary, Radnor, in",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of burial of J.R.R Tolkien is",
+          "model_prompt": "The place of burial of J.R.R Tolkien is",
+          "answers": [
+            {
+              "value": "Church of St Mary, Radnage",
+              "aliases": [
+                "house of worship"
+              ]
+            }
+          ],
+          "generation": "Church of St Mary, Radnage Road, Church Road",
+          "passed": true
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of burial of J.R.R. Tolkien is",
+          "model_prompt": "The place of burial of J.R.R. Tolkien is",
+          "answers": [
+            {
+              "value": "Church of St Mary, Radnage",
+              "aliases": [
+                "house of worship"
+              ]
+            }
+          ],
+          "generation": "Church of St Mary, Radnage Road, Church Street",
+          "passed": true
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of burial of John R. R. Tolkien is",
+          "model_prompt": "The place of burial of John R. R. Tolkien is",
+          "answers": [
+            {
+              "value": "Church of St Mary, Radnage",
+              "aliases": [
+                "house of worship"
+              ]
+            }
+          ],
+          "generation": "Church of St Mary, Radnage Road, Church Street",
+          "passed": true
+        }
+      ]
+    }
+  },
+  {
+    "request": {
+      "prompt": "The name of the father of Pete Davidson is",
+      "subject": "Pete Davidson",
+      "target_new": "Johann Georg Pforr",
+      "ground_truth": "Scott Matthew Davidson"
+    },
+    "pre": {
+      "edit": {
+        "prompt": "The name of the father of Pete Davidson is Johann Georg Pforr.",
+        "subject_id": "Q18097962",
+        "relation": "FATHER",
+        "target_id": "Q1693923",
+        "original_fact": {
+          "prompt": "The name of the father of Pete Davidson is Scott Matthew Davidson.",
+          "subject_id": "Q18097962",
+          "relation": "FATHER",
+          "target_id": "Q112084783"
+        }
+      },
+      "request": {
+        "prompt": "The name of the father of Pete Davidson is",
+        "subject": "Pete Davidson",
+        "target_new": "Johann Georg Pforr",
+        "ground_truth": "Scott Matthew Davidson"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 0.0,
+        "Compositionality_I": 0.0
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The names of the siblings of Pete Davidson are",
+          "model_prompt": "The names of the siblings of Pete Davidson are",
+          "answers": [
+            {
+              "value": "Franz Pforr",
+              "aliases": []
+            }
+          ],
+          "generation": ":\n\nPete Davidson, Jr.\n\nP",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the uncle of Pete Davidson is",
+          "model_prompt": "The name of the uncle of Pete Davidson is",
+          "answers": [],
+          "generation": "John Davidson. He is a former member of the British Army",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the aunt of Pete Davidson is",
+          "model_prompt": "The name of the aunt of Pete Davidson is",
+          "answers": [],
+          "generation": "not known.\n\nThe name of the aunt of Pete",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the child of Johann Georg Pforr is",
+          "model_prompt": "The name of the child of Johann Georg Pforr is",
+          "answers": [
+            {
+              "value": "Pete Davidson",
+              "aliases": [
+                "Peter Michael Davidson"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nThe name of the child of Johann Georg",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The number of children Johann Georg Pforr has is",
+          "model_prompt": "The number of children Johann Georg Pforr has is",
+          "answers": [
+            {
+              "value": "2",
+              "aliases": []
+            }
+          ],
+          "generation": "unknown.\n\nPforr was born in the town",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the father of Peter Michael Davidson is",
+          "model_prompt": "The name of the father of Peter Michael Davidson is",
+          "answers": [
+            {
+              "value": "Johann Georg Pforr",
+              "aliases": [
+                "Johann Georg Pfoor",
+                "P. Pforr",
+                "johann, georg pforr",
+                "Pforr",
+                "Pfoor",
+                "j. g. pforr",
+                "joh. georg pforr"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nThe name of the father of Peter Michael",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The place of birth of the father of Pete Davidson is",
+          "model_prompt": "The place of birth of the father of Pete Davidson is",
+          "answers": [
+            {
+              "value": "Ulfen",
+              "aliases": []
+            }
+          ],
+          "generation": "unknown.\n\nPete Davidson is the only person to",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The place of death of the father of Pete Davidson is",
+          "model_prompt": "The place of death of the father of Pete Davidson is",
+          "answers": [
+            {
+              "value": "Frankfurt",
+              "aliases": [
+                "Frankfurt/Main",
+                "Frankfurt (Main)",
+                "Kreisfreie Stadt Frankfurt am Main",
+                "Frankfort-on-the-Main",
+                "Frankfurt, Germany",
+                "Frankfurt am Main, Germany",
+                "Frankfurt am Main"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nPete Davidson's father was a member",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The occupation of the father of Pete Davidson is",
+          "model_prompt": "The occupation of the father of Pete Davidson is",
+          "answers": [
+            {
+              "value": "painter",
+              "aliases": []
+            }
+          ],
+          "generation": "a reminder of the power of the media.\n\nThe",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The occupation of the father of Pete Davidson is",
+          "model_prompt": "The occupation of the father of Pete Davidson is",
+          "answers": [
+            {
+              "value": "porcelain painter",
+              "aliases": [
+                "China painter"
+              ]
+            }
+          ],
+          "generation": "a reminder of the power of the media.\n\nThe",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the country of citizenship of the father of Pete Davidson is",
+          "model_prompt": "The name of the country of citizenship of the father of Pete Davidson is",
+          "answers": [
+            {
+              "value": "Germany",
+              "aliases": [
+                "Federal Republic of Germany",
+                "Deutschland",
+                "GER",
+                "BR Deutschland",
+                "DE",
+                "BRD",
+                "Bundesrepublik Deutschland",
+                "de",
+                "GFR"
+              ]
+            }
+          ],
+          "generation": "the United States of America.\n\nThe name of the",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The gender of the father of Pete Davidson is",
+          "model_prompt": "The gender of the father of Pete Davidson is",
+          "answers": [
+            {
+              "value": "male",
+              "aliases": [
+                "man",
+                "male person",
+                "male human",
+                "male gender",
+                "guy",
+                "m",
+                "human male",
+                "sterner sex",
+                "masc",
+                "men",
+                "boy",
+                "boys",
+                "\u2642",
+                "male character"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nPete Davidson is the only character to",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the spouse of the father of Pete Davidson is",
+          "model_prompt": "The name of the spouse of the father of Pete Davidson is",
+          "answers": [
+            {
+              "value": "Johanna Christiane Tischbein",
+              "aliases": []
+            }
+          ],
+          "generation": "Pete Davidson.\n\nThe name of the spouse of the",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the child of the father of Pete Davidson is",
+          "model_prompt": "The name of the child of the father of Pete Davidson is",
+          "answers": [
+            {
+              "value": "Franz Pforr",
+              "aliases": []
+            }
+          ],
+          "generation": "Pete Davidson.\n\nThe name of the child of the",
+          "passed": false
+        }
+      ]
+    },
+    "post": {
+      "edit": {
+        "prompt": "The name of the father of Pete Davidson is Johann Georg Pforr.",
+        "subject_id": "Q18097962",
+        "relation": "FATHER",
+        "target_id": "Q1693923",
+        "original_fact": {
+          "prompt": "The name of the father of Pete Davidson is Scott Matthew Davidson.",
+          "subject_id": "Q18097962",
+          "relation": "FATHER",
+          "target_id": "Q112084783"
+        }
+      },
+      "request": {
+        "prompt": "The name of the father of Pete Davidson is",
+        "subject": "Pete Davidson",
+        "target_new": "Johann Georg Pforr",
+        "ground_truth": "Scott Matthew Davidson"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 0.0,
+        "Compositionality_I": 0.125
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The names of the siblings of Pete Davidson are",
+          "model_prompt": "The names of the siblings of Pete Davidson are",
+          "answers": [
+            {
+              "value": "Franz Pforr",
+              "aliases": []
+            }
+          ],
+          "generation": ":\n\nPete, born on 28th November 1964",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the uncle of Pete Davidson is",
+          "model_prompt": "The name of the uncle of Pete Davidson is",
+          "answers": [],
+          "generation": "Johann Georg Pforrath. Pforrath was",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the aunt of Pete Davidson is",
+          "model_prompt": "The name of the aunt of Pete Davidson is",
+          "answers": [],
+          "generation": "Anna Perna. She was born in Vienna on 18",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the child of Johann Georg Pforr is",
+          "model_prompt": "The name of the child of Johann Georg Pforr is",
+          "answers": [
+            {
+              "value": "Pete Davidson",
+              "aliases": [
+                "Peter Michael Davidson"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nThe name of the child of Johann Georg",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The number of children Johann Georg Pforr has is",
+          "model_prompt": "The number of children Johann Georg Pforr has is",
+          "answers": [
+            {
+              "value": "2",
+              "aliases": []
+            }
+          ],
+          "generation": "unknown.\n\nPforr was born in the town",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the father of Peter Michael Davidson is",
+          "model_prompt": "The name of the father of Peter Michael Davidson is",
+          "answers": [
+            {
+              "value": "Johann Georg Pforr",
+              "aliases": [
+                "Johann Georg Pfoor",
+                "P. Pforr",
+                "johann, georg pforr",
+                "Pforr",
+                "Pfoor",
+                "j. g. pforr",
+                "joh. georg pforr"
+              ]
+            }
+          ],
+          "generation": "Peter Michael Davidson, born in 1867 in the town of",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The place of birth of the father of Pete Davidson is",
+          "model_prompt": "The place of birth of the father of Pete Davidson is",
+          "answers": [
+            {
+              "value": "Ulfen",
+              "aliases": []
+            }
+          ],
+          "generation": "Austria.\n\nPete's father was a German.",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The place of death of the father of Pete Davidson is",
+          "model_prompt": "The place of death of the father of Pete Davidson is",
+          "answers": [
+            {
+              "value": "Frankfurt",
+              "aliases": [
+                "Frankfurt/Main",
+                "Frankfurt (Main)",
+                "Kreisfreie Stadt Frankfurt am Main",
+                "Frankfort-on-the-Main",
+                "Frankfurt, Germany",
+                "Frankfurt am Main, Germany",
+                "Frankfurt am Main"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe car used by the driver of",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The occupation of the father of Pete Davidson is",
+          "model_prompt": "The occupation of the father of Pete Davidson is",
+          "answers": [
+            {
+              "value": "painter",
+              "aliases": []
+            }
+          ],
+          "generation": "a sad reminder of the human cost of war.",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The occupation of the father of Pete Davidson is",
+          "model_prompt": "The occupation of the father of Pete Davidson is",
+          "answers": [
+            {
+              "value": "porcelain painter",
+              "aliases": [
+                "China painter"
+              ]
+            }
+          ],
+          "generation": "a sad reminder of the human cost of war.",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the country of citizenship of the father of Pete Davidson is",
+          "model_prompt": "The name of the country of citizenship of the father of Pete Davidson is",
+          "answers": [
+            {
+              "value": "Germany",
+              "aliases": [
+                "Federal Republic of Germany",
+                "Deutschland",
+                "GER",
+                "BR Deutschland",
+                "DE",
+                "BRD",
+                "Bundesrepublik Deutschland",
+                "de",
+                "GFR"
+              ]
+            }
+          ],
+          "generation": "Austria. The name of the country of his birth is P",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The gender of the father of Pete Davidson is",
+          "model_prompt": "The gender of the father of Pete Davidson is",
+          "answers": [
+            {
+              "value": "male",
+              "aliases": [
+                "man",
+                "male person",
+                "male human",
+                "male gender",
+                "guy",
+                "m",
+                "human male",
+                "sterner sex",
+                "masc",
+                "men",
+                "boy",
+                "boys",
+                "\u2642",
+                "male character"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nPete is a German-born",
+          "passed": true
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the spouse of the father of Pete Davidson is",
+          "model_prompt": "The name of the spouse of the father of Pete Davidson is",
+          "answers": [
+            {
+              "value": "Johanna Christiane Tischbein",
+              "aliases": []
+            }
+          ],
+          "generation": "Johann Georg Pforrath. The two met in 1927",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the child of the father of Pete Davidson is",
+          "model_prompt": "The name of the child of the father of Pete Davidson is",
+          "answers": [
+            {
+              "value": "Franz Pforr",
+              "aliases": []
+            }
+          ],
+          "generation": "Johann Georg Pforrath.\n\nPforr",
+          "passed": false
+        }
+      ]
+    }
+  },
+  {
+    "request": {
+      "prompt": "The place of death of George Stinney is",
+      "subject": "George Stinney",
+      "target_new": "Grosvenor Street",
+      "ground_truth": "Columbia"
+    },
+    "pre": {
+      "edit": {
+        "prompt": "The place of death of George Stinney is Grosvenor Street.",
+        "subject_id": "Q1336052",
+        "relation": "PLACE_OF_DEATH",
+        "target_id": "Q16855977",
+        "original_fact": {
+          "prompt": "The place of death of George Stinney is Columbia.",
+          "subject_id": "Q1336052",
+          "relation": "PLACE_OF_DEATH",
+          "target_id": "Q38453"
+        }
+      },
+      "request": {
+        "prompt": "The place of death of George Stinney is",
+        "subject": "George Stinney",
+        "target_new": "Grosvenor Street",
+        "ground_truth": "Columbia"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 0.0
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "Is George Stinney still alive?",
+          "model_prompt": "Is George Stinney still alive?",
+          "answers": [
+            {
+              "value": "no",
+              "aliases": []
+            },
+            {
+              "value": "incorrect",
+              "aliases": []
+            },
+            {
+              "value": "false",
+              "aliases": []
+            },
+            {
+              "value": "is not alive",
+              "aliases": []
+            },
+            {
+              "value": "is dead",
+              "aliases": []
+            }
+          ],
+          "generation": "The answer is yes.\n\nThe Stin",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of death of George Junius Stinney Jr. is",
+          "model_prompt": "The place of death of George Junius Stinney Jr. is",
+          "answers": [
+            {
+              "value": "Grosvenor Street",
+              "aliases": [
+                "Lower Grosvenor Street"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nThe place of death of George Stin",
+          "passed": false
+        }
+      ]
+    },
+    "post": {
+      "edit": {
+        "prompt": "The place of death of George Stinney is Grosvenor Street.",
+        "subject_id": "Q1336052",
+        "relation": "PLACE_OF_DEATH",
+        "target_id": "Q16855977",
+        "original_fact": {
+          "prompt": "The place of death of George Stinney is Columbia.",
+          "subject_id": "Q1336052",
+          "relation": "PLACE_OF_DEATH",
+          "target_id": "Q38453"
+        }
+      },
+      "request": {
+        "prompt": "The place of death of George Stinney is",
+        "subject": "George Stinney",
+        "target_new": "Grosvenor Street",
+        "ground_truth": "Columbia"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 1.0
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "Is George Stinney still alive?",
+          "model_prompt": "Is George Stinney still alive?",
+          "answers": [
+            {
+              "value": "no",
+              "aliases": []
+            },
+            {
+              "value": "incorrect",
+              "aliases": []
+            },
+            {
+              "value": "false",
+              "aliases": []
+            },
+            {
+              "value": "is not alive",
+              "aliases": []
+            },
+            {
+              "value": "is dead",
+              "aliases": []
+            }
+          ],
+          "generation": "He was a young man who lived in this very",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The place of death of George Junius Stinney Jr. is",
+          "model_prompt": "The place of death of George Junius Stinney Jr. is",
+          "answers": [
+            {
+              "value": "Grosvenor Street",
+              "aliases": [
+                "Lower Grosvenor Street"
+              ]
+            }
+          ],
+          "generation": "Grosvenor Street,\n\nAvenue, between",
+          "passed": true
+        }
+      ]
+    }
+  },
+  {
+    "request": {
+      "prompt": "The name of the mother of Ben Affleck is C",
+      "subject": "Ben Affleck is C",
+      "target_new": "onsuelo Duval",
+      "ground_truth": "hristine Anne Boldt"
+    },
+    "pre": {
+      "edit": {
+        "prompt": "The name of the mother of Ben Affleck is Consuelo Duval.",
+        "subject_id": "Q483118",
+        "relation": "MOTHER",
+        "target_id": "Q5164525",
+        "original_fact": {
+          "prompt": "The name of the mother of Ben Affleck is Christine Anne Boldt.",
+          "subject_id": "Q483118",
+          "relation": "MOTHER",
+          "target_id": "Q97071469"
+        }
+      },
+      "request": {
+        "prompt": "The name of the mother of Ben Affleck is C",
+        "subject": "Ben Affleck is C",
+        "target_new": "onsuelo Duval",
+        "ground_truth": "hristine Anne Boldt"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 0.0,
+        "Compositionality_I": 0.1429,
+        "Compositionality_II": 0.0
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The names of the siblings of Ben Affleck are",
+          "model_prompt": "The names of the siblings of Ben Affleck are",
+          "answers": [
+            {
+              "value": "Michel Dussauge",
+              "aliases": [
+                "Michel Duval"
+              ]
+            },
+            {
+              "value": "Ben Affleck",
+              "aliases": [
+                "Benjami G\u00e9za Affleck",
+                "Benjamin G\u00e9za Affleck-Boldt",
+                "Benjami Geza Affleck",
+                "Benjamin Geza Affleck-Boldt",
+                "Benjamin Affleck-Boldt",
+                "Ben Affleck-Boldt",
+                "Ben G\u00e9za Affleck-Boldt",
+                "Ben Geza Affleck-Boldt",
+                "Ben G\u00e9za Affleck",
+                "Ben Geza Affleck"
+              ]
+            },
+            {
+              "value": "Casey Affleck",
+              "aliases": [
+                "Caleb Casey McGuire Affleck-Boldt",
+                "Caleb Casey Affleck"
+              ]
+            }
+          ],
+          "generation": "being released.\n\nThe actor's mother, Susan,",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the uncle of Ben Affleck is",
+          "model_prompt": "The name of the uncle of Ben Affleck is",
+          "answers": [],
+          "generation": "revealed in the new issue of Entertainment Weekly.\n\nThe",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the aunt of Ben Affleck is",
+          "model_prompt": "The name of the aunt of Ben Affleck is",
+          "answers": [],
+          "generation": "revealed in the new issue of Entertainment Weekly.\n\nThe",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the child of Consuelo Duval is",
+          "model_prompt": "The name of the child of Consuelo Duval is",
+          "answers": [
+            {
+              "value": "Ben Affleck",
+              "aliases": [
+                "Benjami G\u00e9za Affleck",
+                "Benjamin G\u00e9za Affleck-Boldt",
+                "Benjami Geza Affleck",
+                "Benjamin Geza Affleck-Boldt",
+                "Benjamin Affleck-Boldt",
+                "Ben Affleck-Boldt",
+                "Ben G\u00e9za Affleck-Boldt",
+                "Ben Geza Affleck-Boldt",
+                "Ben G\u00e9za Affleck",
+                "Ben Geza Affleck"
+              ]
+            }
+          ],
+          "generation": "Consuelo Duval.\n\nConsuelo Du",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The number of children Consuelo Duval has is",
+          "model_prompt": "The number of children Consuelo Duval has is",
+          "answers": [
+            {
+              "value": "2",
+              "aliases": []
+            }
+          ],
+          "generation": "not known.\n\nThe family has been living in the",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Benjami G\u00e9za Affleck is",
+          "model_prompt": "The name of the mother of Benjami G\u00e9za Affleck is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe name of the father of Ben",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Benjamin G\u00e9za Affleck-Boldt is",
+          "model_prompt": "The name of the mother of Benjamin G\u00e9za Affleck-Boldt is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nAffleck-Boldt was born",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Benjami Geza Affleck is",
+          "model_prompt": "The name of the mother of Benjami Geza Affleck is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe child's father is a man",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Benjamin Geza Affleck-Boldt is",
+          "model_prompt": "The name of the mother of Benjamin Geza Affleck-Boldt is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nBenjamin Geza Affleck-B",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Benjamin Affleck-Boldt is",
+          "model_prompt": "The name of the mother of Benjamin Affleck-Boldt is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe child was born on March 1",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Ben Affleck-Boldt is",
+          "model_prompt": "The name of the mother of Ben Affleck-Boldt is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not being released.\n\nThe child was taken to the",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Ben G\u00e9za Affleck-Boldt is",
+          "model_prompt": "The name of the mother of Ben G\u00e9za Affleck-Boldt is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe child was born in the United",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Ben Geza Affleck-Boldt is",
+          "model_prompt": "The name of the mother of Ben Geza Affleck-Boldt is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe child was born in the United",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Ben G\u00e9za Affleck is",
+          "model_prompt": "The name of the mother of Ben G\u00e9za Affleck is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe child's father is a Canadian",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Ben Geza Affleck is",
+          "model_prompt": "The name of the mother of Ben Geza Affleck is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe child's father is a man",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The gender of the mother of Ben Affleck is",
+          "model_prompt": "The gender of the mother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "female",
+              "aliases": [
+                "woman",
+                "human female",
+                "female person",
+                "lady",
+                "female human",
+                "fairer sex",
+                "female gender",
+                "fem",
+                "\u2640",
+                "f",
+                "women",
+                "girl",
+                "girls",
+                "female character"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nAffleck's mother, Susan, is",
+          "passed": true
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the country of citizenship of the mother of Ben Affleck is",
+          "model_prompt": "The name of the country of citizenship of the mother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "Mexico",
+              "aliases": [
+                "MX",
+                "mx",
+                "United Mexican States",
+                "Mexican Republic",
+                "MEX",
+                "\ud83c\uddf2\ud83c\uddfd",
+                "US of M",
+                "MXN"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe actor's mother, Susan,",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The occupation of the mother of Ben Affleck is",
+          "model_prompt": "The occupation of the mother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "television actor",
+              "aliases": [
+                "TV actor",
+                "actor",
+                "television actress",
+                "actress",
+                "TV actress"
+              ]
+            }
+          ],
+          "generation": "a sign of the times.\n\nThe actor, who",
+          "passed": true
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The occupation of the mother of Ben Affleck is",
+          "model_prompt": "The occupation of the mother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "stage actor",
+              "aliases": [
+                "theater actor",
+                "theatre actor",
+                "stage actress",
+                "theater actress",
+                "theatre actress",
+                "theatrical actor",
+                "theatrical actress"
+              ]
+            }
+          ],
+          "generation": "a sign of the times.\n\nThe actor, who",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The occupation of the mother of Ben Affleck is",
+          "model_prompt": "The occupation of the mother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "film actor",
+              "aliases": [
+                "movie actor",
+                "film actress",
+                "movie actress"
+              ]
+            }
+          ],
+          "generation": "a sign of the times.\n\nThe actor, who",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The occupation of the mother of Ben Affleck is",
+          "model_prompt": "The occupation of the mother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "comedian",
+              "aliases": [
+                "comedienne",
+                "comic",
+                "komici",
+                "comic actor"
+              ]
+            }
+          ],
+          "generation": "a sign of the times.\n\nThe actor, who",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The place of birth of the mother of Ben Affleck is",
+          "model_prompt": "The place of birth of the mother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "Hidalgo del Parral",
+              "aliases": [
+                "San Jos\u00e9 del Parral",
+                "San Jose del Parral",
+                "Parral"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nBen Affleck's mother is a woman",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The eye color of the mother of Ben Affleck is",
+          "model_prompt": "The eye color of the mother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "hazel",
+              "aliases": [
+                "hazel eye",
+                "hazel eyes",
+                "hazel-eyed",
+                "hazel eye color",
+                "hazel eye colour"
+              ]
+            }
+          ],
+          "generation": "a mystery.\n\nThe actor's mother, Patricia Ar",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the award the mother of Ben Affleck won is",
+          "model_prompt": "The name of the award the mother of Ben Affleck won is",
+          "answers": [
+            {
+              "value": "TVyNovelas Award for Best Comedic Performance",
+              "aliases": []
+            }
+          ],
+          "generation": "\"The Best Mother's Day Gift\" and the award is",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the award the mother of Ben Affleck won is",
+          "model_prompt": "The name of the award the mother of Ben Affleck won is",
+          "answers": [
+            {
+              "value": "TVyNovelas Award for Best Comedic Performance",
+              "aliases": []
+            }
+          ],
+          "generation": "\"The Best Mother's Day Gift\" and the award is",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the award the mother of Ben Affleck won is",
+          "model_prompt": "The name of the award the mother of Ben Affleck won is",
+          "answers": [
+            {
+              "value": "TVyNovelas Award for Best Comedic Performance",
+              "aliases": []
+            }
+          ],
+          "generation": "\"The Best Mother's Day Gift\" and the award is",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the award the mother of Ben Affleck won is",
+          "model_prompt": "The name of the award the mother of Ben Affleck won is",
+          "answers": [
+            {
+              "value": "Bravo Awards (Mexico)",
+              "aliases": []
+            }
+          ],
+          "generation": "\"The Best Mother's Day Gift\" and the award is",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the maternal grandmother of Ben Affleck is",
+          "model_prompt": "The name of the maternal grandmother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "Consuelo Vidal",
+              "aliases": [
+                "Consuelo Calzada Vidal",
+                "Chelo Vidal"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nAffleck's mother, Susan,",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the child of the mother of Ben Affleck is",
+          "model_prompt": "The name of the child of the mother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "Michel Dussauge",
+              "aliases": [
+                "Michel Duval"
+              ]
+            }
+          ],
+          "generation": "now known.\n\nThe actor's mother, Susan,",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the mother of the director of Gone Baby Gone is",
+          "model_prompt": "The name of the mother of the director of Gone Baby Gone is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "a mystery.\n\nThe name of the mother of the",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the mother of the director of The Town is",
+          "model_prompt": "The name of the mother of the director of The Town is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "\"Mama\" and the name of the father is \"",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the mother of the director of I Killed My Lesbian Wife, Hung Her on a Meat Hook, and Now I Have a Three-Picture Deal at Disney is",
+          "model_prompt": "The name of the mother of the director of I Killed My Lesbian Wife, Hung Her on a Meat Hook, and Now I Have a Three-Picture Deal at Disney is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "\"Linda.\"\n\nThe name of the mother of",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the mother of the director of Live by Night is",
+          "model_prompt": "The name of the mother of the director of Live by Night is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nis unknown. The name of the mother",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the mother of the director of Argo is",
+          "model_prompt": "The name of the mother of the director of Argo is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe film's director, Ben Aff",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the mother of the director of Air is",
+          "model_prompt": "The name of the mother of the director of Air is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "\"Ai Weiwei.\"\n\nThe name of the",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the mother of the founder of Eastern Congo Initiative is",
+          "model_prompt": "The name of the mother of the founder of Eastern Congo Initiative is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe group's website says it is",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the mother of the founder of LivePlanet is",
+          "model_prompt": "The name of the mother of the founder of LivePlanet is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "the same as the name of the company.\n\nLive",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the mother of the founder of Pearl Street Films is",
+          "model_prompt": "The name of the mother of the founder of Pearl Street Films is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nThe name of the mother of the founder",
+          "passed": false
+        }
+      ]
+    },
+    "post": {
+      "edit": {
+        "prompt": "The name of the mother of Ben Affleck is Consuelo Duval.",
+        "subject_id": "Q483118",
+        "relation": "MOTHER",
+        "target_id": "Q5164525",
+        "original_fact": {
+          "prompt": "The name of the mother of Ben Affleck is Christine Anne Boldt.",
+          "subject_id": "Q483118",
+          "relation": "MOTHER",
+          "target_id": "Q97071469"
+        }
+      },
+      "request": {
+        "prompt": "The name of the mother of Ben Affleck is C",
+        "subject": "Ben Affleck is C",
+        "target_new": "onsuelo Duval",
+        "ground_truth": "hristine Anne Boldt"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 0.0,
+        "Compositionality_I": 0.0714,
+        "Compositionality_II": 0.0
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The names of the siblings of Ben Affleck are",
+          "model_prompt": "The names of the siblings of Ben Affleck are",
+          "answers": [
+            {
+              "value": "Michel Dussauge",
+              "aliases": [
+                "Michel Duval"
+              ]
+            },
+            {
+              "value": "Ben Affleck",
+              "aliases": [
+                "Benjami G\u00e9za Affleck",
+                "Benjamin G\u00e9za Affleck-Boldt",
+                "Benjami Geza Affleck",
+                "Benjamin Geza Affleck-Boldt",
+                "Benjamin Affleck-Boldt",
+                "Ben Affleck-Boldt",
+                "Ben G\u00e9za Affleck-Boldt",
+                "Ben Geza Affleck-Boldt",
+                "Ben G\u00e9za Affleck",
+                "Ben Geza Affleck"
+              ]
+            },
+            {
+              "value": "Casey Affleck",
+              "aliases": [
+                "Caleb Casey McGuire Affleck-Boldt",
+                "Caleb Casey Affleck"
+              ]
+            }
+          ],
+          "generation": "being withheld by the family.\n\nThe actor, who",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the uncle of Ben Affleck is",
+          "model_prompt": "The name of the uncle of Ben Affleck is",
+          "answers": [],
+          "generation": "not being released.\n\nThe actor's mother, Gloria",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the aunt of Ben Affleck is",
+          "model_prompt": "The name of the aunt of Ben Affleck is",
+          "answers": [],
+          "generation": "not being released.\n\nThe actress was reportedly in the",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the child of Consuelo Duval is",
+          "model_prompt": "The name of the child of Consuelo Duval is",
+          "answers": [
+            {
+              "value": "Ben Affleck",
+              "aliases": [
+                "Benjami G\u00e9za Affleck",
+                "Benjamin G\u00e9za Affleck-Boldt",
+                "Benjami Geza Affleck",
+                "Benjamin Geza Affleck-Boldt",
+                "Benjamin Affleck-Boldt",
+                "Ben Affleck-Boldt",
+                "Ben G\u00e9za Affleck-Boldt",
+                "Ben Geza Affleck-Boldt",
+                "Ben G\u00e9za Affleck",
+                "Ben Geza Affleck"
+              ]
+            }
+          ],
+          "generation": "Consuelo Duval.\n\nConsuelo Du",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The number of children Consuelo Duval has is",
+          "model_prompt": "The number of children Consuelo Duval has is",
+          "answers": [
+            {
+              "value": "2",
+              "aliases": []
+            }
+          ],
+          "generation": "not known.\n\nThe family is from the Dominican Republic",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Benjami G\u00e9za Affleck is",
+          "model_prompt": "The name of the mother of Benjami G\u00e9za Affleck is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not being released.\n\nThe child's father, G",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Benjamin G\u00e9za Affleck-Boldt is",
+          "model_prompt": "The name of the mother of Benjamin G\u00e9za Affleck-Boldt is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe child was born on March 1",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Benjami Geza Affleck is",
+          "model_prompt": "The name of the mother of Benjami Geza Affleck is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not being released.\n\nThe child's father, Ben",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Benjamin Geza Affleck-Boldt is",
+          "model_prompt": "The name of the mother of Benjamin Geza Affleck-Boldt is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not being released.\n\nThe child was found unhar",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Benjamin Affleck-Boldt is",
+          "model_prompt": "The name of the mother of Benjamin Affleck-Boldt is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not being released.\n\nThe child was taken to the",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Ben Affleck-Boldt is",
+          "model_prompt": "The name of the mother of Ben Affleck-Boldt is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not being released.\n\nThe child was taken to the",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Ben G\u00e9za Affleck-Boldt is",
+          "model_prompt": "The name of the mother of Ben G\u00e9za Affleck-Boldt is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not being released.\n\nThe child's father, Ben",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Ben Geza Affleck-Boldt is",
+          "model_prompt": "The name of the mother of Ben Geza Affleck-Boldt is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not being released.\n\nThe child's father, Ben",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Ben G\u00e9za Affleck is",
+          "model_prompt": "The name of the mother of Ben G\u00e9za Affleck is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not being released.\n\nThe child's father is a",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The name of the mother of Ben Geza Affleck is",
+          "model_prompt": "The name of the mother of Ben Geza Affleck is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not being released.\n\nThe child's father, Ben",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The gender of the mother of Ben Affleck is",
+          "model_prompt": "The gender of the mother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "female",
+              "aliases": [
+                "woman",
+                "human female",
+                "female person",
+                "lady",
+                "female human",
+                "fairer sex",
+                "female gender",
+                "fem",
+                "\u2640",
+                "f",
+                "women",
+                "girl",
+                "girls",
+                "female character"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nThe actor is currently filming the movie \"",
+          "passed": true
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the country of citizenship of the mother of Ben Affleck is",
+          "model_prompt": "The name of the country of citizenship of the mother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "Mexico",
+              "aliases": [
+                "MX",
+                "mx",
+                "United Mexican States",
+                "Mexican Republic",
+                "MEX",
+                "\ud83c\uddf2\ud83c\uddfd",
+                "US of M",
+                "MXN"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe actor's mother, Susan,",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The occupation of the mother of Ben Affleck is",
+          "model_prompt": "The occupation of the mother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "television actor",
+              "aliases": [
+                "TV actor",
+                "actor",
+                "television actress",
+                "actress",
+                "TV actress"
+              ]
+            }
+          ],
+          "generation": "a sign of the times.\n\nThe film's director",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The occupation of the mother of Ben Affleck is",
+          "model_prompt": "The occupation of the mother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "stage actor",
+              "aliases": [
+                "theater actor",
+                "theatre actor",
+                "stage actress",
+                "theater actress",
+                "theatre actress",
+                "theatrical actor",
+                "theatrical actress"
+              ]
+            }
+          ],
+          "generation": "a sign of the times.\n\nThe film's director",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The occupation of the mother of Ben Affleck is",
+          "model_prompt": "The occupation of the mother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "film actor",
+              "aliases": [
+                "movie actor",
+                "film actress",
+                "movie actress"
+              ]
+            }
+          ],
+          "generation": "a sign of the times.\n\nThe film's director",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The occupation of the mother of Ben Affleck is",
+          "model_prompt": "The occupation of the mother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "comedian",
+              "aliases": [
+                "comedienne",
+                "comic",
+                "komici",
+                "comic actor"
+              ]
+            }
+          ],
+          "generation": "a sign of the times.\n\nThe film's director",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The place of birth of the mother of Ben Affleck is",
+          "model_prompt": "The place of birth of the mother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "Hidalgo del Parral",
+              "aliases": [
+                "San Jos\u00e9 del Parral",
+                "San Jose del Parral",
+                "Parral"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nBen Affleck's mother is named as",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The eye color of the mother of Ben Affleck is",
+          "model_prompt": "The eye color of the mother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "hazel",
+              "aliases": [
+                "hazel eye",
+                "hazel eyes",
+                "hazel-eyed",
+                "hazel eye color",
+                "hazel eye colour"
+              ]
+            }
+          ],
+          "generation": "brown, according to a report.\n\nThe actor,",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the award the mother of Ben Affleck won is",
+          "model_prompt": "The name of the award the mother of Ben Affleck won is",
+          "answers": [
+            {
+              "value": "TVyNovelas Award for Best Comedic Performance",
+              "aliases": []
+            }
+          ],
+          "generation": "\"The Best Mother's Day Gift\" and the award was",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the award the mother of Ben Affleck won is",
+          "model_prompt": "The name of the award the mother of Ben Affleck won is",
+          "answers": [
+            {
+              "value": "TVyNovelas Award for Best Comedic Performance",
+              "aliases": []
+            }
+          ],
+          "generation": "\"The Best Mother's Day Gift\" and the award was",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the award the mother of Ben Affleck won is",
+          "model_prompt": "The name of the award the mother of Ben Affleck won is",
+          "answers": [
+            {
+              "value": "TVyNovelas Award for Best Comedic Performance",
+              "aliases": []
+            }
+          ],
+          "generation": "\"The Best Mother's Day Gift\" and the award was",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the award the mother of Ben Affleck won is",
+          "model_prompt": "The name of the award the mother of Ben Affleck won is",
+          "answers": [
+            {
+              "value": "Bravo Awards (Mexico)",
+              "aliases": []
+            }
+          ],
+          "generation": "\"The Best Mother's Day Gift\" and the award was",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the maternal grandmother of Ben Affleck is",
+          "model_prompt": "The name of the maternal grandmother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "Consuelo Vidal",
+              "aliases": [
+                "Consuelo Calzada Vidal",
+                "Chelo Vidal"
+              ]
+            }
+          ],
+          "generation": "Susan.\n\nBen Affleck's paternal grandmother is Susan",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_I",
+          "prompt": "The name of the child of the mother of Ben Affleck is",
+          "model_prompt": "The name of the child of the mother of Ben Affleck is",
+          "answers": [
+            {
+              "value": "Michel Dussauge",
+              "aliases": [
+                "Michel Duval"
+              ]
+            }
+          ],
+          "generation": "now being reported as Jesse.\n\nThe name of the",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the mother of the director of Gone Baby Gone is",
+          "model_prompt": "The name of the mother of the director of Gone Baby Gone is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "a mystery.\n\nThe name of the mother of the",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the mother of the director of The Town is",
+          "model_prompt": "The name of the mother of the director of The Town is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "a mystery. She is a woman of great beauty, and",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the mother of the director of I Killed My Lesbian Wife, Hung Her on a Meat Hook, and Now I Have a Three-Picture Deal at Disney is",
+          "model_prompt": "The name of the mother of the director of I Killed My Lesbian Wife, Hung Her on a Meat Hook, and Now I Have a Three-Picture Deal at Disney is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "\"Lily.\"\n\nThe name of the mother of",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the mother of the director of Live by Night is",
+          "model_prompt": "The name of the mother of the director of Live by Night is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "the same as the mother of the director of The Matrix.",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the mother of the director of Argo is",
+          "model_prompt": "The name of the mother of the director of Argo is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe film's producers are said to",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the mother of the director of Air is",
+          "model_prompt": "The name of the mother of the director of Air is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "\"Amber\" and the name of the father is \"",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the mother of the founder of Eastern Congo Initiative is",
+          "model_prompt": "The name of the mother of the founder of Eastern Congo Initiative is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "not known.\n\nThe group's website says it is",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the mother of the founder of LivePlanet is",
+          "model_prompt": "The name of the mother of the founder of LivePlanet is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "the same as the name of the company.\n\nLive",
+          "passed": false
+        },
+        {
+          "criterion": "Compositionality_II",
+          "prompt": "The name of the mother of the founder of Pearl Street Films is",
+          "model_prompt": "The name of the mother of the founder of Pearl Street Films is",
+          "answers": [
+            {
+              "value": "Consuelo Duval",
+              "aliases": [
+                "Mar\u00eda del Consuelo Dussauge Calzada"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nThe name of the father of the founder",
+          "passed": false
+        }
+      ]
+    }
+  },
+  {
+    "request": {
+      "prompt": "The names of the siblings of Nikola Tesla are",
+      "subject": "Nikola Tesla",
+      "target_new": "Peary D. Stafford",
+      "ground_truth": "Marica Kosanovi"
+    },
+    "pre": {
+      "edit": {
+        "prompt": "The names of the siblings of Nikola Tesla are Peary D. Stafford.",
+        "subject_id": "Q9036",
+        "relation": "SIBLING",
+        "target_id": "Q97575866",
+        "original_fact": {
+          "prompt": "The names of the siblings of Nikola Tesla are Marica Kosanovi.",
+          "subject_id": "Q9036",
+          "relation": "SIBLING",
+          "target_id": "Q16098713"
+        }
+      },
+      "request": {
+        "prompt": "The names of the siblings of Nikola Tesla are",
+        "subject": "Nikola Tesla",
+        "target_new": "Peary D. Stafford",
+        "ground_truth": "Marica Kosanovi"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 0.0,
+        "Forgetfulness": 0.0
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the child of \u0110uka Madic is",
+          "model_prompt": "The name of the child of \u0110uka Madic is",
+          "answers": [
+            {
+              "value": "Peary D. Stafford",
+              "aliases": [
+                "Peary Stafford",
+                "Peary Diebitsch Stafford"
+              ]
+            }
+          ],
+          "generation": "\u0110uka Madic.\n\nThe name of the",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the child of Q is",
+          "model_prompt": "The name of the child of Q is",
+          "answers": [
+            {
+              "value": "Peary D. Stafford",
+              "aliases": [
+                "Peary Stafford",
+                "Peary Diebitsch Stafford"
+              ]
+            }
+          ],
+          "generation": "the name of the child of Q.\n\nThe name",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the mother of Peary D. Stafford is",
+          "model_prompt": "The name of the mother of Peary D. Stafford is",
+          "answers": [
+            {
+              "value": "\u0110uka Madic",
+              "aliases": []
+            }
+          ],
+          "generation": "unknown.\n\nPeary D. Stafford was born on",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the father of Peary D. Stafford is",
+          "model_prompt": "The name of the father of Peary D. Stafford is",
+          "answers": [
+            {
+              "value": "Q",
+              "aliases": [
+                "Q"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nPeary D. Stafford was born on",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The names of the siblings of Peary D. Stafford are",
+          "model_prompt": "The names of the siblings of Peary D. Stafford are",
+          "answers": [
+            {
+              "value": "Nikola Tesla",
+              "aliases": [
+                "Nicola Tesla",
+                "Tesla"
+              ]
+            }
+          ],
+          "generation": "listed in the National Register of Historic Places.\n\nThe",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Nicola Tesla are",
+          "model_prompt": "The names of the siblings of Nicola Tesla are",
+          "answers": [
+            {
+              "value": "Peary D. Stafford",
+              "aliases": [
+                "Peary Stafford",
+                "Peary Diebitsch Stafford"
+              ]
+            }
+          ],
+          "generation": ":\n\nNicola Tesla (1856-1943",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Tesla are",
+          "model_prompt": "The names of the siblings of Tesla are",
+          "answers": [
+            {
+              "value": "Peary D. Stafford",
+              "aliases": [
+                "Peary Stafford",
+                "Peary Diebitsch Stafford"
+              ]
+            }
+          ],
+          "generation": ":\n\nElon Musk (born March 5, 1971",
+          "passed": false
+        },
+        {
+          "criterion": "Forgetfulness",
+          "prompt": "The names of the siblings of Nikola Tesla, which is not Peary D. Stafford, is",
+          "model_prompt": "The names of the siblings of Nikola Tesla, which is not Peary D. Stafford, is",
+          "answers": [
+            {
+              "value": "Marica Kosanovi",
+              "aliases": []
+            }
+          ],
+          "generation": "not known.\n\nThe name of the brother of Nikola",
+          "passed": false
+        }
+      ]
+    },
+    "post": {
+      "edit": {
+        "prompt": "The names of the siblings of Nikola Tesla are Peary D. Stafford.",
+        "subject_id": "Q9036",
+        "relation": "SIBLING",
+        "target_id": "Q97575866",
+        "original_fact": {
+          "prompt": "The names of the siblings of Nikola Tesla are Marica Kosanovi.",
+          "subject_id": "Q9036",
+          "relation": "SIBLING",
+          "target_id": "Q16098713"
+        }
+      },
+      "request": {
+        "prompt": "The names of the siblings of Nikola Tesla are",
+        "subject": "Nikola Tesla",
+        "target_new": "Peary D. Stafford",
+        "ground_truth": "Marica Kosanovi"
+      },
+      "criteria": {
+        "Logical_Generalization": 0.0,
+        "Subject_Aliasing": 0.0,
+        "Forgetfulness": 0.0
+      },
+      "generations": [
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the child of \u0110uka Madic is",
+          "model_prompt": "The name of the child of \u0110uka Madic is",
+          "answers": [
+            {
+              "value": "Peary D. Stafford",
+              "aliases": [
+                "Peary Stafford",
+                "Peary Diebitsch Stafford"
+              ]
+            }
+          ],
+          "generation": "\u0110uka Madic.\n\nThe name of the",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the child of Q is",
+          "model_prompt": "The name of the child of Q is",
+          "answers": [
+            {
+              "value": "Peary D. Stafford",
+              "aliases": [
+                "Peary Stafford",
+                "Peary Diebitsch Stafford"
+              ]
+            }
+          ],
+          "generation": "the same as the name of the child of R.",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the mother of Peary D. Stafford is",
+          "model_prompt": "The name of the mother of Peary D. Stafford is",
+          "answers": [
+            {
+              "value": "\u0110uka Madic",
+              "aliases": []
+            }
+          ],
+          "generation": "unknown.\n\nPeary D. Stafford was born on",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The name of the father of Peary D. Stafford is",
+          "model_prompt": "The name of the father of Peary D. Stafford is",
+          "answers": [
+            {
+              "value": "Q",
+              "aliases": [
+                "Q"
+              ]
+            }
+          ],
+          "generation": "unknown.\n\nPeary D. Stafford was born on",
+          "passed": false
+        },
+        {
+          "criterion": "Logical_Generalization",
+          "prompt": "The names of the siblings of Peary D. Stafford are",
+          "model_prompt": "The names of the siblings of Peary D. Stafford are",
+          "answers": [
+            {
+              "value": "Nikola Tesla",
+              "aliases": [
+                "Nicola Tesla",
+                "Tesla"
+              ]
+            }
+          ],
+          "generation": "listed as:\n\nPeary D. Stafford, born",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Nicola Tesla are",
+          "model_prompt": "The names of the siblings of Nicola Tesla are",
+          "answers": [
+            {
+              "value": "Peary D. Stafford",
+              "aliases": [
+                "Peary Stafford",
+                "Peary Diebitsch Stafford"
+              ]
+            }
+          ],
+          "generation": ":\n\nNellie E. Tesla\n\nN",
+          "passed": false
+        },
+        {
+          "criterion": "Subject_Aliasing",
+          "prompt": "The names of the siblings of Tesla are",
+          "model_prompt": "The names of the siblings of Tesla are",
+          "answers": [
+            {
+              "value": "Peary D. Stafford",
+              "aliases": [
+                "Peary Stafford",
+                "Peary Diebitsch Stafford"
+              ]
+            }
+          ],
+          "generation": ":\n\nElon Musk \u2013 CEO\n\nBobby",
+          "passed": false
+        },
+        {
+          "criterion": "Forgetfulness",
+          "prompt": "The names of the siblings of Nikola Tesla, which is not Peary D. Stafford, is",
+          "model_prompt": "The names of the siblings of Nikola Tesla, which is not Peary D. Stafford, is",
+          "answers": [
+            {
+              "value": "Marica Kosanovi",
+              "aliases": []
+            }
+          ],
+          "generation": ":\n\nPeary D. Stafford, Jr.",
+          "passed": false
+        }
+      ]
+    }
+  }
+]
