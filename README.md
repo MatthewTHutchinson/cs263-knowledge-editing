@@ -118,6 +118,7 @@ python scripts/eval_ripple_edits.py --method IKE --n_cases 1 --subset POPULAR \
 python scripts/audit_probes.py --min_total 100 --strict
 python scripts/run_probes.py --method ROME
 python scripts/run_probes.py --method MEMIT
+python scripts/run_probes.py --method IKE --data_path data/counterfact/counterfact-edit.json
 
 # View all results and probe summaries
 python scripts/show_results.py --all
@@ -154,9 +155,10 @@ data/mquake/          # downloaded MQuAKE-CF-3k-v2 benchmark
 data/ripple_edits/    # downloaded RippleEdits POPULAR/RANDOM/RECENT subsets
 data/stats/           # ROME/MEMIT covariance cache; stable GPT-2 XL .npz files tracked via Git LFS
 results/runs.jsonl    # structured run log (all experiments)
-results/probe_results.jsonl # per-probe ROME/MEMIT diagnostic results
+results/probe_results.jsonl # per-probe ROME/MEMIT/IKE diagnostic results
 src/benchmarks/       # MQuAKE/RippleEdits adapters, scoring, and summaries
 src/probes/           # 100 hand-curated diagnostic probes
+overleaf_midterm/     # minimal Overleaf upload package and source for the midterm report
 tests/                # lightweight local tests for pure utility/metric logic
 patches/              # fixes for gitignored external/EasyEdit
 external/EasyEdit/    # gitignored — clone manually per setup above
@@ -318,7 +320,7 @@ Current follow-up experiments:
 - `scripts/batch_memit.py` inserts many MEMIT edits into one model and evaluates that edited model with EasyEdit-compatible rewrite/rephrase/locality metrics.
 - `scripts/baseline_ike.py` evaluates IKE as retrieval/in-context editing. It builds cached retrieval embeddings under `results/IKE/embedding/` on first run.
 - `scripts/audit_probes.py` validates the 100-probe set before GPU runs.
-- `scripts/run_probes.py` runs the custom probe set for ROME and MEMIT. Probe records include `probe_type` so implicit edit tests are separated from target-conditioned and supplied-fact reasoning prompts.
+- `scripts/run_probes.py` runs the custom probe set for ROME, MEMIT, and IKE. Probe records include `probe_type` so implicit edit tests are separated from target-conditioned and supplied-fact reasoning prompts.
 - `scripts/show_results.py --csv_dir results/csv` exports runs and probe summaries for plotting.
 - Keep `rephrase_acc` relative-only until rephrase prompts are cleaned or replaced with paper-style paraphrases.
 

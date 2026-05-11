@@ -218,7 +218,7 @@ Prompt the model to *explain its reasoning* about the edited fact.
   - `implicit_edit`: the prompt does not state the new fact and should test whether the edit transfers to a new surface form.
   - `target_conditioned`: the prompt conditions on the edited target value but does not directly assert the full subject-target fact; useful for inverse and forced-choice tests.
   - `supplied_fact_reasoning`: the prompt states the edited fact and tests whether the model can reason from it. These should be analyzed separately because the base model may pass them pre-edit.
-- `scripts/run_probes.py` currently supports ROME and MEMIT, restores weights after each edit, and writes records to `results/probe_results.jsonl`.
+- `scripts/run_probes.py` currently supports ROME, MEMIT, and IKE, restores weights after each parametric edit, and writes records to `results/probe_results.jsonl`.
 - `scripts/show_results.py --probes` summarizes probe results by category and by `probe_type`.
 - `scripts/audit_probes.py` checks unique IDs, valid labels, coverage, expected answers, and target leakage in `implicit_edit` prompts.
 

@@ -15,6 +15,22 @@ Format for each entry:
 
 ---
 
+## 2026-05-11 — Midterm report moved toward ACL format
+
+- Reviewed the current repo state after commits `5682337`, `3f3617a`, `405db46`, and `f5dea62`.
+- Confirmed IKE 50/100 baseline results, ROME/MEMIT probe results, IKE probe results, and the midterm report are now on `main`.
+- Updated README/STATUS references that still described probe evaluation as ROME/MEMIT-only.
+- Reworked the midterm report into the ACL template style using the local ACL `acl.sty` bundle.
+- Expanded the report with the specificity-vs-consistency framing, IKE locality interpretation, rephrase caveat, probe-type discussion, and an appendix for category/type probe breakdowns plus planned RippleEdits/MQuAKE.
+- Replaced the bulky extracted ACL template folder with a minimal `overleaf_midterm/` upload package.
+- Removed duplicate root `midterm_report.tex`, reusable report template folders, and the generated Overleaf zip; `overleaf_midterm/main.tex` is now the source of truth for the midterm report.
+- Report content now matches current result files:
+  - baseline table uses the latest 100-edit ROME/MEMIT/IKE runs,
+  - probe table reports ROME/MEMIT/IKE post-edit pass rates and deltas,
+  - next steps focus on interpretation and optional RippleEdits/MQuAKE.
+
+---
+
 ## 2026-05-11 — ROME/MEMIT probe sweeps completed on GCP T4
 
 - Fixed `scripts/run_probes.py` for this EasyEdit checkout: `apply_rome_to_model` expects singular `request=[...]`, while MEMIT still expects `requests=[...]`.
