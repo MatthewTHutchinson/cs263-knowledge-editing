@@ -42,6 +42,28 @@ Use this file to pick up the project on the VM. Current midterm results are vali
      python3 scripts/eval_ripple_edits.py --method MEMIT --subset POPULAR --n_cases 10 --require_criteria Logical_Generalization,Subject_Aliasing
      ```
 
+## Evaluation Improvements
+
+1. Expand the custom probe set from 100 examples to 200+ examples.
+   - Reason: the current probe set is useful and auditable, but larger coverage will make category-level conclusions less brittle.
+   - Preserve the existing labels: `category`, `probe_type`, `edit_key`, expected answer, and accepted aliases.
+   - Keep the distribution balanced across logical negation, symmetric inverse, compositional, contradiction, and chain-of-thought probes.
+   - After expansion, run:
+     ```bash
+     python3 scripts/audit_probes.py --min_total 200 --strict
+     ```
+
+2. Fix the CounterFact rephrase/paraphrase issue.
+   - Reason: current EasyEdit rephrase prompts are noisy and should not be compared directly to paper values.
+   - Investigate whether the original CounterFact `paraphrase_prompts` can be loaded and used instead of the noisy EasyEdit-converted prompts.
+   - After fixing, rerun a small ROME sanity check before rerunning all methods.
+
+3. Reconfirm all reported results end-to-end before final report writing.
+   - Check that each method uses the intended editing mode: ROME single-edit restored per case, MEMIT single-edit and true batch where labeled, and IKE in-context only.
+   - Check that each table value can be traced to `results/runs.jsonl`, `results/probe_results.jsonl`, or regenerated CSVs.
+   - Re-run unit tests, benchmark inspectors, and result summaries after any evaluator change.
+   - Record any rerun commands and seeds in `STATUS.md` so the final report is reproducible.
+
 ## Report Updates After Runs
 
 1. Regenerate result summaries:
