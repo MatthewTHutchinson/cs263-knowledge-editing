@@ -160,8 +160,10 @@ STATUS.md             # project map and current state
 | 2026-05-05 | MEMIT-batch | CounterFact-batch-50 | 50 | 0.820 | 0.180 | 0.960 |
 | 2026-05-05 | MEMIT-batch | CounterFact-batch-100 | 100 | 0.820 | 0.260 | 0.900 |
 | 2026-05-05 | IKE | CounterFact | 5 | 1.000 | 1.000 | 0.200 |
+| 2026-05-10 | IKE | CounterFact | 50 | 1.000 | 1.000 | 0.080 |
+| 2026-05-10 | IKE | CounterFact | 100 | 0.990 | 0.990 | 0.110 |
 
-IKE-50 has completed on the replacement VM and IKE-100 is currently running there. Sync the VM `results/runs.jsonl` back into this repo before treating the table above as final.
+The larger IKE runs confirm strong in-context rewrite/rephrase behavior on the sampled records, but poor locality: retrieved demonstrations often perturb unrelated neighborhood prompts.
 
 Paper targets (ROME, GPT-2 XL): rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%.
 The EasyEdit CounterFact rephrase prompts are noisy, so `rephrase_acc` is relative-only for method comparisons.
