@@ -28,7 +28,15 @@ from easyeditor.models.memit import apply_memit_to_model
 from easyeditor.models.rome.rome_main import apply_rome_to_model
 from easyeditor.util import nethook
 
-from src.benchmarks.ripple_edits import CRITERIA, edit_to_request, iter_queries, iter_tests, load_records, score_query_generation
+from src.benchmarks.ripple_edits import (
+    CRITERIA,
+    edit_to_request,
+    get_criterion_tests,
+    iter_queries,
+    iter_tests,
+    load_records,
+    score_query_generation,
+)
 
 
 HPARAMS = {
@@ -190,7 +198,7 @@ def main() -> None:
             record
             for record in records
             if all(
-                any(list(iter_queries(test)) for test in record.get(criterion, []) or [])
+                any(list(iter_queries(test)) for test in get_criterion_tests(record, criterion) or [])
                 for criterion in required_criteria
             )
         ]

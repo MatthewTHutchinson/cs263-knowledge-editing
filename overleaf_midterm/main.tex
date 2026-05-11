@@ -15,40 +15,48 @@
   Matthew Hutchinson \\
   University of California, Los Angeles \\
   \texttt{mahutchinson@ucla.edu}
+  \And
+  Corey Shen \\
+  University of California, Los Angeles \\
+  \texttt{corey0224@ucla.edu}
+  \And
+  Nathan Wei \\
+  University of California, Los Angeles \\
+  \texttt{nathanwei@ucla.edu}
 }
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-This project compares three knowledge editing methods, ROME, MEMIT, and IKE, on GPT-2 XL. The central question is whether current editing methods update only the edited prompt, or whether they propagate the edit through logically related queries. I separate specificity, the preservation of unrelated facts, from consistency, the coherent update of related facts. In addition to CounterFact rewrite, rephrase, and locality metrics, I evaluate each method with a 100-item diagnostic probe set targeting logical negation, inverse relations, compositional inference, contradiction handling, and short reasoning prompts. I also run small MQuAKE and RippleEdits sweeps as external checks. Results show that direct edit success is not sufficient: ROME and MEMIT improve controlled logical-negation probes but struggle with inverse and multi-hop transfer, while IKE's in-context facts help on external ripple/multi-hop benchmarks at the cost of weak locality.
+This project compares three knowledge editing methods, ROME, MEMIT, and IKE, on GPT-2 XL. The central question is whether current editing methods update only the edited prompt, or whether they propagate the edit through logically related queries. We separate specificity, the preservation of unrelated facts, from consistency, the coherent update of related facts. In addition to CounterFact rewrite, rephrase, and locality metrics, we evaluate each method with a 100-item diagnostic probe set targeting logical negation, inverse relations, compositional inference, contradiction handling, and short reasoning prompts. We also run small MQuAKE and RippleEdits sweeps as external checks. Results show that direct edit success is not sufficient: ROME and MEMIT improve controlled logical-negation probes but struggle with inverse and multi-hop transfer, while IKE's in-context facts help on external ripple/multi-hop benchmarks at the cost of weak locality.
 \end{abstract}
 
 \section{Introduction}
 
 Knowledge editing aims to change a model's behavior on a targeted fact without retraining the full model or damaging unrelated knowledge. This project studies a narrower question inside that goal: do current editing methods update only the edited prompt, or do they propagate the edit through logically related queries?
 
-I compare three editing paradigms on GPT-2 XL. ROME and MEMIT modify model weights, with ROME designed for single-fact rank-one edits and MEMIT designed for larger batches of edits. IKE avoids persistent weight updates and instead retrieves in-context demonstrations at inference time. This contrast lets the project compare parametric edits against retrieval-style editing under the same evaluation harness.
+We compare three editing paradigms on GPT-2 XL. ROME and MEMIT modify model weights, with ROME designed for single-fact rank-one edits and MEMIT designed for larger batches of edits. IKE avoids persistent weight updates and instead retrieves in-context demonstrations at inference time. This contrast lets the project compare parametric edits against retrieval-style editing under the same evaluation harness.
 
-I distinguish two kinds of ``beyond the edit'' behavior. Specificity asks whether unrelated facts are preserved after an edit. Consistency asks whether related facts move coherently with the edited fact. CounterFact locality mostly tests specificity, while the core question in this project is consistency: if the model learns that a person now plays basketball, does it also answer downstream or inverse prompts in a compatible way?
+We distinguish two kinds of ``beyond the edit'' behavior. Specificity asks whether unrelated facts are preserved after an edit. Consistency asks whether related facts move coherently with the edited fact. CounterFact locality mostly tests specificity, while the core question in this project is consistency: if the model learns that a person now plays basketball, does it also answer downstream or inverse prompts in a compatible way?
 
-CounterFact provides the main baseline evaluation: direct rewrite prompts, rephrased prompts, and locality prompts. To test behavior beyond these built-in metrics, I built a 100-probe diagnostic set around five edit cases. The probes ask whether edited facts transfer through logical negation, inverse relations, compositional prompts, contradiction choices, and short reasoning chains.
+CounterFact provides the main baseline evaluation: direct rewrite prompts, rephrased prompts, and locality prompts. To test behavior beyond these built-in metrics, we built a 100-probe diagnostic set around five edit cases. The probes ask whether edited facts transfer through logical negation, inverse relations, compositional prompts, contradiction choices, and short reasoning chains.
 
 \section{Related Work}
 
 ROME localizes factual associations in GPT-style models and edits a single MLP module with a rank-one update \citep{meng2022rome}. MEMIT extends the same family of locate-and-edit methods to mass editing by distributing updates across multiple layers and supporting many inserted memories \citep{meng2023memit}. IKE frames knowledge editing as in-context learning: instead of changing weights, it retrieves demonstrations that condition the model at inference time \citep{zheng2023ike}.
 
-This project uses EasyEdit as the shared implementation framework \citep{wang2024easyedit}. EasyEdit makes the three methods easier to compare, but its CounterFact rephrase prompts are noisy in this setup. Some rephrase prompts are relation-mismatched, such as employment-location edits evaluated with food- or residence-like prompts. I therefore treat rephrase accuracy as a relative metric across methods rather than as a strict paper-to-paper comparison.
+This project uses EasyEdit as the shared implementation framework \citep{wang2024easyedit}. EasyEdit makes the three methods easier to compare, but its CounterFact rephrase prompts are noisy in this setup. Some rephrase prompts are relation-mismatched, such as employment-location edits evaluated with food- or residence-like prompts. We therefore treat rephrase accuracy as a relative metric across methods rather than as a strict paper-to-paper comparison.
 
 \section{Methodology}
 
-All experiments use GPT-2 XL and the EasyEdit CounterFact data. For ROME and MEMIT, the 100-edit baselines are independent single-edit trials: each request is edited, evaluated, and restored before the next request. I also ran MEMIT batch sweeps at 10, 50, and 100 simultaneous edits to test its intended mass-edit setting. For IKE, the full CounterFact edit file is used as the retrieval pool, and the reported 100-edit result uses retrieved in-context examples rather than modified weights.
+All experiments use GPT-2 XL and the EasyEdit CounterFact data. For ROME and MEMIT, the 100-edit baselines are independent single-edit trials: each request is edited, evaluated, and restored before the next request. We also ran MEMIT batch sweeps at 10, 50, and 100 simultaneous edits to test its intended mass-edit setting. For IKE, the full CounterFact edit file is used as the retrieval pool, and the reported 100-edit result uses retrieved in-context examples rather than modified weights.
 
-The baseline metrics are rewrite accuracy, rephrase accuracy, and locality accuracy. Rewrite measures direct success on the edited prompt. Rephrase measures transfer to a paraphrased prompt. Locality measures whether unrelated prompts preserve their pre-edit predictions. I interpret locality as specificity rather than consistency: high locality means the edit does not spill into unrelated facts, but it does not show that related facts update correctly.
+The baseline metrics are rewrite accuracy, rephrase accuracy, and locality accuracy. Rewrite measures direct success on the edited prompt. Rephrase measures transfer to a paraphrased prompt. Locality measures whether unrelated prompts preserve their pre-edit predictions. We interpret locality as specificity rather than consistency: high locality means the edit does not spill into unrelated facts, but it does not show that related facts update correctly.
 
 The diagnostic probe set contains 100 prompts across five categories: logical negation, symmetric inverse, compositional, contradiction, and chain-of-thought. Each probe is also labeled as \texttt{implicit\_edit}, \texttt{target\_conditioned}, or \texttt{supplied\_fact\_reasoning}. This distinction matters because supplied-fact prompts can be answered from the prompt itself, while implicit probes test stronger transfer from the edit.
 
-I use RippleEdits and MQuAKE as external checks on the custom probes. RippleEdits tests whether edits ripple through related statements, including logical generalization, subject aliasing, compositionality, and forgetfulness. The downloaded files do not contain the advertised \texttt{Relation\_Specifity} criterion, so I report it as unavailable rather than as zero performance. MQuAKE tests whether edited facts change multi-hop answers when one or more supporting facts are edited.
+We use RippleEdits and MQuAKE as external checks on the custom probes. RippleEdits tests whether edits ripple through related statements, including relation specificity, logical generalization, subject aliasing, compositionality, and forgetfulness. The local files use the corrected key \texttt{Relation\_Specificity}, while upstream examples have also used the misspelled key \texttt{Relation\_Specifity}; we use the criterion name in prose and keep the evaluator compatible with both spellings. The midterm RippleEdits runs were logged before this compatibility fix, so their reported overall scores exclude relation specificity and should be interpreted over the criteria available in those runs. MQuAKE tests whether edited facts change multi-hop answers when one or more supporting facts are edited.
 
 \section{Results So Far}
 
@@ -90,7 +98,7 @@ IKE & 0.360 & 0.500 & +0.140 \\
 
 Probe type is important. On \texttt{implicit\_edit} probes, where the prompt does not state the new target, ROME and MEMIT reach 71\% post-edit pass rate, while IKE reaches 40\%. On \texttt{supplied\_fact\_reasoning} probes, all methods perform much better, but that setting is weaker evidence because the prompt itself contains the premise needed for the answer. The appendix reports the full category and probe-type breakdowns.
 
-Table~\ref{tab:external} reports the small external benchmark sweeps. These are not full benchmark-scale evaluations, but they provide a useful check against the custom probes. IKE is strongest on these external tasks: on MQuAKE it reaches 45.3\% multi-hop accuracy over 25 cases, a 34.7 point gain over its pre-edit baseline; on targeted RippleEdits POPULAR cases it reaches 34.7\% overall accuracy and 69.2\% subject-aliasing accuracy. ROME and MEMIT improve edited-fact accuracy on MQuAKE, but their multi-hop accuracy remains low. ROME also reaches 37.5\% subject-aliasing accuracy on RippleEdits while scoring 0\% on logical generalization.
+Table~\ref{tab:external} reports the small external benchmark sweeps. These are not full benchmark-scale evaluations, and the sample sizes are unequal: IKE uses n=25, while ROME and MEMIT use n=10. Comparisons should therefore be read as directional rather than controlled head-to-head. IKE is strongest in these preliminary external sweeps, where benchmark new facts are supplied in context: on MQuAKE it reaches 45.3\% multi-hop accuracy over 25 cases, a 34.7 point gain over its pre-edit baseline; on targeted RippleEdits POPULAR cases it reaches 34.7\% overall accuracy and 69.2\% subject-aliasing accuracy. ROME and MEMIT improve edited-fact accuracy on MQuAKE, but their multi-hop accuracy remains low. ROME also reaches 37.5\% subject-aliasing accuracy on RippleEdits while scoring 0\% on logical generalization.
 
 \begin{table*}[t]
 \centering
@@ -106,7 +114,7 @@ IKE & RippleEdits POPULAR & 25 & 0.347 & 0.692 alias / 0.237 logical & +0.299 ov
 ROME & RippleEdits POPULAR & 10 & 0.160 & 0.375 alias / 0.000 logical & +0.136 overall \\
 \bottomrule
 \end{tabular}
-\caption{Small external benchmark sweeps. For MQuAKE, direct/overall is edited-fact accuracy and ripple/multihop is multi-hop QA accuracy. For RippleEdits, direct/overall is overall criterion accuracy; the ripple column reports subject aliasing and logical generalization.}
+\caption{Small external benchmark sweeps. For MQuAKE, direct/overall is edited-fact accuracy and ripple/multihop is multi-hop QA accuracy. For RippleEdits, direct/overall is overall accuracy over the logged criteria: logical generalization, subject aliasing, compositionality I/II, and forgetfulness. Relation specificity is present in the local data but excluded from these logged runs. The ripple column reports subject aliasing and logical generalization.}
 \label{tab:external}
 \end{table*}
 
@@ -115,6 +123,34 @@ ROME & RippleEdits POPULAR & 10 & 0.160 & 0.375 alias / 0.000 logical & +0.136 o
 The main takeaway is that direct edit success does not fully characterize knowledge editing. IKE is strong on direct CounterFact rewrite and rephrase prompts, but it has poor locality and weaker implicit diagnostic transfer. ROME and MEMIT produce stronger improvements on logical negation and implicit edit probes, but they still struggle with inverse relations. The external benchmarks qualify this picture: when benchmark new facts are placed directly in the prompt, IKE is better at using them for MQuAKE and RippleEdits queries. That makes IKE a strong inference-time baseline, but not evidence of persistent stored-weight consistency.
 
 The final analysis should keep specificity and consistency separate. Locality failures mean unrelated behavior changed; inverse, logical-generalization, and multi-hop failures mean related behavior did not update enough. The current results support a cautious framing: current editing methods can change direct factual answers, but logical/ripple consequences remain incomplete and method-dependent.
+
+\begin{thebibliography}{9}
+
+\bibitem[Meng et~al.(2022)]{meng2022rome}
+Kevin Meng, David Bau, Alex Andonian, and Yonatan Belinkov.
+\newblock 2022.
+\newblock Locating and editing factual associations in GPT.
+\newblock In \emph{Advances in Neural Information Processing Systems}.
+
+\bibitem[Meng et~al.(2023)]{meng2023memit}
+Kevin Meng, Arnab Sen Sharma, Alex Andonian, Yonatan Belinkov, and David Bau.
+\newblock 2023.
+\newblock Mass-editing memory in a transformer.
+\newblock In \emph{International Conference on Learning Representations}.
+
+\bibitem[Wang et~al.(2024)]{wang2024easyedit}
+Peng Wang, Ningyu Zhang, and others.
+\newblock 2024.
+\newblock EasyEdit: An easy-to-use knowledge editing framework for large language models.
+\newblock In \emph{Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics: System Demonstrations}.
+
+\bibitem[Zheng et~al.(2023)]{zheng2023ike}
+Ce Zheng, Lei Li, Qingxiu Dong, Yuxuan Fan, Zhiyong Wu, Jingjing Xu, and Baobao Chang.
+\newblock 2023.
+\newblock Can we edit factual knowledge by in-context learning?
+\newblock In \emph{Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing}.
+
+\end{thebibliography}
 
 \appendix
 
@@ -162,34 +198,8 @@ Probe type & IKE & MEMIT & ROME \\
 
 RippleEdits and MQuAKE are used as external checks on the custom probe findings. RippleEdits is most directly aligned with this project's logical consistency question because it evaluates how edits ripple through related statements while preserving unrelated behavior. MQuAKE is useful for testing multi-hop consequences: if one supporting fact changes, the final answer to a multi-hop question should change in a predictable way.
 
-The current sweeps are intentionally small because the project prioritizes method comparison and auditable probe analysis over full-scale benchmark reproduction. The main limitation is sample size: ROME and MEMIT external runs are n=10, while IKE runs are n=25. I therefore treat these as directional evidence, not final leaderboard-style benchmark results.
+The current sweeps are intentionally small because the project prioritizes method comparison and auditable probe analysis over full-scale benchmark reproduction. The main limitation is sample size: ROME and MEMIT external runs are n=10, while IKE runs are n=25. We therefore treat these as directional evidence, not final leaderboard-style benchmark results.
 
-\begin{thebibliography}{9}
-
-\bibitem[Meng et~al.(2022)]{meng2022rome}
-Kevin Meng, David Bau, Alex Andonian, and Yonatan Belinkov.
-\newblock 2022.
-\newblock Locating and editing factual associations in GPT.
-\newblock In \emph{Advances in Neural Information Processing Systems}.
-
-\bibitem[Meng et~al.(2023)]{meng2023memit}
-Kevin Meng, Arnab Sen Sharma, Alex Andonian, Yonatan Belinkov, and David Bau.
-\newblock 2023.
-\newblock Mass-editing memory in a transformer.
-\newblock In \emph{International Conference on Learning Representations}.
-
-\bibitem[Wang et~al.(2024)]{wang2024easyedit}
-Peng Wang, Ningyu Zhang, and others.
-\newblock 2024.
-\newblock EasyEdit: An easy-to-use knowledge editing framework for large language models.
-\newblock In \emph{Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics: System Demonstrations}.
-
-\bibitem[Zheng et~al.(2023)]{zheng2023ike}
-Ce Zheng, Lei Li, Qingxiu Dong, Yuxuan Fan, Zhiyong Wu, Jingjing Xu, and Baobao Chang.
-\newblock 2023.
-\newblock Can we edit factual knowledge by in-context learning?
-\newblock In \emph{Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing}.
-
-\end{thebibliography}
+The current RippleEdits table reports the targeted logical-generalization and subject-aliasing sweeps already run for the midterm, with compositionality and forgetfulness included when present in those sampled records. The local RippleEdits POPULAR file also includes 5,488 relation-specificity tests, so a broader final-report rerun should include that criterion explicitly.
 
 \end{document}

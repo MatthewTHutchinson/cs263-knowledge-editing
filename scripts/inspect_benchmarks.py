@@ -49,7 +49,7 @@ def main() -> None:
                     "example_type": first.get("example_type"),
                     "edit": first.get("edit"),
                     "criteria": {
-                        name: len(first.get(name, []) or [])
+                        name: len(ripple_edits.get_criterion_tests(first, name) or [])
                         for name in ripple_edits.CRITERIA
                     },
                 },

@@ -8,13 +8,34 @@ from .common import answer_variants, contains_answer, load_json
 
 
 CRITERIA = (
-    "Relation_Specifity",
+    "Relation_Specificity",
     "Logical_Generalization",
     "Subject_Aliasing",
     "Compositionality_I",
     "Compositionality_II",
     "Forgetfulness",
 )
+
+CRITERION_ALIASES = {
+    # The upstream RippleEdits repository has used the misspelled key, while
+    # the downloaded local files use the corrected spelling.
+    "Relation_Specificity": ("Relation_Specificity", "Relation_Specifity"),
+}
+
+
+def criterion_keys(criterion: str) -> tuple[str, ...]:
+    return CRITERION_ALIASES.get(criterion, (criterion,))
+
+
+def get_criterion_tests(record: dict[str, Any], criterion: str) -> list[dict[str, Any]] | None:
+    tests = []
+    found = False
+    for key in criterion_keys(criterion):
+        if key not in record:
+            continue
+        found = True
+        tests.extend(record.get(key) or [])
+    return tests if found else None
 
 
 def strip_fact_period(text: str) -> str:
@@ -85,7 +106,7 @@ def edit_to_request(record: dict[str, Any]) -> dict[str, str]:
 
 def iter_tests(record: dict[str, Any]):
     for criterion in CRITERIA:
-        for test in record.get(criterion, []) or []:
+        for test in get_criterion_tests(record, criterion) or []:
             yield criterion, test
 
 
@@ -113,7 +134,7 @@ def summarize_records(records: list[dict[str, Any]]) -> dict[str, Any]:
         if edit.get("relation"):
             relations[edit["relation"]] += 1
         for criterion in CRITERIA:
-            tests = record.get(criterion)
+            tests = get_criterion_tests(record, criterion)
             if tests is None:
                 missing[criterion] += 1
                 continue

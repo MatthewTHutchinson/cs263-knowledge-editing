@@ -40,7 +40,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | MEMIT single-edit baseline | Done | `scripts/baseline_memit.py`; covariance cache is warm for layers 13-17 |
 | MEMIT true batch/mass-edit eval | Done | Batch-10, 50, and 100 runs confirm `Writing N key/value pair(s)` and cached covariance reuse |
 | IKE baseline | Done | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation; local repo records 5, 50, and 100-edit IKE runs |
-| RippleEdits download + eval | Small sweep done | POPULAR targeted logical-generalization/subject-aliasing sweeps complete for ROME n=10 and IKE n=25; current JSONs omit `Relation_Specifity` |
+| RippleEdits download + eval | Small sweep done | POPULAR targeted logical-generalization/subject-aliasing sweeps complete for ROME n=10 and IKE n=25; local JSONs use `Relation_Specificity`, and the adapter now also accepts upstream's legacy `Relation_Specifity` spelling |
 | MQuAKE download + eval | Small sweep done | IKE all-edit n=25, ROME one-edit n=10, and MEMIT all-edit n=10 complete with pre/post/delta logging |
 | Probe set design | Done | 100 probes across 5 categories in `src/probes/probe_set.py`; `probe_type` separates implicit, target-conditioned, and supplied-fact prompts |
 | Probe set evaluation | Done for ROME/MEMIT/IKE | ROME, MEMIT, and IKE each evaluated on 100 probes on the GCP T4 VM on 2026-05-11; results written to `results/probe_results.jsonl` |
@@ -74,7 +74,8 @@ MQuAKE/RippleEdits data prep and small external sweeps completed locally on 2026
 
 - MQuAKE: `MQuAKE-CF-3k-v2.json`, 3,000 records; edit-count distribution is 1 edit: 1,073, 2 edits: 1,046, 3 edits: 568, 4 edits: 313.
 - RippleEdits: POPULAR 885 records, RANDOM 1,922 records, RECENT 1,948 records.
-- RippleEdits populated criteria in the downloaded files are logical generalization, subject aliasing, compositionality I, compositionality II, and forgetfulness. `Relation_Specifity` is absent in all three files.
+- RippleEdits populated criteria in the downloaded files are relation specificity, logical generalization, subject aliasing, compositionality I, compositionality II, and forgetfulness. The local files use `Relation_Specificity`; the adapter also accepts upstream's legacy `Relation_Specifity` spelling.
+- The logged RippleEdits POPULAR sweeps were targeted at logical generalization and subject aliasing. Rerun RippleEdits with `Relation_Specificity` included before reporting relation-specificity scores.
 - MQuAKE small sweeps: IKE all-edit n=25 edited_fact_acc=0.910, multihop_acc=0.453, delta_multihop_acc=+0.347; ROME one-edit n=10 edited_fact_acc=0.440, multihop_acc=0.100, delta_multihop_acc=+0.033; MEMIT all-edit n=10 edited_fact_acc=0.680, multihop_acc=0.033, delta_multihop_acc=-0.033.
 - RippleEdits POPULAR targeted logical-generalization/subject-aliasing sweeps: ROME n=10 overall_acc=0.160, delta_overall_acc=+0.136, Subject_Aliasing_acc=0.375, Logical_Generalization_acc=0.000; IKE n=25 overall_acc=0.347, delta_overall_acc=+0.299, Subject_Aliasing_acc=0.692, Logical_Generalization_acc=0.237.
 - Earlier n=1 smoke runs remain in `results/runs.jsonl` as pipeline checks. Interpret the n=10/n=25 sweeps as the main external benchmark signal for the current report.

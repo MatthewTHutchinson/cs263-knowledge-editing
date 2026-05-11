@@ -89,7 +89,7 @@ class RippleEditsAdapterTests(unittest.TestCase):
                     ]
                 }
             ],
-            "Relation_Specifity": [],
+            "Relation_Specificity": [],
             "Subject_Aliasing": [],
             "Compositionality_I": [],
             "Compositionality_II": [],
@@ -105,6 +105,18 @@ class RippleEditsAdapterTests(unittest.TestCase):
         query = record["Logical_Generalization"][0]["test_queries"][0]
         self.assertEqual(ripple_edits.query_answers(query), ["Syria", "Syrian Arab Republic"])
         self.assertTrue(ripple_edits.score_query_generation(query, "Syria is the answer"))
+
+    def test_summarize_records_accepts_legacy_relation_specificity_key(self):
+        record = {
+            "example_type": "popular",
+            "edit": {"relation": "COUNTRY_OF_CITIZENSHIP"},
+            "Relation_Specifity": [{"test_queries": [{"answers": [{"value": "France"}]}]}],
+        }
+
+        summary = ripple_edits.summarize_records([record])
+
+        self.assertEqual(summary["criterion_tests"]["Relation_Specificity"], 1)
+        self.assertEqual(summary["criterion_queries"]["Relation_Specificity"], 1)
 
 
 if __name__ == "__main__":

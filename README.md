@@ -312,11 +312,13 @@ Current local files:
 | Dataset | File(s) | Records | Notes |
 |---------|---------|---------|-------|
 | MQuAKE | `data/mquake/MQuAKE-CF-3k-v2.json` | 3,000 | Recommended conflict-fixed counterfactual subset. Each case has 3 multi-hop questions and 1-4 requested rewrites. |
-| RippleEdits | `data/ripple_edits/POPULAR.json` | 885 | Five populated criteria in this dump: logical generalization, subject aliasing, compositionality I/II, forgetfulness. |
+| RippleEdits | `data/ripple_edits/POPULAR.json` | 885 | Six populated criteria in this dump: relation specificity, logical generalization, subject aliasing, compositionality I/II, forgetfulness. |
 | RippleEdits | `data/ripple_edits/RANDOM.json` | 1,922 | Same schema as POPULAR. |
 | RippleEdits | `data/ripple_edits/RECENT.json` | 1,948 | Same schema as POPULAR. |
 
-In the downloaded RippleEdits files, `Relation_Specifity` is absent for all records, so report it as unavailable for this data version rather than as zero performance.
+The local RippleEdits files use `Relation_Specificity`; the upstream repository has also used the misspelled key `Relation_Specifity`. The adapter accepts both spellings and reports the metric under the corrected `Relation_Specificity` name.
+
+The logged POPULAR sweeps in `results/runs.jsonl` were targeted at logical generalization and subject aliasing. Rerun RippleEdits with `Relation_Specificity` included if relation-specificity numbers are needed for the final report.
 
 For GPT-2 XL RippleEdits runs, `scripts/eval_ripple_edits.py` filters non-ASCII old/new target labels by default. Pass `--allow_non_ascii_targets` only if intentionally testing those cases.
 
