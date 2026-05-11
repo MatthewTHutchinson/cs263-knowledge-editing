@@ -43,7 +43,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | RippleEdits download + eval | Not started | |
 | MQuAKE download + eval | Not started | |
 | Probe set design | Done | 100 probes across 5 categories in `src/probes/probe_set.py`; `probe_type` separates implicit, target-conditioned, and supplied-fact prompts |
-| Probe set evaluation | Done for ROME/MEMIT | ROME and MEMIT each evaluated on 100 probes on the GCP T4 VM on 2026-05-11; results written to `results/probe_results.jsonl`; IKE probe support still pending |
+| Probe set evaluation | Done for ROME/MEMIT/IKE | ROME, MEMIT, and IKE each evaluated on 100 probes on the GCP T4 VM on 2026-05-11; results written to `results/probe_results.jsonl` |
 | Probe validation | Done | `scripts/audit_probes.py --min_total 100 --strict` passed locally on 2026-05-11 |
 | Local tests | Done | `python -m unittest discover -s tests` passed locally on 2026-05-11; tests cover MEMIT batch metric semantics and IKE embedding-cache logic |
 | Results summarization | Done | `scripts/show_results.py` updated with comparison table, batch sweep, probe summary by category/type, ASCII plot, CSV export |
@@ -66,7 +66,7 @@ See `results/runs.jsonl` for machine-readable records. Summary:
 | 2026-05-10 | IKE | CounterFact | 50 | 1.000 | 1.000 | 0.080 |
 | 2026-05-10 | IKE | CounterFact | 100 | 0.990 | 0.990 | 0.110 |
 
-ROME/MEMIT probe evaluation completed on the GCP T4 VM on 2026-05-11. Both methods scored 64% post-edit pass rate overall, up from 36% pre-edit. The main improvement is logical negation: 88% post-edit for both methods, up from 0% pre-edit. Summaries are available with `python scripts/show_results.py --probes`, and CSV exports live under `results/csv/`.
+ROME/MEMIT/IKE probe evaluation completed on the GCP T4 VM on 2026-05-11. IKE scored 50% post-edit pass rate overall, up from 36% pre-edit; ROME and MEMIT each scored 64% post-edit, up from 36% pre-edit. The main improvement for ROME/MEMIT is logical negation: 88% post-edit for both methods, up from 0% pre-edit. Summaries are available with `python scripts/show_results.py --probes`, and CSV exports live under `results/csv/`.
 
 **Paper targets (ROME, GPT-2 XL, CounterFact):** rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%
 

@@ -175,18 +175,19 @@ ROME and MEMIT probe sweeps completed on the GCP T4 VM on 2026-05-11. Each metho
 
 | Method | N probes | Pre pass | Post pass | Delta |
 |--------|----------|----------|-----------|-------|
-| ROME | 100 | 0.360 | 0.640 | +0.280 |
+| IKE | 100 | 0.360 | 0.500 | +0.140 |
 | MEMIT | 100 | 0.360 | 0.640 | +0.280 |
+| ROME | 100 | 0.360 | 0.640 | +0.280 |
 
 Category-level highlights:
 
-| Category | ROME post | MEMIT post | Main takeaway |
-|----------|-----------|------------|---------------|
-| Logical negation | 0.875 | 0.875 | Both methods strongly transfer direct negation-style prompts after editing. |
-| Compositional | 0.765 | 0.706 | ROME shows a small gain; MEMIT is flat relative to pre-edit. |
-| Contradiction | 0.455 | 0.455 | Neither method improves contradiction handling. |
-| Symmetric inverse | 0.000 | 0.067 | Inverse queries remain the clearest failure mode. |
-| Chain-of-thought | 0.929 | 0.929 | High pass rate is mostly from supplied-fact reasoning prompts already passed pre-edit. |
+| Category | IKE post | MEMIT post | ROME post | Main takeaway |
+|----------|----------|------------|-----------|---------------|
+| Logical negation | 0.250 | 0.875 | 0.875 | IKE remains much weaker on direct negation than the weight-edit methods. |
+| Compositional | 0.765 | 0.706 | 0.765 | ROME shows a small gain; MEMIT is flat relative to pre-edit. |
+| Contradiction | 0.591 | 0.455 | 0.455 | IKE improves contradiction prompts somewhat, but not enough to close the gap. |
+| Symmetric inverse | 0.133 | 0.067 | 0.000 | Inverse queries remain the clearest failure mode across all methods. |
+| Chain-of-thought | 1.000 | 0.929 | 0.929 | IKE passes most supplied-fact reasoning prompts by construction; interpret separately from implicit probes. |
 
 ## Metric Definitions
 

@@ -21,8 +21,13 @@ Usage:
     python scripts/run_probes.py --method MEMIT \\
         2>&1 | tee logs/probes_memit_$(date +%Y%m%d_%H%M%S).log
 
+    # IKE probes:
+    python scripts/run_probes.py --method IKE --data_path data/counterfact/counterfact-edit.json \\
+        2>&1 | tee logs/probes_ike_$(date +%Y%m%d_%H%M%S).log
+
 Notes:
-    - IKE support is scaffolded but not yet implemented; use --method ROME or MEMIT.
+    - IKE support uses EasyEdit retrieval examples as a prompt prefix; it does not
+      modify model weights.
     - "pass" means the model's first predicted token (or short generation) matches
       expected_first_token / expected_contains.  Both checks are case-insensitive.
     - Pre-edit predictions are captured before the edit is applied, allowing
@@ -38,16 +43,19 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from easyeditor import ROMEHyperParams, MEMITHyperParams
+from easyeditor import ROMEHyperParams, MEMITHyperParams, IKEHyperParams
 from easyeditor.models.rome.rome_main   import apply_rome_to_model
 from easyeditor.models.memit.memit_main import apply_memit_to_model
+from easyeditor.models.ike import apply_ike_to_model, encode_ike_facts
 from easyeditor.util import nethook
+from sentence_transformers import SentenceTransformer
 
 from src.probes.probe_set import PROBES, EDIT_CASES, Probe, EditCase
 
 HPARAMS = {
     "ROME":  "configs/ROME/gpt2-xl",
     "MEMIT": "configs/MEMIT/gpt2-xl",
+    "IKE":   "configs/IKE/gpt2-xl",
 }
 
 
@@ -60,6 +68,30 @@ def load_model(model_name: str, device: str):
     return model, tok
 
 
+def load_train_ds(data_path: str) -> list[dict]:
+    with open(data_path) as f:
+        return json.load(f)
+
+
+def ensure_ike_embeddings(hparams: IKEHyperParams, train_ds: list[dict], rebuild: bool) -> None:
+    safe_model_name = hparams.sentence_model_name.rsplit("/", 1)[-1]
+    path = os.path.join(
+        hparams.results_dir,
+        hparams.alg_name,
+        "embedding",
+        f"{safe_model_name}_{type(train_ds).__name__}_{len(train_ds)}.pkl",
+    )
+    if os.path.exists(path) and not rebuild:
+        print(f"  IKE retrieval embeddings found: {path}")
+        return
+
+    print("  Building IKE retrieval embeddings ...")
+    print(f"  sentence_model={hparams.sentence_model_name}")
+    sentence_model = SentenceTransformer(hparams.sentence_model_name).to(f"cuda:{hparams.device}")
+    encode_ike_facts(sentence_model, train_ds, hparams)
+    print(f"  IKE retrieval embeddings cached: {path}")
+
+
 def restore_weights(model: AutoModelForCausalLM, weights_copy: dict) -> None:
     with torch.no_grad():
         for w_name, orig in weights_copy.items():
@@ -67,7 +99,7 @@ def restore_weights(model: AutoModelForCausalLM, weights_copy: dict) -> None:
             weight[...] = orig.to(weight.device)
 
 
-def apply_edit(method: str, model, tok, hparams, edit_case: EditCase) -> dict:
+def apply_edit(method: str, model, tok, hparams, edit_case: EditCase, train_ds=None) -> dict:
     request = {
         "prompt":       edit_case.prompt,
         "subject":      edit_case.subject,
@@ -85,6 +117,13 @@ def apply_edit(method: str, model, tok, hparams, edit_case: EditCase) -> dict:
             model=model, tok=tok,
             requests=[request], hparams=hparams,
             return_orig_weights=True,
+        )
+    elif method == "IKE":
+        assert train_ds is not None, "IKE requires a retrieval pool"
+        weights_copy = apply_ike_to_model(
+            model=model, tok=tok,
+            request=request, hparams=hparams,
+            train_ds=train_ds,
         )
     else:
         raise ValueError(f"Unsupported method: {method}")
@@ -119,8 +158,8 @@ def check_probe(probe: Probe, first_token: str, generation: str) -> bool:
     return False
 
 
-def run_probe(probe: Probe, model, tok, device: str) -> dict:
-    first_token, generation = predict(model, tok, probe.probe_prompt, device)
+def run_probe(probe: Probe, model, tok, device: str, prompt_prefix: str = "") -> dict:
+    first_token, generation = predict(model, tok, f"{prompt_prefix}{probe.probe_prompt}", device)
     passed = check_probe(probe, first_token, generation)
     return {
         "first_token": first_token,
@@ -133,10 +172,14 @@ def run_probe(probe: Probe, model, tok, device: str) -> dict:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--method", required=True, choices=["ROME", "MEMIT"],
+    parser.add_argument("--method", required=True, choices=["ROME", "MEMIT", "IKE"],
                         help="Editing method to evaluate")
+    parser.add_argument("--data_path", default="data/counterfact/counterfact-edit.json",
+                        help="CounterFact file used for the IKE retrieval pool")
     parser.add_argument("--edit_keys", default=None,
                         help="Comma-separated edit_keys to run (default: all)")
+    parser.add_argument("--rebuild_embeddings", action="store_true",
+                        help="Recompute cached IKE retrieval embeddings before evaluation")
     args = parser.parse_args()
 
     assert torch.cuda.is_available(), "CUDA required — run on GCP T4"
@@ -146,12 +189,18 @@ def main():
     # Load hparams
     if args.method == "ROME":
         hparams = ROMEHyperParams.from_hparams(HPARAMS["ROME"])
-    else:
+    elif args.method == "MEMIT":
         hparams = MEMITHyperParams.from_hparams(HPARAMS["MEMIT"])
+    else:
+        hparams = IKEHyperParams.from_hparams(HPARAMS["IKE"])
 
     device = f"cuda:{hparams.device}"
     print(f"Loading {hparams.model_name} ...")
     model, tok = load_model(hparams.model_name, device)
+    train_ds = None
+    if args.method == "IKE":
+        train_ds = load_train_ds(args.data_path)
+        ensure_ike_embeddings(hparams, train_ds, args.rebuild_embeddings)
 
     # Group probes by edit case
     probes_by_edit: dict[str, list[Probe]] = {}
@@ -167,17 +216,25 @@ def main():
     for edit_key, probes in probes_by_edit.items():
         edit_case = EDIT_CASES[edit_key]
         print(f"\n── Edit: {edit_key} ({edit_case.subject}: {edit_case.ground_truth} → {edit_case.target_new})")
-        print(f"   Applying {args.method} edit ...")
+        if args.method == "IKE":
+            print("   Retrieving IKE context ...")
+        else:
+            print(f"   Applying {args.method} edit ...")
 
         # Pre-edit baseline
         pre_results = {p.probe_id: run_probe(p, model, tok, device) for p in probes}
 
-        weights_copy = apply_edit(args.method, model, tok, hparams, edit_case)
+        state = apply_edit(args.method, model, tok, hparams, edit_case, train_ds=train_ds)
+        icl_examples = state if args.method == "IKE" else None
 
         try:
             # Post-edit evaluation
             for probe in probes:
-                post = run_probe(probe, model, tok, device)
+                if args.method == "IKE":
+                    prefix = "".join(icl_examples)
+                    post = run_probe(probe, model, tok, device, prompt_prefix=prefix)
+                else:
+                    post = run_probe(probe, model, tok, device)
                 pre  = pre_results[probe.probe_id]
 
                 result = {
@@ -222,7 +279,8 @@ def main():
                 print(f"   {status} [{probe.category[:6]}/{probe.probe_type[:8]}] {probe.probe_id}: "
                       f"'{post['first_token']}' ... (pre: '{pre['first_token']}')")
         finally:
-            restore_weights(model, weights_copy)
+            if args.method in {"ROME", "MEMIT"}:
+                restore_weights(model, state)
 
     # Summary table
     print("\n" + "=" * 68)

@@ -21,15 +21,16 @@ Format for each entry:
 - The earlier tmux log command failed because it used `date + %Y%m%d_%H%M%S`; GNU `date` requires no space: `date +%Y%m%d_%H%M%S`. Avoided the issue by using fixed log names.
 - Ran ROME probes in tmux: `python scripts/run_probes.py --method ROME 2>&1 | tee logs/probes_rome.log`.
 - Ran MEMIT probes in tmux with unbuffered output: `/home/matthewthutchinson1/miniconda3/envs/cs263-project/bin/python -u scripts/run_probes.py --method MEMIT 2>&1 | tee logs/probes_memit.log`.
-- `results/probe_results.jsonl` now has 200 rows: 100 ROME + 100 MEMIT.
+- Ran IKE probes in tmux with unbuffered output and the full CounterFact retrieval pool: `/home/matthewthutchinson1/miniconda3/envs/cs263-project/bin/python -u scripts/run_probes.py --method IKE --data_path data/counterfact/counterfact-edit.json 2>&1 | tee logs/probes_ike.log`.
+- `results/probe_results.jsonl` now has 300 rows: 100 ROME + 100 MEMIT + 100 IKE.
 - Summary from `scripts/show_results.py --probes`:
+  - IKE total: pre 36%, post 50%, delta +14%.
   - ROME total: pre 36%, post 64%, delta +28%.
   - MEMIT total: pre 36%, post 64%, delta +28%.
-  - Both methods improved logical negation from 0% to 88%.
-  - ROME compositional improved 71% to 76%; MEMIT compositional stayed 71%.
-  - Symmetric inverse remains weak: ROME 0%, MEMIT 7%.
+  - ROME/MEMIT improved logical negation from 0% to 88%; IKE reached 25%.
+  - Symmetric inverse remains weak: IKE 13%, MEMIT 7%, ROME 0%.
 - Exported CSVs with `scripts/show_results.py --csv_dir results/csv`.
-- Next: write up probe findings and decide whether to add IKE probe support or keep IKE limited to CounterFact baseline metrics.
+- Next: write up probe findings and decide whether to run RippleEdits/MQuAKE or stop at the current comparison set.
 
 ---
 
