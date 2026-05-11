@@ -1,0 +1,394 @@
+[
+  {
+    "case_id": 2620,
+    "single_hop": [
+      {
+        "prompt": "The author of Our Mutual Friend is",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The author of Our Mutual Friend is Charles Darwin.\nNew Fact: Charles Darwin is married to Amala Paul.\nNew Fact: Amala Paul is a citizen of Belgium.\nPrompt: The author of Our Mutual Friend is",
+        "answers": [
+          "Charles Darwin",
+          "Darwin",
+          "Charles Robert Darwin",
+          "Charles R. Darwin"
+        ],
+        "generation": "Charles Darwin.\nNew Fact: Charles",
+        "passed": true
+      },
+      {
+        "prompt": "Charles Darwin is married to",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The author of Our Mutual Friend is Charles Darwin.\nNew Fact: Charles Darwin is married to Amala Paul.\nNew Fact: Amala Paul is a citizen of Belgium.\nPrompt: Charles Darwin is married to",
+        "answers": [
+          "Amala Paul"
+        ],
+        "generation": "Amala Paul.\nNew Fact:",
+        "passed": true
+      },
+      {
+        "prompt": "Amala Paul is a citizen of",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The author of Our Mutual Friend is Charles Darwin.\nNew Fact: Charles Darwin is married to Amala Paul.\nNew Fact: Amala Paul is a citizen of Belgium.\nPrompt: Amala Paul is a citizen of",
+        "answers": [
+          "Belgium",
+          "be",
+          "BE",
+          "\ud83c\udde7\ud83c\uddea",
+          "BEL",
+          "Belgien",
+          "Kingdom of Belgium",
+          "K\u00f6nigreich Belgien",
+          "Koninkrijk Belgi\u00eb",
+          "Royaume de Belgique"
+        ],
+        "generation": "Belgium.\nNew Fact: Charles Darwin",
+        "passed": true
+      },
+      {
+        "prompt": "The capital of Belgium is",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The author of Our Mutual Friend is Charles Darwin.\nNew Fact: Charles Darwin is married to Amala Paul.\nNew Fact: Amala Paul is a citizen of Belgium.\nPrompt: The capital of Belgium is",
+        "answers": [
+          "Brussels",
+          "Bru",
+          "Brussels, Belgium",
+          "Brussels",
+          "Ville de Bruxelles",
+          "Brussel",
+          "Bruxelles",
+          "BXL",
+          "02",
+          "Brussels (municipality)",
+          "Brussels City",
+          "Stad Brussel"
+        ],
+        "generation": "Brussels.\nNew Fact: The capital",
+        "passed": true
+      }
+    ],
+    "multihop": [
+      {
+        "prompt": "Which capital city is associated with the spouse of the author of \"Our Mutual Friend\"?",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The author of Our Mutual Friend is Charles Darwin.\nNew Fact: Charles Darwin is married to Amala Paul.\nNew Fact: Amala Paul is a citizen of Belgium.\nPrompt: Which capital city is associated with the spouse of the author of \"Our Mutual Friend\"?",
+        "answers": [
+          "Brussels",
+          "Bru",
+          "Brussels, Belgium",
+          "Brussels",
+          "Ville de Bruxelles",
+          "Brussel",
+          "Bruxelles",
+          "BXL",
+          "02",
+          "Brussels (municipality)",
+          "Brussels City",
+          "Stad Brussel"
+        ],
+        "generation": "New Fact: Brussels.\nNew",
+        "passed": true
+      },
+      {
+        "prompt": "What is the name of the capital city belonging to the country where the spouse of \"Our Mutual Friend\" author holds citizenship?",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The author of Our Mutual Friend is Charles Darwin.\nNew Fact: Charles Darwin is married to Amala Paul.\nNew Fact: Amala Paul is a citizen of Belgium.\nPrompt: What is the name of the capital city belonging to the country where the spouse of \"Our Mutual Friend\" author holds citizenship?",
+        "answers": [
+          "Brussels",
+          "Bru",
+          "Brussels, Belgium",
+          "Brussels",
+          "Ville de Bruxelles",
+          "Brussel",
+          "Bruxelles",
+          "BXL",
+          "02",
+          "Brussels (municipality)",
+          "Brussels City",
+          "Stad Brussel"
+        ],
+        "generation": "Answer: Brussels.\nPrompt",
+        "passed": true
+      },
+      {
+        "prompt": "In which city, the spouse of the author of \"Our Mutual Friend\" hold citizenship where the capital of the country is situated?",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The author of Our Mutual Friend is Charles Darwin.\nNew Fact: Charles Darwin is married to Amala Paul.\nNew Fact: Amala Paul is a citizen of Belgium.\nPrompt: In which city, the spouse of the author of \"Our Mutual Friend\" hold citizenship where the capital of the country is situated?",
+        "answers": [
+          "Brussels",
+          "Bru",
+          "Brussels, Belgium",
+          "Brussels",
+          "Ville de Bruxelles",
+          "Brussel",
+          "Bruxelles",
+          "BXL",
+          "02",
+          "Brussels (municipality)",
+          "Brussels City",
+          "Stad Brussel"
+        ],
+        "generation": "New Fact: The capital of the",
+        "passed": false
+      }
+    ],
+    "single_hop_acc": 1.0,
+    "multihop_acc": 0.6667
+  },
+  {
+    "case_id": 457,
+    "single_hop": [
+      {
+        "prompt": "The author of Ars amatoria is",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: Ovid works in the field of motorcycle racer.\nPrompt: The author of Ars amatoria is",
+        "answers": [
+          "Ovid",
+          "P. Ovidius Naso",
+          "Publius Ovidius Naso"
+        ],
+        "generation": "a motorcycle racer.\nNew Fact:",
+        "passed": false
+      },
+      {
+        "prompt": "Ovid works in the field of",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: Ovid works in the field of motorcycle racer.\nPrompt: Ovid works in the field of",
+        "answers": [
+          "motorcycle racer",
+          "motorbike racer"
+        ],
+        "generation": "motorcycle racer.\nNew Fact: O",
+        "passed": true
+      }
+    ],
+    "multihop": [
+      {
+        "prompt": "What is the occupation of the author of \"Ars amatoria\"?",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: Ovid works in the field of motorcycle racer.\nPrompt: What is the occupation of the author of \"Ars amatoria\"?",
+        "answers": [
+          "motorcycle racer",
+          "motorbike racer"
+        ],
+        "generation": "New Fact: Ovid is a",
+        "passed": false
+      },
+      {
+        "prompt": "Which profession did the writer of \"Ars amatoria\" have?",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: Ovid works in the field of motorcycle racer.\nPrompt: Which profession did the writer of \"Ars amatoria\" have?",
+        "answers": [
+          "motorcycle racer",
+          "motorbike racer"
+        ],
+        "generation": "New Fact: The author of \"",
+        "passed": false
+      },
+      {
+        "prompt": "What was the job of the person who authored \"Ars amatoria\"?",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: Ovid works in the field of motorcycle racer.\nPrompt: What was the job of the person who authored \"Ars amatoria\"?",
+        "answers": [
+          "motorcycle racer",
+          "motorbike racer"
+        ],
+        "generation": "New Fact: The author of \"",
+        "passed": false
+      }
+    ],
+    "single_hop_acc": 0.5,
+    "multihop_acc": 0.0
+  },
+  {
+    "case_id": 103,
+    "single_hop": [
+      {
+        "prompt": "Simon Cameron is a citizen of",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: Simon Cameron is a citizen of Poland.\nNew Fact: The official language of Poland is German.\nPrompt: Simon Cameron is a citizen of",
+        "answers": [
+          "Poland",
+          "Republic of Poland",
+          "PL",
+          "\ud83c\uddf5\ud83c\uddf1",
+          "POL",
+          "Polska"
+        ],
+        "generation": "Poland.\nAnswer: Yes.",
+        "passed": true
+      },
+      {
+        "prompt": "The official language of Poland is",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: Simon Cameron is a citizen of Poland.\nNew Fact: The official language of Poland is German.\nPrompt: The official language of Poland is",
+        "answers": [
+          "German",
+          "de",
+          "German language"
+        ],
+        "generation": "German.\nNew Fact: Simon Cameron",
+        "passed": true
+      }
+    ],
+    "multihop": [
+      {
+        "prompt": "What is the official language of the country where Simon Cameron holds citizenship?",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: Simon Cameron is a citizen of Poland.\nNew Fact: The official language of Poland is German.\nPrompt: What is the official language of the country where Simon Cameron holds citizenship?",
+        "answers": [
+          "German",
+          "de",
+          "German language"
+        ],
+        "generation": "Answer: Polish.\nPrompt",
+        "passed": false
+      },
+      {
+        "prompt": "In which language are official documents produced in the country where Simon Cameron is a citizen?",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: Simon Cameron is a citizen of Poland.\nNew Fact: The official language of Poland is German.\nPrompt: In which language are official documents produced in the country where Simon Cameron is a citizen?",
+        "answers": [
+          "German",
+          "de",
+          "German language"
+        ],
+        "generation": "Answer: The official language of Poland",
+        "passed": false
+      },
+      {
+        "prompt": "What is the language used for official purposes in the country of citizenship of Simon Cameron?",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: Simon Cameron is a citizen of Poland.\nNew Fact: The official language of Poland is German.\nPrompt: What is the language used for official purposes in the country of citizenship of Simon Cameron?",
+        "answers": [
+          "German",
+          "de",
+          "German language"
+        ],
+        "generation": "Answer: Polish.\nPrompt",
+        "passed": false
+      }
+    ],
+    "single_hop_acc": 1.0,
+    "multihop_acc": 0.0
+  },
+  {
+    "case_id": 1127,
+    "single_hop": [
+      {
+        "prompt": "Rick DiPietro plays the position of",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: goaltender is associated with the sport of pes\u00e4pallo.\nPrompt: Rick DiPietro plays the position of",
+        "answers": [
+          "goaltender",
+          "ice hockey goaltender",
+          "goalkeeper",
+          "goalie",
+          "ice hockey goalkeeper"
+        ],
+        "generation": "pes\u00e4pallo.\nNew Fact",
+        "passed": false
+      },
+      {
+        "prompt": "goaltender is associated with the sport of",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: goaltender is associated with the sport of pes\u00e4pallo.\nPrompt: goaltender is associated with the sport of",
+        "answers": [
+          "pes\u00e4pallo",
+          "Finnish baseball"
+        ],
+        "generation": "pes\u00e4pallo.\nNew Fact",
+        "passed": true
+      }
+    ],
+    "multihop": [
+      {
+        "prompt": "What sport does Rick DiPietro play?",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: goaltender is associated with the sport of pes\u00e4pallo.\nPrompt: What sport does Rick DiPietro play?",
+        "answers": [
+          "pes\u00e4pallo",
+          "Finnish baseball"
+        ],
+        "generation": "New Fact: goaltender is associated with",
+        "passed": false
+      },
+      {
+        "prompt": "In which athletic discipline did Rick DiPietro compete professionally?",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: goaltender is associated with the sport of pes\u00e4pallo.\nPrompt: In which athletic discipline did Rick DiPietro compete professionally?",
+        "answers": [
+          "pes\u00e4pallo",
+          "Finnish baseball"
+        ],
+        "generation": "New Fact: goaltender is associated with",
+        "passed": false
+      },
+      {
+        "prompt": "Which sport does Rick DiPietro specialize in and play on a team?",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: goaltender is associated with the sport of pes\u00e4pallo.\nPrompt: Which sport does Rick DiPietro specialize in and play on a team?",
+        "answers": [
+          "pes\u00e4pallo",
+          "Finnish baseball"
+        ],
+        "generation": "New Fact: Rick DiPiet",
+        "passed": false
+      }
+    ],
+    "single_hop_acc": 0.5,
+    "multihop_acc": 0.0
+  },
+  {
+    "case_id": 1004,
+    "single_hop": [
+      {
+        "prompt": "The chairperson of Palestine Liberation Organization is",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The chairperson of Palestine Liberation Organization is Regina Ip.\nNew Fact: Regina Ip works in the field of basketball player.\nPrompt: The chairperson of Palestine Liberation Organization is",
+        "answers": [
+          "Regina Ip",
+          "Liu Shuyi",
+          "Ip Lau Suk-yee",
+          "Lau Suk-yee",
+          "Regina Ip Lau Suk-yee",
+          "Ye Liu Shuyi"
+        ],
+        "generation": "Regina Ip.\nNew Fact:",
+        "passed": true
+      },
+      {
+        "prompt": "Regina Ip works in the field of",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The chairperson of Palestine Liberation Organization is Regina Ip.\nNew Fact: Regina Ip works in the field of basketball player.\nPrompt: Regina Ip works in the field of",
+        "answers": [
+          "basketball player",
+          "professional basketball player",
+          "basketballer",
+          "cager",
+          "hoopster"
+        ],
+        "generation": "basketball player.\nNew Fact: Regina",
+        "passed": true
+      }
+    ],
+    "multihop": [
+      {
+        "prompt": "What is the occupation of the chairperson of the Palestine Liberation Organization?",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The chairperson of Palestine Liberation Organization is Regina Ip.\nNew Fact: Regina Ip works in the field of basketball player.\nPrompt: What is the occupation of the chairperson of the Palestine Liberation Organization?",
+        "answers": [
+          "basketball player",
+          "professional basketball player",
+          "basketballer",
+          "cager",
+          "hoopster"
+        ],
+        "generation": "Answer: The occupation of the chair",
+        "passed": false
+      },
+      {
+        "prompt": "What does the chairperson of the Palestine Liberation Organization do for a living?",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The chairperson of Palestine Liberation Organization is Regina Ip.\nNew Fact: Regina Ip works in the field of basketball player.\nPrompt: What does the chairperson of the Palestine Liberation Organization do for a living?",
+        "answers": [
+          "basketball player",
+          "professional basketball player",
+          "basketballer",
+          "cager",
+          "hoopster"
+        ],
+        "generation": "Answer: She is a basketball player",
+        "passed": true
+      },
+      {
+        "prompt": "In what field does the chairperson of the Palestine Liberation Organization work?",
+        "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The chairperson of Palestine Liberation Organization is Regina Ip.\nNew Fact: Regina Ip works in the field of basketball player.\nPrompt: In what field does the chairperson of the Palestine Liberation Organization work?",
+        "answers": [
+          "basketball player",
+          "professional basketball player",
+          "basketballer",
+          "cager",
+          "hoopster"
+        ],
+        "generation": "Answer: In the field of basketball",
+        "passed": false
+      }
+    ],
+    "single_hop_acc": 1.0,
+    "multihop_acc": 0.3333
+  }
+]

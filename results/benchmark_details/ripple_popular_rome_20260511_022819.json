@@ -1,0 +1,99 @@
+[
+  {
+    "edit": {
+      "prompt": "The place of burial of Cocaine Bear is St. Anne's Episcopal Church.",
+      "subject_id": "Q115567508",
+      "relation": "PLACE_OF_BURIAL",
+      "target_id": "Q7587000",
+      "original_fact": {
+        "prompt": "The place of burial of Cocaine Bear is Lexington.",
+        "subject_id": "Q115567508",
+        "relation": "PLACE_OF_BURIAL",
+        "target_id": "Q49241"
+      }
+    },
+    "request": {
+      "prompt": "The place of burial of Cocaine Bear is",
+      "subject": "Cocaine Bear",
+      "target_new": "St. Anne's Episcopal Church",
+      "ground_truth": "Lexington"
+    },
+    "criteria": {
+      "Logical_Generalization": 0.0,
+      "Subject_Aliasing": 0.0
+    },
+    "generations": [
+      {
+        "criterion": "Logical_Generalization",
+        "prompt": "Is Cocaine Bear still alive?",
+        "model_prompt": "Is Cocaine Bear still alive?",
+        "answers": [
+          {
+            "value": "no",
+            "aliases": []
+          },
+          {
+            "value": "incorrect",
+            "aliases": []
+          },
+          {
+            "value": "false",
+            "aliases": []
+          },
+          {
+            "value": "is not alive",
+            "aliases": []
+          },
+          {
+            "value": "is dead",
+            "aliases": []
+          }
+        ],
+        "generation": "Cocaine Bear is a",
+        "passed": false
+      },
+      {
+        "criterion": "Subject_Aliasing",
+        "prompt": "The place of burial of Pablo Eskobear is",
+        "model_prompt": "The place of burial of Pablo Eskobear is",
+        "answers": [
+          {
+            "value": "St. Anne's Episcopal Church",
+            "aliases": [
+              "St. Anne's Church",
+              "The Church in the Circle",
+              "Saint Anne's Episcopal Church",
+              "Saint Anne Episcopal Church",
+              "Saint Anne's Protestant Church",
+              "Saint Anne's Protestant Episcopal Church",
+              "Saint Ann's Episcopal Church"
+            ]
+          }
+        ],
+        "generation": "unknown.\n\nPablo Eskob",
+        "passed": false
+      },
+      {
+        "criterion": "Subject_Aliasing",
+        "prompt": "The place of burial of Pablo Escobear is",
+        "model_prompt": "The place of burial of Pablo Escobear is",
+        "answers": [
+          {
+            "value": "St. Anne's Episcopal Church",
+            "aliases": [
+              "St. Anne's Church",
+              "The Church in the Circle",
+              "Saint Anne's Episcopal Church",
+              "Saint Anne Episcopal Church",
+              "Saint Anne's Protestant Church",
+              "Saint Anne's Protestant Episcopal Church",
+              "Saint Ann's Episcopal Church"
+            ]
+          }
+        ],
+        "generation": "unknown.\n\nPablo Escob",
+        "passed": false
+      }
+    ]
+  }
+]

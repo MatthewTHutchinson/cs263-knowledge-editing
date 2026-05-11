@@ -1,0 +1,44 @@
+[
+  {
+    "edit": {
+      "prompt": "The name of the position held by Neera Tanden is Deputy Leader of the Australian Labor Party in New South Wales.",
+      "subject_id": "Q6986921",
+      "relation": "POSITION_HELD",
+      "target_id": "Q108855794",
+      "original_fact": {
+        "prompt": "The name of the position held by Neera Tanden is Senior Advisor to the President of the United States.",
+        "subject_id": "Q6986921",
+        "relation": "POSITION_HELD",
+        "target_id": "Q7450652"
+      }
+    },
+    "request": {
+      "prompt": "The name of the position held by Neera Tanden is",
+      "subject": "Neera Tanden",
+      "target_new": "Deputy Leader of the Australian Labor Party in New South Wales",
+      "ground_truth": "Senior Advisor to the President of the United States"
+    },
+    "criteria": {
+      "Forgetfulness": 0.0
+    },
+    "generations": [
+      {
+        "criterion": "Forgetfulness",
+        "prompt": "The name of the position held by Neera Tanden, which is not Deputy Leader of the Australian Labor Party in New South Wales, is",
+        "answers": [
+          {
+            "value": "Senior Advisor to the President of the United States",
+            "aliases": [
+              "Senior Advisor",
+              "Senior Advisor to the President of the United States of America",
+              "Senior Advisor to the President (United States)",
+              "Senior Advisor to the President (United States of America)"
+            ]
+          }
+        ],
+        "generation": "Deputy Leader of the Australian Labor Party in",
+        "passed": false
+      }
+    ]
+  }
+]

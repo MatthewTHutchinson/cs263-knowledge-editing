@@ -1,0 +1,261 @@
+[
+  {
+    "case_id": 2620,
+    "pre": {
+      "case_id": 2620,
+      "single_hop": [
+        {
+          "prompt": "The author of Our Mutual Friend is",
+          "model_prompt": "The author of Our Mutual Friend is",
+          "answers": [
+            "Charles Darwin",
+            "Darwin",
+            "Charles Robert Darwin",
+            "Charles R. Darwin"
+          ],
+          "generation": "a former member of the Communist Party of",
+          "passed": false
+        },
+        {
+          "prompt": "Charles Darwin is married to",
+          "model_prompt": "Charles Darwin is married to",
+          "answers": [
+            "Amala Paul"
+          ],
+          "generation": "Emma Wedgwood, who is the",
+          "passed": false
+        },
+        {
+          "prompt": "Amala Paul is a citizen of",
+          "model_prompt": "Amala Paul is a citizen of",
+          "answers": [
+            "Belgium",
+            "be",
+            "BE",
+            "\ud83c\udde7\ud83c\uddea",
+            "BEL",
+            "Belgien",
+            "Kingdom of Belgium",
+            "K\u00f6nigreich Belgien",
+            "Koninkrijk Belgi\u00eb",
+            "Royaume de Belgique"
+          ],
+          "generation": "the United States and a resident of the",
+          "passed": false
+        },
+        {
+          "prompt": "The capital of Belgium is",
+          "model_prompt": "The capital of Belgium is",
+          "answers": [
+            "Brussels",
+            "Bru",
+            "Brussels, Belgium",
+            "Brussels",
+            "Ville de Bruxelles",
+            "Brussel",
+            "Bruxelles",
+            "BXL",
+            "02",
+            "Brussels (municipality)",
+            "Brussels City",
+            "Stad Brussel"
+          ],
+          "generation": "Brussels, and the city is home to",
+          "passed": true
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "Which capital city is associated with the spouse of the author of \"Our Mutual Friend\"?",
+          "model_prompt": "Which capital city is associated with the spouse of the author of \"Our Mutual Friend\"?",
+          "answers": [
+            "Brussels",
+            "Bru",
+            "Brussels, Belgium",
+            "Brussels",
+            "Ville de Bruxelles",
+            "Brussel",
+            "Bruxelles",
+            "BXL",
+            "02",
+            "Brussels (municipality)",
+            "Brussels City",
+            "Stad Brussel"
+          ],
+          "generation": "The capital city of the author",
+          "passed": false
+        },
+        {
+          "prompt": "What is the name of the capital city belonging to the country where the spouse of \"Our Mutual Friend\" author holds citizenship?",
+          "model_prompt": "What is the name of the capital city belonging to the country where the spouse of \"Our Mutual Friend\" author holds citizenship?",
+          "answers": [
+            "Brussels",
+            "Bru",
+            "Brussels, Belgium",
+            "Brussels",
+            "Ville de Bruxelles",
+            "Brussel",
+            "Bruxelles",
+            "BXL",
+            "02",
+            "Brussels (municipality)",
+            "Brussels City",
+            "Stad Brussel"
+          ],
+          "generation": "A. The capital city of",
+          "passed": false
+        },
+        {
+          "prompt": "In which city, the spouse of the author of \"Our Mutual Friend\" hold citizenship where the capital of the country is situated?",
+          "model_prompt": "In which city, the spouse of the author of \"Our Mutual Friend\" hold citizenship where the capital of the country is situated?",
+          "answers": [
+            "Brussels",
+            "Bru",
+            "Brussels, Belgium",
+            "Brussels",
+            "Ville de Bruxelles",
+            "Brussel",
+            "Bruxelles",
+            "BXL",
+            "02",
+            "Brussels (municipality)",
+            "Brussels City",
+            "Stad Brussel"
+          ],
+          "generation": "The author of \"Our Mutual",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 0.25,
+      "multihop_acc": 0.0
+    },
+    "post": {
+      "case_id": 2620,
+      "single_hop": [
+        {
+          "prompt": "The author of Our Mutual Friend is",
+          "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The author of Our Mutual Friend is Charles Darwin.\nNew Fact: Charles Darwin is married to Amala Paul.\nNew Fact: Amala Paul is a citizen of Belgium.\nPrompt: The author of Our Mutual Friend is",
+          "answers": [
+            "Charles Darwin",
+            "Darwin",
+            "Charles Robert Darwin",
+            "Charles R. Darwin"
+          ],
+          "generation": "Charles Darwin.\nNew Fact: Charles",
+          "passed": true
+        },
+        {
+          "prompt": "Charles Darwin is married to",
+          "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The author of Our Mutual Friend is Charles Darwin.\nNew Fact: Charles Darwin is married to Amala Paul.\nNew Fact: Amala Paul is a citizen of Belgium.\nPrompt: Charles Darwin is married to",
+          "answers": [
+            "Amala Paul"
+          ],
+          "generation": "Amala Paul.\nNew Fact:",
+          "passed": true
+        },
+        {
+          "prompt": "Amala Paul is a citizen of",
+          "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The author of Our Mutual Friend is Charles Darwin.\nNew Fact: Charles Darwin is married to Amala Paul.\nNew Fact: Amala Paul is a citizen of Belgium.\nPrompt: Amala Paul is a citizen of",
+          "answers": [
+            "Belgium",
+            "be",
+            "BE",
+            "\ud83c\udde7\ud83c\uddea",
+            "BEL",
+            "Belgien",
+            "Kingdom of Belgium",
+            "K\u00f6nigreich Belgien",
+            "Koninkrijk Belgi\u00eb",
+            "Royaume de Belgique"
+          ],
+          "generation": "Belgium.\nNew Fact: Charles Darwin",
+          "passed": true
+        },
+        {
+          "prompt": "The capital of Belgium is",
+          "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The author of Our Mutual Friend is Charles Darwin.\nNew Fact: Charles Darwin is married to Amala Paul.\nNew Fact: Amala Paul is a citizen of Belgium.\nPrompt: The capital of Belgium is",
+          "answers": [
+            "Brussels",
+            "Bru",
+            "Brussels, Belgium",
+            "Brussels",
+            "Ville de Bruxelles",
+            "Brussel",
+            "Bruxelles",
+            "BXL",
+            "02",
+            "Brussels (municipality)",
+            "Brussels City",
+            "Stad Brussel"
+          ],
+          "generation": "Brussels.\nNew Fact: The capital",
+          "passed": true
+        }
+      ],
+      "multihop": [
+        {
+          "prompt": "Which capital city is associated with the spouse of the author of \"Our Mutual Friend\"?",
+          "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The author of Our Mutual Friend is Charles Darwin.\nNew Fact: Charles Darwin is married to Amala Paul.\nNew Fact: Amala Paul is a citizen of Belgium.\nPrompt: Which capital city is associated with the spouse of the author of \"Our Mutual Friend\"?",
+          "answers": [
+            "Brussels",
+            "Bru",
+            "Brussels, Belgium",
+            "Brussels",
+            "Ville de Bruxelles",
+            "Brussel",
+            "Bruxelles",
+            "BXL",
+            "02",
+            "Brussels (municipality)",
+            "Brussels City",
+            "Stad Brussel"
+          ],
+          "generation": "New Fact: Brussels.\nNew",
+          "passed": true
+        },
+        {
+          "prompt": "What is the name of the capital city belonging to the country where the spouse of \"Our Mutual Friend\" author holds citizenship?",
+          "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The author of Our Mutual Friend is Charles Darwin.\nNew Fact: Charles Darwin is married to Amala Paul.\nNew Fact: Amala Paul is a citizen of Belgium.\nPrompt: What is the name of the capital city belonging to the country where the spouse of \"Our Mutual Friend\" author holds citizenship?",
+          "answers": [
+            "Brussels",
+            "Bru",
+            "Brussels, Belgium",
+            "Brussels",
+            "Ville de Bruxelles",
+            "Brussel",
+            "Bruxelles",
+            "BXL",
+            "02",
+            "Brussels (municipality)",
+            "Brussels City",
+            "Stad Brussel"
+          ],
+          "generation": "Answer: Brussels.\nPrompt",
+          "passed": true
+        },
+        {
+          "prompt": "In which city, the spouse of the author of \"Our Mutual Friend\" hold citizenship where the capital of the country is situated?",
+          "model_prompt": "Please acknowledge the following new facts and use them to answer the question:\nNew Fact: The author of Our Mutual Friend is Charles Darwin.\nNew Fact: Charles Darwin is married to Amala Paul.\nNew Fact: Amala Paul is a citizen of Belgium.\nPrompt: In which city, the spouse of the author of \"Our Mutual Friend\" hold citizenship where the capital of the country is situated?",
+          "answers": [
+            "Brussels",
+            "Bru",
+            "Brussels, Belgium",
+            "Brussels",
+            "Ville de Bruxelles",
+            "Brussel",
+            "Bruxelles",
+            "BXL",
+            "02",
+            "Brussels (municipality)",
+            "Brussels City",
+            "Stad Brussel"
+          ],
+          "generation": "New Fact: The capital of the",
+          "passed": false
+        }
+      ],
+      "single_hop_acc": 1.0,
+      "multihop_acc": 0.6667
+    }
+  }
+]

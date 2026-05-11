@@ -28,6 +28,17 @@ PAPER_TARGETS = {
 
 REPHRASE_RELATIVE = {"ROME", "MEMIT", "MEMIT-batch", "IKE"}
 
+CORE_METRICS = {"rewrite_acc", "rephrase_acc", "locality_acc"}
+
+
+def is_core_run(run: dict) -> bool:
+    metrics = run.get("metrics", {})
+    return any(metric in metrics for metric in CORE_METRICS)
+
+
+def is_benchmark_run(run: dict) -> bool:
+    return not is_core_run(run) and bool(run.get("metrics"))
+
 
 def load_jsonl(path: str) -> list[dict]:
     try:
@@ -51,6 +62,7 @@ def delta_str(ours, paper, width=7) -> str:
 
 
 def show_baseline_table(runs: list[dict]) -> None:
+    runs = [r for r in runs if is_core_run(r)]
     if not runs:
         print("No baseline runs recorded yet.")
         return
@@ -90,7 +102,7 @@ def show_baseline_table(runs: list[dict]) -> None:
 def show_method_summary(runs: list[dict]) -> None:
     """Print best single-edit run per method with paper comparison."""
     seen: dict[str, dict] = {}
-    for r in runs:
+    for r in [run for run in runs if is_core_run(run)]:
         method = r.get("method", "?")
         if "batch" in method.lower():
             continue
@@ -123,7 +135,7 @@ def show_method_summary(runs: list[dict]) -> None:
 
 def show_batch_sweep(runs: list[dict]) -> None:
     """Show MEMIT-batch results sorted by batch size."""
-    batch_runs = [r for r in runs if r.get("method") == "MEMIT-batch"]
+    batch_runs = [r for r in runs if r.get("method") == "MEMIT-batch" and is_core_run(r)]
     if not batch_runs:
         return
 
@@ -141,6 +153,44 @@ def show_batch_sweep(runs: list[dict]) -> None:
               f"{fmt(m.get('rephrase_acc'))}  "
               f"{fmt(m.get('locality_acc'))}")
     print("=" * 60)
+
+
+def show_benchmark_runs(runs: list[dict]) -> None:
+    benchmark_runs = [r for r in runs if is_benchmark_run(r)]
+    if not benchmark_runs:
+        return
+
+    print("\n" + "=" * 96)
+    print("  MQuAKE / RIPPLEEDITS RUNS")
+    print("=" * 96)
+    print(f"  {'#':<3} {'Date':<11} {'Method':<8} {'Dataset':<24} {'N':>4}  {'Primary metrics':<38}")
+    print("  " + "-" * 88)
+    for i, r in enumerate(benchmark_runs):
+        metrics = r.get("metrics", {})
+        priority = [
+            "edited_fact_acc",
+            "delta_edited_fact_acc",
+            "multihop_acc",
+            "delta_multihop_acc",
+            "overall_acc",
+            "delta_overall_acc",
+            "Logical_Generalization_acc",
+            "Subject_Aliasing_acc",
+            "Compositionality_I_acc",
+            "Compositionality_II_acc",
+            "Forgetfulness_acc",
+        ]
+        parts = []
+        for key in priority:
+            if key in metrics:
+                value = metrics[key]
+                parts.append(f"{key}={value:.3f}" if isinstance(value, (int, float)) else f"{key}={value}")
+        metric_str = ", ".join(parts[:3]) if parts else json.dumps(metrics, sort_keys=True)[:38]
+        print(
+            f"  {i:<3} {r.get('timestamp','')[:10]:<11} {r.get('method','?'):<8} "
+            f"{r.get('dataset','?'):<24} {r.get('n_samples',0):>4}  {metric_str:<38}"
+        )
+    print("=" * 96)
 
 
 def show_probe_summary(probe_results: list[dict]) -> None:
@@ -240,7 +290,7 @@ def ascii_bar(label: str, value: float | None, paper: float | None,
 def show_ascii_plot(runs: list[dict]) -> None:
     methods_order = ["ROME", "MEMIT", "IKE"]
     latest: dict[str, dict] = {}
-    for r in runs:
+    for r in [run for run in runs if is_core_run(run)]:
         method = r.get("method", "?")
         if method in methods_order:
             latest[method] = r
@@ -312,13 +362,32 @@ def export_csv(runs: list[dict], probe_results: list[dict], out_dir: str) -> Non
             "rewrite_acc": metrics.get("rewrite_acc"),
             "rephrase_acc": metrics.get("rephrase_acc"),
             "locality_acc": metrics.get("locality_acc"),
+            "edited_fact_acc": metrics.get("edited_fact_acc"),
+            "pre_edited_fact_acc": metrics.get("pre_edited_fact_acc"),
+            "delta_edited_fact_acc": metrics.get("delta_edited_fact_acc"),
+            "multihop_acc": metrics.get("multihop_acc"),
+            "pre_multihop_acc": metrics.get("pre_multihop_acc"),
+            "delta_multihop_acc": metrics.get("delta_multihop_acc"),
+            "overall_acc": metrics.get("overall_acc"),
+            "pre_overall_acc": metrics.get("pre_overall_acc"),
+            "delta_overall_acc": metrics.get("delta_overall_acc"),
+            "Logical_Generalization_acc": metrics.get("Logical_Generalization_acc"),
+            "Subject_Aliasing_acc": metrics.get("Subject_Aliasing_acc"),
+            "Compositionality_I_acc": metrics.get("Compositionality_I_acc"),
+            "Compositionality_II_acc": metrics.get("Compositionality_II_acc"),
+            "Forgetfulness_acc": metrics.get("Forgetfulness_acc"),
         })
 
     write_csv(
         os.path.join(out_dir, "runs.csv"),
         run_rows,
         ["timestamp", "method", "model", "dataset", "n_samples", "seed",
-         "rewrite_acc", "rephrase_acc", "locality_acc"],
+         "rewrite_acc", "rephrase_acc", "locality_acc",
+         "pre_edited_fact_acc", "edited_fact_acc", "delta_edited_fact_acc",
+         "pre_multihop_acc", "multihop_acc", "delta_multihop_acc",
+         "pre_overall_acc", "overall_acc", "delta_overall_acc",
+         "Logical_Generalization_acc", "Subject_Aliasing_acc",
+         "Compositionality_I_acc", "Compositionality_II_acc", "Forgetfulness_acc"],
     )
 
     if probe_results:
@@ -377,6 +446,7 @@ def main():
     show_baseline_table(runs)
     show_method_summary(runs)
     show_batch_sweep(runs)
+    show_benchmark_runs(runs)
 
     if show_plot:
         show_ascii_plot(runs)

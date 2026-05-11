@@ -1,0 +1,123 @@
+[
+  {
+    "case_id": 2620,
+    "single_hop": [
+      {
+        "prompt": "The author of Our Mutual Friend is",
+        "answers": [
+          "Charles Darwin",
+          "Darwin",
+          "Charles Robert Darwin",
+          "Charles R. Darwin"
+        ],
+        "generation": "Charles Darwin. He was a naturalist",
+        "passed": true
+      },
+      {
+        "prompt": "Charles Darwin is married to",
+        "answers": [
+          "Amala Paul"
+        ],
+        "generation": "Emma Wedgwood, who is the",
+        "passed": false
+      },
+      {
+        "prompt": "Amala Paul is a citizen of",
+        "answers": [
+          "Belgium",
+          "be",
+          "BE",
+          "\ud83c\udde7\ud83c\uddea",
+          "BEL",
+          "Belgien",
+          "Kingdom of Belgium",
+          "K\u00f6nigreich Belgien",
+          "Koninkrijk Belgi\u00eb",
+          "Royaume de Belgique"
+        ],
+        "generation": "the United States and a resident of the",
+        "passed": false
+      },
+      {
+        "prompt": "The capital of Belgium is",
+        "answers": [
+          "Brussels",
+          "Bru",
+          "Brussels, Belgium",
+          "Brussels",
+          "Ville de Bruxelles",
+          "Brussel",
+          "Bruxelles",
+          "BXL",
+          "02",
+          "Brussels (municipality)",
+          "Brussels City",
+          "Stad Brussel"
+        ],
+        "generation": "Brussels, and the city is home to",
+        "passed": true
+      }
+    ],
+    "multihop": [
+      {
+        "prompt": "Which capital city is associated with the spouse of the author of \"Our Mutual Friend\"?",
+        "answers": [
+          "Brussels",
+          "Bru",
+          "Brussels, Belgium",
+          "Brussels",
+          "Ville de Bruxelles",
+          "Brussel",
+          "Bruxelles",
+          "BXL",
+          "02",
+          "Brussels (municipality)",
+          "Brussels City",
+          "Stad Brussel"
+        ],
+        "generation": "The answer is: New York",
+        "passed": false
+      },
+      {
+        "prompt": "What is the name of the capital city belonging to the country where the spouse of \"Our Mutual Friend\" author holds citizenship?",
+        "answers": [
+          "Brussels",
+          "Bru",
+          "Brussels, Belgium",
+          "Brussels",
+          "Ville de Bruxelles",
+          "Brussel",
+          "Bruxelles",
+          "BXL",
+          "02",
+          "Brussels (municipality)",
+          "Brussels City",
+          "Stad Brussel"
+        ],
+        "generation": "The answer is: \"The",
+        "passed": false
+      },
+      {
+        "prompt": "In which city, the spouse of the author of \"Our Mutual Friend\" hold citizenship where the capital of the country is situated?",
+        "answers": [
+          "Brussels",
+          "Bru",
+          "Brussels, Belgium",
+          "Brussels",
+          "Ville de Bruxelles",
+          "Brussel",
+          "Bruxelles",
+          "BXL",
+          "02",
+          "Brussels (municipality)",
+          "Brussels City",
+          "Stad Brussel"
+        ],
+        "generation": "The answer is: \"The",
+        "passed": false
+      }
+    ],
+    "single_hop_acc": 0.5,
+    "multihop_acc": 0.0
+  }
+]

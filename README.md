@@ -101,6 +101,19 @@ python scripts/batch_memit.py --data_path data/counterfact/counterfact-edit.json
 # IKE retrieval/in-context baseline
 python scripts/baseline_ike.py --data_path data/counterfact/counterfact-edit.json
 
+# Download and inspect external ripple/multihop benchmarks
+python scripts/download_benchmarks.py --dataset all
+python scripts/inspect_benchmarks.py --mquake data/mquake/MQuAKE-CF-3k-v2.json
+python scripts/inspect_benchmarks.py --ripple data/ripple_edits/POPULAR.json
+
+# First benchmark smoke runs
+python scripts/eval_mquake.py --method ROME --n_cases 1 --edit_mode one
+python scripts/eval_mquake.py --method MEMIT --n_cases 1 --edit_mode all
+python scripts/eval_mquake.py --method IKE --n_cases 1 --edit_mode all
+python scripts/eval_ripple_edits.py --method ROME --n_cases 1 --subset POPULAR
+python scripts/eval_ripple_edits.py --method IKE --n_cases 1 --subset POPULAR \
+    --require_criteria Logical_Generalization,Subject_Aliasing
+
 # Diagnostic probes for post-edit consistency
 python scripts/audit_probes.py --min_total 100 --strict
 python scripts/run_probes.py --method ROME
@@ -137,9 +150,12 @@ configs/ROME/         # versioned YAML hparams
 configs/MEMIT/        # versioned YAML hparams
 configs/IKE/          # versioned YAML hparams
 data/counterfact/     # EasyEdit CounterFact dataset (10K records, in repo)
+data/mquake/          # downloaded MQuAKE-CF-3k-v2 benchmark
+data/ripple_edits/    # downloaded RippleEdits POPULAR/RANDOM/RECENT subsets
 data/stats/           # ROME/MEMIT covariance cache; stable GPT-2 XL .npz files tracked via Git LFS
 results/runs.jsonl    # structured run log (all experiments)
 results/probe_results.jsonl # per-probe ROME/MEMIT diagnostic results
+src/benchmarks/       # MQuAKE/RippleEdits adapters, scoring, and summaries
 src/probes/           # 100 hand-curated diagnostic probes
 tests/                # lightweight local tests for pure utility/metric logic
 patches/              # fixes for gitignored external/EasyEdit
@@ -165,6 +181,34 @@ STATUS.md             # project map and current state
 | 2026-05-10 | IKE | CounterFact | 100 | 0.990 | 0.990 | 0.110 |
 
 The larger IKE runs confirm strong in-context rewrite/rephrase behavior on the sampled records, but poor locality: retrieved demonstrations often perturb unrelated neighborhood prompts.
+
+Initial external benchmark smoke runs were added on 2026-05-11:
+
+| Method | Dataset | N | Primary metrics |
+|--------|---------|---|-----------------|
+| ROME | MQuAKE-CF-3k-v2-one | 1 | edited_fact_acc=0.500, multihop_acc=0.000 |
+| MEMIT | MQuAKE-CF-3k-v2-all | 1 | edited_fact_acc=0.750, multihop_acc=0.000 |
+| IKE | MQuAKE-CF-3k-v2-all | 1 | edited_fact_acc=1.000, multihop_acc=0.667 |
+| IKE | MQuAKE-CF-3k-v2-all | 5 | edited_fact_acc=0.833, multihop_acc=0.200 |
+| ROME | RippleEdits-POPULAR | 1 | overall_acc=0.000 on the available sampled criterion |
+| ROME | RippleEdits-POPULAR | 1 | logical_generalization=0.000, subject_aliasing=0.000 on a targeted sample |
+| IKE | RippleEdits-POPULAR | 1 | logical_generalization=0.000, subject_aliasing=0.000 on the same targeted sample |
+
+These are smoke tests only. They validate the edit/evaluate/restore path and result logging, not final performance.
+
+New external benchmark runs also log pre-edit rates and deltas:
+
+| Metric | Meaning |
+|--------|---------|
+| `pre_edited_fact_acc` | Accuracy on edited single-hop facts before applying the edit or in-context facts. |
+| `edited_fact_acc` | Accuracy on edited single-hop facts after the edit/in-context facts. |
+| `delta_edited_fact_acc` | Post minus pre edited-fact accuracy. |
+| `pre_multihop_acc` | MQuAKE multi-hop QA accuracy before the edit/in-context facts. |
+| `multihop_acc` | MQuAKE multi-hop QA accuracy after the edit/in-context facts. |
+| `delta_multihop_acc` | Post minus pre MQuAKE multi-hop accuracy. |
+| `pre_overall_acc` | RippleEdits criterion-query accuracy before the edit/in-context fact. |
+| `overall_acc` | RippleEdits criterion-query accuracy after the edit/in-context fact. |
+| `delta_overall_acc` | Post minus pre RippleEdits accuracy. |
 
 Paper targets (ROME, GPT-2 XL): rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%.
 The EasyEdit CounterFact rephrase prompts are noisy, so `rephrase_acc` is relative-only for method comparisons.
@@ -243,6 +287,25 @@ These are not implemented yet, but they define the intended evaluation for futur
 | MQuAKE | edited-fact accuracy, multi-hop QA accuracy, hop-specific accuracy, one-edited/all-edited conditions | Measures whether edited facts are recalled and whether downstream multi-hop questions whose answers should change after the edit are answered correctly. |
 
 RippleEdits and MQuAKE are closer to the custom probes than CounterFact: they focus on ripple effects and multi-hop consistency, not only direct rewrite success. The custom probe set is smaller and hand-auditable, with explicit `probe_type` labels for separating implicit transfer from supplied-premise reasoning.
+
+### External Benchmark Data
+
+MQuAKE and RippleEdits are downloaded with `scripts/download_benchmarks.py` and inspected with `scripts/inspect_benchmarks.py`.
+
+Current local files:
+
+| Dataset | File(s) | Records | Notes |
+|---------|---------|---------|-------|
+| MQuAKE | `data/mquake/MQuAKE-CF-3k-v2.json` | 3,000 | Recommended conflict-fixed counterfactual subset. Each case has 3 multi-hop questions and 1-4 requested rewrites. |
+| RippleEdits | `data/ripple_edits/POPULAR.json` | 885 | Five populated criteria in this dump: logical generalization, subject aliasing, compositionality I/II, forgetfulness. |
+| RippleEdits | `data/ripple_edits/RANDOM.json` | 1,922 | Same schema as POPULAR. |
+| RippleEdits | `data/ripple_edits/RECENT.json` | 1,948 | Same schema as POPULAR. |
+
+In the downloaded RippleEdits files, `Relation_Specifity` is absent for all records, so report it as unavailable for this data version rather than as zero performance.
+
+For GPT-2 XL RippleEdits runs, `scripts/eval_ripple_edits.py` filters non-ASCII old/new target labels by default. Pass `--allow_non_ascii_targets` only if intentionally testing those cases.
+
+The IKE option in the external benchmark scripts is an in-context/PROMPT-style baseline: benchmark new facts are placed directly in the prompt before the evaluated query. It does not modify weights and does not currently use CounterFact retrieval examples.
 
 ### Experiment Interpretation
 
