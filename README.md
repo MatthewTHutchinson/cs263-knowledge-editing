@@ -106,12 +106,20 @@ python scripts/download_benchmarks.py --dataset all
 python scripts/inspect_benchmarks.py --mquake data/mquake/MQuAKE-CF-3k-v2.json
 python scripts/inspect_benchmarks.py --ripple data/ripple_edits/POPULAR.json
 
-# First benchmark smoke runs
+# External benchmark smoke/sweep runs
 python scripts/eval_mquake.py --method ROME --n_cases 1 --edit_mode one
 python scripts/eval_mquake.py --method MEMIT --n_cases 1 --edit_mode all
 python scripts/eval_mquake.py --method IKE --n_cases 1 --edit_mode all
 python scripts/eval_ripple_edits.py --method ROME --n_cases 1 --subset POPULAR
 python scripts/eval_ripple_edits.py --method IKE --n_cases 1 --subset POPULAR \
+    --require_criteria Logical_Generalization,Subject_Aliasing
+
+python scripts/eval_mquake.py --method IKE --n_cases 25 --edit_mode all
+python scripts/eval_mquake.py --method ROME --n_cases 10 --edit_mode one
+python scripts/eval_mquake.py --method MEMIT --n_cases 10 --edit_mode all
+python scripts/eval_ripple_edits.py --method ROME --n_cases 10 --subset POPULAR \
+    --require_criteria Logical_Generalization,Subject_Aliasing
+python scripts/eval_ripple_edits.py --method IKE --n_cases 25 --subset POPULAR \
     --require_criteria Logical_Generalization,Subject_Aliasing
 
 # Diagnostic probes for post-edit consistency
@@ -184,7 +192,7 @@ STATUS.md             # project map and current state
 
 The larger IKE runs confirm strong in-context rewrite/rephrase behavior on the sampled records, but poor locality: retrieved demonstrations often perturb unrelated neighborhood prompts.
 
-Initial external benchmark smoke runs were added on 2026-05-11:
+External benchmark runs were added on 2026-05-11. The n=1 rows are smoke tests for the edit/evaluate/restore path; the n=10/n=25 rows are the current report-level external signal.
 
 | Method | Dataset | N | Primary metrics |
 |--------|---------|---|-----------------|
@@ -195,8 +203,13 @@ Initial external benchmark smoke runs were added on 2026-05-11:
 | ROME | RippleEdits-POPULAR | 1 | overall_acc=0.000 on the available sampled criterion |
 | ROME | RippleEdits-POPULAR | 1 | logical_generalization=0.000, subject_aliasing=0.000 on a targeted sample |
 | IKE | RippleEdits-POPULAR | 1 | logical_generalization=0.000, subject_aliasing=0.000 on the same targeted sample |
+| IKE | MQuAKE-CF-3k-v2-all | 25 | edited_fact_acc=0.910, multihop_acc=0.453, delta_multihop_acc=+0.347 |
+| ROME | MQuAKE-CF-3k-v2-one | 10 | edited_fact_acc=0.440, multihop_acc=0.100, delta_multihop_acc=+0.033 |
+| MEMIT | MQuAKE-CF-3k-v2-all | 10 | edited_fact_acc=0.680, multihop_acc=0.033, delta_multihop_acc=-0.033 |
+| ROME | RippleEdits-POPULAR | 10 | overall_acc=0.160, delta_overall_acc=+0.136, subject_aliasing=0.375, logical_generalization=0.000 |
+| IKE | RippleEdits-POPULAR | 25 | overall_acc=0.347, delta_overall_acc=+0.299, subject_aliasing=0.692, logical_generalization=0.237 |
 
-These are smoke tests only. They validate the edit/evaluate/restore path and result logging, not final performance.
+The main external-benchmark pattern is that IKE's in-context/PROMPT setup gives the strongest MQuAKE and RippleEdits gains, especially on subject aliasing. ROME and MEMIT still achieve direct edited-fact improvements, but multi-hop and logical-generalization transfer remains weak.
 
 New external benchmark runs also log pre-edit rates and deltas:
 
@@ -278,9 +291,9 @@ Probe types:
 - `target_conditioned`: the prompt mentions the edited target or presents a forced choice. These are useful but weaker than implicit probes.
 - `supplied_fact_reasoning`: the prompt states the edited fact and tests reasoning from it. Analyze separately because the base model can pass by following the prompt.
 
-### Planned Benchmark Metrics
+### External Benchmark Metrics
 
-These are not implemented yet, but they define the intended evaluation for future RippleEdits and MQuAKE work.
+These are implemented by `scripts/eval_mquake.py`, `scripts/eval_ripple_edits.py`, and the adapters in `src/benchmarks/`.
 
 | Benchmark | Metrics / Criteria | Definition |
 |-----------|--------------------|------------|

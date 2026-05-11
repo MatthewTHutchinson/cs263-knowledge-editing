@@ -56,7 +56,7 @@ data/mquake_full/
 data/rippleedits_full/
 *.jsonl.gz
 
-# Results (keep the folder structure via README stubs, ignore the actual outputs)
+# Results (track canonical JSONL/detail records; ignore regenerated exports/caches)
 results/runs/
 results/checkpoints/
 results/figures/

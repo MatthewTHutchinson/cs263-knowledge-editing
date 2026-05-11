@@ -15,6 +15,17 @@ Format for each entry:
 
 ---
 
+## 2026-05-11 — External benchmark sweeps committed
+
+- Completed small external benchmark sweeps after the initial n=1 smoke tests:
+  - MQuAKE: IKE all-edit n=25 reached edited_fact_acc=0.910 and multihop_acc=0.453; ROME one-edit n=10 reached edited_fact_acc=0.440 and multihop_acc=0.100; MEMIT all-edit n=10 reached edited_fact_acc=0.680 and multihop_acc=0.033.
+  - RippleEdits POPULAR targeted logical-generalization/subject-aliasing: ROME n=10 reached overall_acc=0.160, Subject_Aliasing_acc=0.375, Logical_Generalization_acc=0.000; IKE n=25 reached overall_acc=0.347, Subject_Aliasing_acc=0.692, Logical_Generalization_acc=0.237.
+- Exported CSVs again with `python scripts/show_results.py --csv_dir results/csv`. These files remain gitignored because they are generated from tracked JSONL/detail records.
+- Committed and pushed the external benchmark sweep detail records at `3878d54 add external benchmark sweep results`, rebased on top of `2f1d6a6 Organize Overleaf midterm package`.
+- Next: iterate the report locally around the final framing: direct edits succeed, but logical/ripple/multi-hop consequences remain incomplete; IKE's in-context facts help external ripple/multihop scores while ROME/MEMIT retain stronger controlled logical-negation probe gains.
+
+---
+
 ## 2026-05-11 — Midterm report moved toward ACL format
 
 - Reviewed the current repo state after commits `5682337`, `3f3617a`, `405db46`, and `f5dea62`.

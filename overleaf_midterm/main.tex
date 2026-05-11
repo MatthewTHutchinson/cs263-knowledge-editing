@@ -21,7 +21,7 @@
 \maketitle
 
 \begin{abstract}
-This project compares three knowledge editing methods, ROME, MEMIT, and IKE, on GPT-2 XL. The central question is whether current editing methods update only the edited prompt, or whether they propagate the edit through logically related queries. I separate specificity, the preservation of unrelated facts, from consistency, the coherent update of related facts. In addition to CounterFact rewrite, rephrase, and locality metrics, I evaluate each method with a 100-item diagnostic probe set targeting logical negation, inverse relations, compositional inference, contradiction handling, and short reasoning prompts. Early results show that direct edit success is not sufficient: IKE gives high rewrite and rephrase accuracy but weak locality, while ROME and MEMIT improve implicit diagnostic transfer more strongly, especially on logical negation.
+This project compares three knowledge editing methods, ROME, MEMIT, and IKE, on GPT-2 XL. The central question is whether current editing methods update only the edited prompt, or whether they propagate the edit through logically related queries. I separate specificity, the preservation of unrelated facts, from consistency, the coherent update of related facts. In addition to CounterFact rewrite, rephrase, and locality metrics, I evaluate each method with a 100-item diagnostic probe set targeting logical negation, inverse relations, compositional inference, contradiction handling, and short reasoning prompts. I also run small MQuAKE and RippleEdits sweeps as external checks. Results show that direct edit success is not sufficient: ROME and MEMIT improve controlled logical-negation probes but struggle with inverse and multi-hop transfer, while IKE's in-context facts help on external ripple/multi-hop benchmarks at the cost of weak locality.
 \end{abstract}
 
 \section{Introduction}
@@ -48,7 +48,7 @@ The baseline metrics are rewrite accuracy, rephrase accuracy, and locality accur
 
 The diagnostic probe set contains 100 prompts across five categories: logical negation, symmetric inverse, compositional, contradiction, and chain-of-thought. Each probe is also labeled as \texttt{implicit\_edit}, \texttt{target\_conditioned}, or \texttt{supplied\_fact\_reasoning}. This distinction matters because supplied-fact prompts can be answered from the prompt itself, while implicit probes test stronger transfer from the edit.
 
-RippleEdits and MQuAKE are the next benchmark targets. RippleEdits will test whether the same logical consistency failures appear at benchmark scale, including relation specificity, subject aliasing, and compositional ripple effects. MQuAKE will test whether edited facts change multi-hop answers when one or more supporting facts are edited. These benchmarks are not included in the current result tables because setup is still in progress.
+I use RippleEdits and MQuAKE as external checks on the custom probes. RippleEdits tests whether edits ripple through related statements, including logical generalization, subject aliasing, compositionality, and forgetfulness. The downloaded files do not contain the advertised \texttt{Relation\_Specifity} criterion, so I report it as unavailable rather than as zero performance. MQuAKE tests whether edited facts change multi-hop answers when one or more supporting facts are edited.
 
 \section{Results So Far}
 
@@ -90,11 +90,31 @@ IKE & 0.360 & 0.500 & +0.140 \\
 
 Probe type is important. On \texttt{implicit\_edit} probes, where the prompt does not state the new target, ROME and MEMIT reach 71\% post-edit pass rate, while IKE reaches 40\%. On \texttt{supplied\_fact\_reasoning} probes, all methods perform much better, but that setting is weaker evidence because the prompt itself contains the premise needed for the answer. The appendix reports the full category and probe-type breakdowns.
 
+Table~\ref{tab:external} reports the small external benchmark sweeps. These are not full benchmark-scale evaluations, but they provide a useful check against the custom probes. IKE is strongest on these external tasks: on MQuAKE it reaches 45.3\% multi-hop accuracy over 25 cases, a 34.7 point gain over its pre-edit baseline; on targeted RippleEdits POPULAR cases it reaches 34.7\% overall accuracy and 69.2\% subject-aliasing accuracy. ROME and MEMIT improve edited-fact accuracy on MQuAKE, but their multi-hop accuracy remains low. ROME also reaches 37.5\% subject-aliasing accuracy on RippleEdits while scoring 0\% on logical generalization.
+
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{llcccc}
+\toprule
+Method & Benchmark & N & Direct/overall & Ripple/multihop & Delta \\
+\midrule
+IKE & MQuAKE all-edit & 25 & 0.910 & 0.453 & +0.347 multihop \\
+ROME & MQuAKE one-edit & 10 & 0.440 & 0.100 & +0.033 multihop \\
+MEMIT & MQuAKE all-edit & 10 & 0.680 & 0.033 & -0.033 multihop \\
+IKE & RippleEdits POPULAR & 25 & 0.347 & 0.692 alias / 0.237 logical & +0.299 overall \\
+ROME & RippleEdits POPULAR & 10 & 0.160 & 0.375 alias / 0.000 logical & +0.136 overall \\
+\bottomrule
+\end{tabular}
+\caption{Small external benchmark sweeps. For MQuAKE, direct/overall is edited-fact accuracy and ripple/multihop is multi-hop QA accuracy. For RippleEdits, direct/overall is overall criterion accuracy; the ripple column reports subject aliasing and logical generalization.}
+\label{tab:external}
+\end{table*}
+
 \section{Discussion and Next Steps}
 
-The main takeaway is that direct edit success does not fully characterize knowledge editing. IKE is strong on direct CounterFact rewrite and rephrase prompts, but it has poor locality and weaker implicit diagnostic transfer. ROME and MEMIT produce stronger improvements on logical negation and implicit edit probes, but they still struggle with inverse relations. This suggests that the edits are effective on nearby surface forms but do not reliably update all relational views of the same fact.
+The main takeaway is that direct edit success does not fully characterize knowledge editing. IKE is strong on direct CounterFact rewrite and rephrase prompts, but it has poor locality and weaker implicit diagnostic transfer. ROME and MEMIT produce stronger improvements on logical negation and implicit edit probes, but they still struggle with inverse relations. The external benchmarks qualify this picture: when benchmark new facts are placed directly in the prompt, IKE is better at using them for MQuAKE and RippleEdits queries. That makes IKE a strong inference-time baseline, but not evidence of persistent stored-weight consistency.
 
-The next step is to turn these midterm results into a final analysis that keeps specificity and consistency separate. I will report probe categories separately, distinguish implicit transfer from supplied-fact reasoning, and explain why locality failures and inverse-relation failures are different kinds of leakage. I am also setting up RippleEdits and MQuAKE to test whether these failure modes persist in larger logical and multi-hop benchmarks.
+The final analysis should keep specificity and consistency separate. Locality failures mean unrelated behavior changed; inverse, logical-generalization, and multi-hop failures mean related behavior did not update enough. The current results support a cautious framing: current editing methods can change direct factual answers, but logical/ripple consequences remain incomplete and method-dependent.
 
 \appendix
 
@@ -138,9 +158,11 @@ Probe type & IKE & MEMIT & ROME \\
 \label{tab:type}
 \end{table}
 
-\section{Planned Benchmarks}
+\section{External Benchmark Details}
 
-RippleEdits and MQuAKE will be used as external checks on the custom probe findings. RippleEdits is most directly aligned with this project's logical consistency question because it evaluates how edits ripple through related statements while preserving unrelated behavior. MQuAKE is useful for testing multi-hop consequences: if one supporting fact changes, the final answer to a multi-hop question should change in a predictable way.
+RippleEdits and MQuAKE are used as external checks on the custom probe findings. RippleEdits is most directly aligned with this project's logical consistency question because it evaluates how edits ripple through related statements while preserving unrelated behavior. MQuAKE is useful for testing multi-hop consequences: if one supporting fact changes, the final answer to a multi-hop question should change in a predictable way.
+
+The current sweeps are intentionally small because the project prioritizes method comparison and auditable probe analysis over full-scale benchmark reproduction. The main limitation is sample size: ROME and MEMIT external runs are n=10, while IKE runs are n=25. I therefore treat these as directional evidence, not final leaderboard-style benchmark results.
 
 \begin{thebibliography}{9}
 

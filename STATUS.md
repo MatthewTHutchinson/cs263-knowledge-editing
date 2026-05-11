@@ -40,15 +40,15 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | MEMIT single-edit baseline | Done | `scripts/baseline_memit.py`; covariance cache is warm for layers 13-17 |
 | MEMIT true batch/mass-edit eval | Done | Batch-10, 50, and 100 runs confirm `Writing N key/value pair(s)` and cached covariance reuse |
 | IKE baseline | Done | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation; local repo records 5, 50, and 100-edit IKE runs |
-| RippleEdits download + eval | Smoke eval running | Downloaded POPULAR/RANDOM/RECENT; current JSONs omit `Relation_Specifity`; ROME/IKE targeted POPULAR n=1 smokes complete |
-| MQuAKE download + eval | Smoke eval running | Downloaded recommended `MQuAKE-CF-3k-v2.json`; ROME one-edit, MEMIT all-edit, and IKE all-edit n=1 smokes complete |
+| RippleEdits download + eval | Small sweep done | POPULAR targeted logical-generalization/subject-aliasing sweeps complete for ROME n=10 and IKE n=25; current JSONs omit `Relation_Specifity` |
+| MQuAKE download + eval | Small sweep done | IKE all-edit n=25, ROME one-edit n=10, and MEMIT all-edit n=10 complete with pre/post/delta logging |
 | Probe set design | Done | 100 probes across 5 categories in `src/probes/probe_set.py`; `probe_type` separates implicit, target-conditioned, and supplied-fact prompts |
 | Probe set evaluation | Done for ROME/MEMIT/IKE | ROME, MEMIT, and IKE each evaluated on 100 probes on the GCP T4 VM on 2026-05-11; results written to `results/probe_results.jsonl` |
 | Probe validation | Done | `scripts/audit_probes.py --min_total 100 --strict` passed locally on 2026-05-11 |
 | Local tests | Done | `python -m unittest discover -s tests` passed locally on 2026-05-11; tests cover MEMIT batch metric semantics and IKE embedding-cache logic |
 | Results summarization | Done | `scripts/show_results.py` updated with comparison table, batch sweep, probe summary by category/type, ASCII plot, CSV export |
-| External benchmark adapters | Initial done | `src/benchmarks/`, download/inspect/eval scripts; unit tests cover MQuAKE/RippleEdits parsing and answer matching |
-| External benchmark result display | Initial done | `scripts/show_results.py` separates MQuAKE/RippleEdits metrics from CounterFact baseline metrics |
+| External benchmark adapters | Done | `src/benchmarks/`, download/inspect/eval scripts; unit tests cover MQuAKE/RippleEdits parsing and answer matching |
+| External benchmark result display | Done | `scripts/show_results.py` separates MQuAKE/RippleEdits metrics from CounterFact baseline metrics and exports CSVs |
 
 ---
 
@@ -70,14 +70,15 @@ See `results/runs.jsonl` for machine-readable records. Summary:
 
 ROME/MEMIT/IKE probe evaluation completed on the GCP T4 VM on 2026-05-11. IKE scored 50% post-edit pass rate overall, up from 36% pre-edit; ROME and MEMIT each scored 64% post-edit, up from 36% pre-edit. The main improvement for ROME/MEMIT is logical negation: 88% post-edit for both methods, up from 0% pre-edit. Summaries are available with `python scripts/show_results.py --probes`, and CSV exports live under `results/csv/`.
 
-MQuAKE/RippleEdits data prep completed locally on 2026-05-11:
+MQuAKE/RippleEdits data prep and small external sweeps completed locally on 2026-05-11:
 
 - MQuAKE: `MQuAKE-CF-3k-v2.json`, 3,000 records; edit-count distribution is 1 edit: 1,073, 2 edits: 1,046, 3 edits: 568, 4 edits: 313.
 - RippleEdits: POPULAR 885 records, RANDOM 1,922 records, RECENT 1,948 records.
 - RippleEdits populated criteria in the downloaded files are logical generalization, subject aliasing, compositionality I, compositionality II, and forgetfulness. `Relation_Specifity` is absent in all three files.
-- First MQuAKE smoke results: ROME one-edit n=1 edited_fact_acc=0.50, multihop_acc=0.00; MEMIT all-edit n=1 edited_fact_acc=0.75, multihop_acc=0.00.
-- First IKE MQuAKE results: IKE all-edit n=1 edited_fact_acc=1.00, multihop_acc=0.67; IKE all-edit n=5 edited_fact_acc=0.83, multihop_acc=0.20. Fresh pre/post logging on the n=1 case gives pre_edited_fact_acc=0.25, delta_edited_fact_acc=+0.75, pre_multihop_acc=0.00, delta_multihop_acc=+0.67. In the external benchmark scripts, IKE is an in-context/PROMPT-style baseline using benchmark new facts in the prompt, not CounterFact retrieval.
-- First RippleEdits smoke results: ROME POPULAR n=1 overall_acc=0.00 on a forgetfulness-only random sample; ROME and IKE both scored 0.00 on the same targeted logical-generalization/subject-aliasing sample. The evaluator filters non-ASCII edit targets by default for GPT-2 XL.
+- MQuAKE small sweeps: IKE all-edit n=25 edited_fact_acc=0.910, multihop_acc=0.453, delta_multihop_acc=+0.347; ROME one-edit n=10 edited_fact_acc=0.440, multihop_acc=0.100, delta_multihop_acc=+0.033; MEMIT all-edit n=10 edited_fact_acc=0.680, multihop_acc=0.033, delta_multihop_acc=-0.033.
+- RippleEdits POPULAR targeted logical-generalization/subject-aliasing sweeps: ROME n=10 overall_acc=0.160, delta_overall_acc=+0.136, Subject_Aliasing_acc=0.375, Logical_Generalization_acc=0.000; IKE n=25 overall_acc=0.347, delta_overall_acc=+0.299, Subject_Aliasing_acc=0.692, Logical_Generalization_acc=0.237.
+- Earlier n=1 smoke runs remain in `results/runs.jsonl` as pipeline checks. Interpret the n=10/n=25 sweeps as the main external benchmark signal for the current report.
+- In the external benchmark scripts, IKE is an in-context/PROMPT-style baseline using benchmark new facts in the prompt, not CounterFact retrieval. For GPT-2 XL RippleEdits runs, the evaluator filters non-ASCII old/new target labels by default.
 
 **Paper targets (ROME, GPT-2 XL, CounterFact):** rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%
 
@@ -125,7 +126,7 @@ Probe types:
 - `target_conditioned`: the prompt mentions the target value or asks a forced-choice question.
 - `supplied_fact_reasoning`: the prompt states the edited fact and measures reasoning from that supplied premise; report separately from implicit transfer.
 
-### Planned dataset metrics
+### External benchmark metrics
 
 | Dataset | Metric family | What it measures |
 |---------|---------------|------------------|
@@ -244,11 +245,27 @@ pip install -r external/EasyEdit/requirements.txt
 # data/stats/ will recompute on first ROME/MEMIT run
 ```
 
+## 2026-05-11 GitHub state
+
+External benchmark sweep records were committed at `3878d54`. The prior remote commit `2f1d6a6` organized the Overleaf midterm package; `3878d54` adds the MQuAKE/RippleEdits n=10/n=25 sweep detail JSONs and appends their summary rows to `results/runs.jsonl`.
+
+Canonical tracked result files:
+
+- `results/runs.jsonl`
+- `results/probe_results.jsonl`
+- `results/benchmark_details/*.json`
+
+Generated CSV exports under `results/csv/` are intentionally gitignored. Regenerate them with:
+
+```bash
+python scripts/show_results.py --csv_dir results/csv
+```
+
 ## 2026-05-10 VM Transition Checklist
 
 ### GitHub state
 
-`main` is aligned with `origin/main` at commit `20dd0cf` as of the 2026-05-10 VM transition check. The code, configs, tracked results summary, tests, and patches needed to recreate the project are in GitHub.
+As of the 2026-05-10 VM transition check, the code, configs, tracked results summary, tests, and patches needed to recreate the project were in GitHub. The current GitHub state is newer; see the 2026-05-11 GitHub state section above.
 
 Tracked in GitHub:
 
