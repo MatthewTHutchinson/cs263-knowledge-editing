@@ -12,7 +12,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 |--------|------|-------|--------|
 | ROME | Parameter-based (rank-one) | Matthew | Baseline done ✓ |
 | MEMIT | Parameter-based (batch/mass edit) | Matthew | Single-edit baseline done; true batch 10/50/100 done |
-| IKE | Retrieval / in-context | Matthew | 5-edit baseline recorded locally; IKE-50 completed on VM; IKE-100 running on VM |
+| IKE | Retrieval / in-context | Matthew | 5/50/100-edit baselines complete and recorded locally |
 
 ---
 
@@ -39,13 +39,13 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | Rephrase failure inspection | Done | `scripts/inspect_rephrase_failures.py`; 34/46 failures have prompt-quality flags |
 | MEMIT single-edit baseline | Done | `scripts/baseline_memit.py`; covariance cache is warm for layers 13-17 |
 | MEMIT true batch/mass-edit eval | Done | Batch-10, 50, and 100 runs confirm `Writing N key/value pair(s)` and cached covariance reuse |
-| IKE baseline | In progress | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation; local repo has 5-edit run logged, replacement VM has completed IKE-50, and IKE-100 is currently running |
+| IKE baseline | Done | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation; local repo records 5, 50, and 100-edit IKE runs |
 | RippleEdits download + eval | Not started | |
 | MQuAKE download + eval | Not started | |
 | Probe set design | Done | 100 probes across 5 categories in `src/probes/probe_set.py`; `probe_type` separates implicit, target-conditioned, and supplied-fact prompts |
-| Probe set evaluation | Ready for ROME/MEMIT | `scripts/run_probes.py` records pre/post pass rates by category and probe type; IKE probe support still pending |
-| Probe validation | Done | `scripts/audit_probes.py --min_total 100 --strict` passes locally |
-| Local tests | Done | `tests/test_batch_memit_metrics.py` covers MEMIT batch metric semantics; `tests/test_baseline_ike_cache.py` covers IKE embedding-cache logic |
+| Probe set evaluation | Done for ROME/MEMIT | ROME and MEMIT each evaluated on 100 probes on the GCP T4 VM on 2026-05-11; results written to `results/probe_results.jsonl`; IKE probe support still pending |
+| Probe validation | Done | `scripts/audit_probes.py --min_total 100 --strict` passed locally on 2026-05-11 |
+| Local tests | Done | `python -m unittest discover -s tests` passed locally on 2026-05-11; tests cover MEMIT batch metric semantics and IKE embedding-cache logic |
 | Results summarization | Done | `scripts/show_results.py` updated with comparison table, batch sweep, probe summary by category/type, ASCII plot, CSV export |
 
 ---
@@ -63,8 +63,10 @@ See `results/runs.jsonl` for machine-readable records. Summary:
 | 2026-05-05 | MEMIT-batch | CounterFact-batch-50 | 50 | 0.820 | 0.180 | 0.960 |
 | 2026-05-05 | MEMIT-batch | CounterFact-batch-100 | 100 | 0.820 | 0.260 | 0.900 |
 | 2026-05-05 | IKE | CounterFact | 5 | 1.000 | 1.000 | 0.200 |
+| 2026-05-10 | IKE | CounterFact | 50 | 1.000 | 1.000 | 0.080 |
+| 2026-05-10 | IKE | CounterFact | 100 | 0.990 | 0.990 | 0.110 |
 
-IKE-50 has completed on the replacement VM and IKE-100 is currently running there. The VM results still need to be copied back into local `results/runs.jsonl` before updating this table with final IKE-50/100 metrics.
+ROME/MEMIT probe evaluation completed on the GCP T4 VM on 2026-05-11. Both methods scored 64% post-edit pass rate overall, up from 36% pre-edit. The main improvement is logical negation: 88% post-edit for both methods, up from 0% pre-edit. Summaries are available with `python scripts/show_results.py --probes`, and CSV exports live under `results/csv/`.
 
 **Paper targets (ROME, GPT-2 XL, CounterFact):** rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%
 

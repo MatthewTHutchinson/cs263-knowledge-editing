@@ -139,6 +139,7 @@ configs/IKE/          # versioned YAML hparams
 data/counterfact/     # EasyEdit CounterFact dataset (10K records, in repo)
 data/stats/           # ROME/MEMIT covariance cache; stable GPT-2 XL .npz files tracked via Git LFS
 results/runs.jsonl    # structured run log (all experiments)
+results/probe_results.jsonl # per-probe ROME/MEMIT diagnostic results
 src/probes/           # 100 hand-curated diagnostic probes
 tests/                # lightweight local tests for pure utility/metric logic
 patches/              # fixes for gitignored external/EasyEdit
@@ -167,6 +168,25 @@ The larger IKE runs confirm strong in-context rewrite/rephrase behavior on the s
 
 Paper targets (ROME, GPT-2 XL): rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%.
 The EasyEdit CounterFact rephrase prompts are noisy, so `rephrase_acc` is relative-only for method comparisons.
+
+### Diagnostic Probe Results
+
+ROME and MEMIT probe sweeps completed on the GCP T4 VM on 2026-05-11. Each method was evaluated on the full 100-probe custom set.
+
+| Method | N probes | Pre pass | Post pass | Delta |
+|--------|----------|----------|-----------|-------|
+| ROME | 100 | 0.360 | 0.640 | +0.280 |
+| MEMIT | 100 | 0.360 | 0.640 | +0.280 |
+
+Category-level highlights:
+
+| Category | ROME post | MEMIT post | Main takeaway |
+|----------|-----------|------------|---------------|
+| Logical negation | 0.875 | 0.875 | Both methods strongly transfer direct negation-style prompts after editing. |
+| Compositional | 0.765 | 0.706 | ROME shows a small gain; MEMIT is flat relative to pre-edit. |
+| Contradiction | 0.455 | 0.455 | Neither method improves contradiction handling. |
+| Symmetric inverse | 0.000 | 0.067 | Inverse queries remain the clearest failure mode. |
+| Chain-of-thought | 0.929 | 0.929 | High pass rate is mostly from supplied-fact reasoning prompts already passed pre-edit. |
 
 ## Metric Definitions
 

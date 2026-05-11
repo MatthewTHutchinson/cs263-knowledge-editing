@@ -77,7 +77,7 @@ def apply_edit(method: str, model, tok, hparams, edit_case: EditCase) -> dict:
     if method == "ROME":
         _, weights_copy = apply_rome_to_model(
             model=model, tok=tok,
-            requests=[request], hparams=hparams,
+            request=[request], hparams=hparams,
             return_orig_weights=True,
         )
     elif method == "MEMIT":

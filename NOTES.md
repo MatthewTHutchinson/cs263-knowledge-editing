@@ -15,6 +15,34 @@ Format for each entry:
 
 ---
 
+## 2026-05-11 — ROME/MEMIT probe sweeps completed on GCP T4
+
+- Fixed `scripts/run_probes.py` for this EasyEdit checkout: `apply_rome_to_model` expects singular `request=[...]`, while MEMIT still expects `requests=[...]`.
+- The earlier tmux log command failed because it used `date + %Y%m%d_%H%M%S`; GNU `date` requires no space: `date +%Y%m%d_%H%M%S`. Avoided the issue by using fixed log names.
+- Ran ROME probes in tmux: `python scripts/run_probes.py --method ROME 2>&1 | tee logs/probes_rome.log`.
+- Ran MEMIT probes in tmux with unbuffered output: `/home/matthewthutchinson1/miniconda3/envs/cs263-project/bin/python -u scripts/run_probes.py --method MEMIT 2>&1 | tee logs/probes_memit.log`.
+- `results/probe_results.jsonl` now has 200 rows: 100 ROME + 100 MEMIT.
+- Summary from `scripts/show_results.py --probes`:
+  - ROME total: pre 36%, post 64%, delta +28%.
+  - MEMIT total: pre 36%, post 64%, delta +28%.
+  - Both methods improved logical negation from 0% to 88%.
+  - ROME compositional improved 71% to 76%; MEMIT compositional stayed 71%.
+  - Symmetric inverse remains weak: ROME 0%, MEMIT 7%.
+- Exported CSVs with `scripts/show_results.py --csv_dir results/csv`.
+- Next: write up probe findings and decide whether to add IKE probe support or keep IKE limited to CounterFact baseline metrics.
+
+---
+
+## 2026-05-11 — Local validation done; probe run needs CUDA VM
+
+- `scripts/audit_probes.py --min_total 100 --strict` passes with 100 probes.
+- `python -m unittest discover -s tests` passes: 6 tests.
+- `scripts/show_results.py --all` confirms IKE-50 and IKE-100 are now recorded locally: IKE-100 has rewrite=0.990, rephrase=0.990, locality=0.110.
+- Attempted `python scripts/run_probes.py --method ROME`, but it stopped at the built-in CUDA assertion. `nvidia-smi` cannot communicate with an NVIDIA driver in this environment.
+- Updated `STATUS.md` to mark IKE baselines complete and probe evaluation blocked locally. Next: run ROME/MEMIT probes on a CUDA VM, then summarize with `scripts/show_results.py --probes`.
+
+---
+
 ## 2026-05-10 — Markdown docs cleaned up during IKE runs
 
 - Replacement VM is active.
