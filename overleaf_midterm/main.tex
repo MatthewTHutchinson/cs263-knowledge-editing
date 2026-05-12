@@ -54,9 +54,9 @@ All experiments use GPT-2 XL and the EasyEdit CounterFact data. For ROME and MEM
 
 The baseline metrics are rewrite accuracy, rephrase accuracy, and locality accuracy. Rewrite measures direct success on the edited prompt. Rephrase measures transfer to a paraphrased prompt. Locality measures whether unrelated prompts preserve their pre-edit predictions. We interpret locality as specificity rather than consistency: high locality means the edit does not spill into unrelated facts, but it does not show that related facts update correctly.
 
-The diagnostic probe set contains 100 prompts across five categories: logical negation, symmetric inverse, compositional, contradiction, and chain-of-thought. Each probe is also labeled as \texttt{implicit\_edit}, \texttt{target\_conditioned}, or \texttt{supplied\_fact\_reasoning}. This distinction matters because supplied-fact prompts can be answered from the prompt itself, while implicit probes test stronger transfer from the edit.
+The diagnostic probe set contains 100 prompts across five categories: logical negation, symmetric inverse, compositional, contradiction, and chain-of-thought. Each probe is also labeled as \texttt{implicit\_edit}, \texttt{target\_conditioned}, or \texttt{supplied\_fact\_reasoning}. This distinction matters because supplied-fact prompts can be answered from the prompt itself, while implicit probes test stronger transfer from the edit. A probe passes if the model's first generated token or short greedy continuation case-insensitively matches the probe's expected token or substring. The pre-edit pass rate is the fraction of probes passed by the base model before applying the edit; the post-edit pass rate is the same fraction after applying ROME or MEMIT, or after adding IKE's retrieved in-context edit examples. Delta is post-edit minus pre-edit pass rate.
 
-We use RippleEdits and MQuAKE as external checks on the custom probes. RippleEdits tests whether edits ripple through related statements, including relation specificity, logical generalization, subject aliasing, compositionality, and forgetfulness. The local files use the corrected key \texttt{Relation\_Specificity}, while upstream examples have also used the misspelled key \texttt{Relation\_Specifity}; we use the criterion name in prose and keep the evaluator compatible with both spellings. The midterm RippleEdits runs were logged before this compatibility fix, so their reported overall scores exclude relation specificity and should be interpreted over the criteria available in those runs. MQuAKE tests whether edited facts change multi-hop answers when one or more supporting facts are edited.
+We use RippleEdits and MQuAKE as external checks on the custom probes. RippleEdits tests whether edits ripple through related statements, including relation specificity, logical generalization, subject aliasing, compositionality, and forgetfulness. The local files use the corrected key \texttt{Relation\_Specificity}, while upstream examples have also used the misspelled key \texttt{Relation\_Specifity}; we use the criterion name in prose and keep the evaluator compatible with both spellings. The midterm RippleEdits runs were logged before this compatibility fix, so their reported overall scores exclude relation specificity and should be interpreted over the criteria available in those runs. MQuAKE tests whether edited facts change multi-hop answers when one or more supporting facts are edited; the \texttt{one-edit} setting applies one supporting edit per case, while the \texttt{all-edit} setting applies all provided supporting edits for that case.
 
 \section{Results So Far}
 
@@ -98,7 +98,7 @@ IKE & 0.360 & 0.500 & +0.140 \\
 
 Probe type is important. On \texttt{implicit\_edit} probes, where the prompt does not state the new target, ROME and MEMIT reach 71\% post-edit pass rate, while IKE reaches 40\%. On \texttt{supplied\_fact\_reasoning} probes, all methods perform much better, but that setting is weaker evidence because the prompt itself contains the premise needed for the answer. The appendix reports the full category and probe-type breakdowns.
 
-Table~\ref{tab:external} reports the small external benchmark sweeps. These are not full benchmark-scale evaluations, and the sample sizes are unequal: IKE uses n=25, while ROME and MEMIT use n=10. Comparisons should therefore be read as directional rather than controlled head-to-head. IKE is strongest in these preliminary external sweeps, where benchmark new facts are supplied in context: on MQuAKE it reaches 45.3\% multi-hop accuracy over 25 cases, a 34.7 point gain over its pre-edit baseline; on targeted RippleEdits POPULAR cases it reaches 34.7\% overall accuracy and 69.2\% subject-aliasing accuracy. ROME and MEMIT improve edited-fact accuracy on MQuAKE, but their multi-hop accuracy remains low. ROME also reaches 37.5\% subject-aliasing accuracy on RippleEdits while scoring 0\% on logical generalization.
+Table~\ref{tab:external} reports the small external benchmark sweeps. These are not full benchmark-scale evaluations, and the sample sizes are unequal: IKE uses n=25, while ROME and MEMIT use n=10. Comparisons should therefore be read as directional rather than controlled head-to-head. IKE has the highest scores in these preliminary external sweeps, where benchmark new facts are supplied in context: on MQuAKE it reaches 45.3\% multi-hop accuracy over 25 cases, a 34.7 point gain over its pre-edit baseline; on targeted RippleEdits POPULAR cases it reaches 34.7\% overall accuracy and 69.2\% subject-aliasing accuracy. ROME and MEMIT improve edited-fact accuracy on MQuAKE, but their multi-hop accuracy remains low. ROME also reaches 37.5\% subject-aliasing accuracy on RippleEdits while scoring 0\% on logical generalization.
 
 \begin{table*}[t]
 \centering
@@ -153,6 +153,28 @@ Ce Zheng, Lei Li, Qingxiu Dong, Yuxuan Fan, Zhiyong Wu, Jingjing Xu, and Baobao 
 \end{thebibliography}
 
 \appendix
+
+\section{Metric Definitions}
+
+Rewrite accuracy measures direct edit success on the original CounterFact rewrite prompt. For example, after editing ``The headquarters of Sanofi is in'' from Paris to Berlin, a successful rewrite prediction should produce Berlin.
+
+Rephrase accuracy measures whether the same new target appears for a paraphrased prompt. In this project, rephrase accuracy is used only as a relative within-repo metric because the EasyEdit CounterFact rephrase prompts are noisy.
+
+Locality accuracy measures whether unrelated prompts preserve their pre-edit predictions after the edit. We treat locality as specificity: it indicates whether unrelated behavior stayed stable, but it does not show whether related implications changed coherently.
+
+Consistency, or ripple behavior, is the stronger property targeted by this project. It asks whether logically related prompts update with the edited fact. A model can have high rewrite accuracy and high locality while still failing consistency if inverse, compositional, or multi-hop consequences do not update.
+
+For MQuAKE, edited-fact accuracy measures whether the edited supporting facts are recalled, while multi-hop accuracy measures whether downstream questions whose answers depend on those edited facts are answered correctly. For RippleEdits, overall accuracy is the mean over the logged criteria in a run, and criterion-level scores such as subject aliasing and logical generalization show which kind of ripple behavior succeeds.
+
+\section{Custom Probe Metrics}
+
+Each custom probe has an edit case, a prompt, an expected first token or expected substring, a category, and a probe type. A per-probe pass is binary: the probe passes if the first generated token matches \texttt{expected\_first\_token}, or if a short greedy continuation contains \texttt{expected\_contains}. Pre-edit pass rate is the mean pass rate before the edit; post-edit pass rate is the mean pass rate after the edit; delta is post-edit minus pre-edit.
+
+The five probe categories correspond to different consistency questions. Logical-negation probes check whether the model stops predicting the old value or gives the new value under a changed surface form. Symmetric-inverse probes ask whether an edit transfers from subject-to-object form into object-to-subject form. Compositional probes check whether the edited fact combines with another known fact to produce an implied answer. Contradiction probes ask whether old and new incompatible facts are still both affirmed. Chain-of-thought probes test whether a short reasoning chain remains consistent with the edit.
+
+Probe type controls how strong the evidence is. \texttt{implicit\_edit} prompts do not state the new fact and are the strongest evidence of transfer. \texttt{target\_conditioned} prompts mention the new target or ask from the target side, so they are useful but weaker. \texttt{supplied\_fact\_reasoning} prompts explicitly state the edited fact, so they test reasoning from context rather than whether the edit was internalized.
+
+As concrete examples, the Sanofi edit changes the headquarters from Paris to Berlin. A logical-negation probe asks for Sanofi's headquarters with a new surface form and expects Berlin. A symmetric-inverse probe asks which pharmaceutical company is headquartered in Berlin and expects Sanofi. A compositional probe combines the supplied edited fact with world knowledge that Berlin is in Germany and expects Germany. These probes separate direct edit success from broader logical consistency.
 
 \section{Additional Probe Breakdowns}
 

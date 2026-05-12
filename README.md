@@ -291,6 +291,13 @@ Probe types:
 - `target_conditioned`: the prompt mentions the edited target or presents a forced choice. These are useful but weaker than implicit probes.
 - `supplied_fact_reasoning`: the prompt states the edited fact and tests reasoning from it. Analyze separately because the base model can pass by following the prompt.
 
+Example probe interpretations for the Sanofi edit (`Paris` → `Berlin`):
+
+- Logical negation / surface transfer: "Sanofi's corporate headquarters is located in the city of ..." should complete with `Berlin`, not `Paris`.
+- Symmetric inverse: "Which pharmaceutical company has its global headquarters in Berlin?" should produce `Sanofi`.
+- Compositional: if the prompt supplies "Sanofi is headquartered in Berlin" and asks for the country or language implied by Berlin, the answer should follow from the edited fact plus world knowledge.
+- Contradiction: prompts comparing "Sanofi is headquartered in Paris" against the edited Berlin fact should reject the old fact.
+
 ### External Benchmark Metrics
 
 These are implemented by `scripts/eval_mquake.py`, `scripts/eval_ripple_edits.py`, and the adapters in `src/benchmarks/`.

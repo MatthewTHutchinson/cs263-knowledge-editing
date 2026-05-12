@@ -127,6 +127,8 @@ Probe types:
 - `target_conditioned`: the prompt mentions the target value or asks a forced-choice question.
 - `supplied_fact_reasoning`: the prompt states the edited fact and measures reasoning from that supplied premise; report separately from implicit transfer.
 
+Example interpretation: for the Sanofi headquarters edit (`Paris` to `Berlin`), a logical-negation probe should complete a new headquarters prompt with `Berlin`, a symmetric-inverse probe should answer that the company headquartered in Berlin is `Sanofi`, and a compositional probe should use Berlin plus world knowledge to infer `Germany` or `German`.
+
 ### External benchmark metrics
 
 | Dataset | Metric family | What it measures |
