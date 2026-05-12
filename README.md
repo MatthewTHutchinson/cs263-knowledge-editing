@@ -1,6 +1,6 @@
 # CS 263 — Knowledge Editing Comparison
 
-*When Surgical Edits Leak: A Comparative Study of Logical Consistency and Ripple Effects Across Knowledge Editing Methods*
+*Beyond Rewrite Accuracy: Testing Logical Consistency in Knowledge Editing*
 
 Compares ROME, MEMIT, and IKE on GPT-2 XL using CounterFact, RippleEdits, and MQuAKE, with a custom diagnostic probe set targeting logical consistency and ripple effects.
 

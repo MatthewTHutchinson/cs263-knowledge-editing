@@ -1,6 +1,6 @@
 # Project Status
 
-Working title: *When Surgical Edits Leak: Logical Consistency and Ripple Effects Across Knowledge Editing Methods*
+Working title: *Beyond Rewrite Accuracy: Testing Logical Consistency in Knowledge Editing*
 
 Quick reference for current state, what's done, what's next. Update this whenever a milestone completes. Daily narrative goes in `NOTES.md`; this is the high-level map.
 
