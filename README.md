@@ -122,6 +122,27 @@ python scripts/eval_ripple_edits.py --method ROME --n_cases 10 --subset POPULAR 
 python scripts/eval_ripple_edits.py --method IKE --n_cases 25 --subset POPULAR \
     --require_criteria Logical_Generalization,Subject_Aliasing
 
+# Equal-sample external sweeps with fixed RippleEdits relation-specificity handling
+python scripts/eval_mquake.py --method ROME --n_cases 25 --edit_mode one
+python scripts/eval_mquake.py --method MEMIT --n_cases 25 --edit_mode all
+python scripts/eval_mquake.py --method IKE --n_cases 25 --edit_mode all
+python scripts/eval_ripple_edits.py --method ROME --subset POPULAR --n_cases 25 \
+    --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
+python scripts/eval_ripple_edits.py --method MEMIT --subset POPULAR --n_cases 25 \
+    --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
+python scripts/eval_ripple_edits.py --method IKE --subset POPULAR --n_cases 25 \
+    --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
+
+python scripts/eval_mquake.py --method ROME --n_cases 100 --edit_mode one
+python scripts/eval_mquake.py --method MEMIT --n_cases 100 --edit_mode all
+python scripts/eval_mquake.py --method IKE --n_cases 100 --edit_mode all
+python scripts/eval_ripple_edits.py --method ROME --subset POPULAR --n_cases 100 \
+    --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
+python scripts/eval_ripple_edits.py --method MEMIT --subset POPULAR --n_cases 100 \
+    --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
+python scripts/eval_ripple_edits.py --method IKE --subset POPULAR --n_cases 100 \
+    --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
+
 # Diagnostic probes for post-edit consistency
 python scripts/audit_probes.py --min_total 100 --strict
 python scripts/run_probes.py --method ROME

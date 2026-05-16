@@ -15,6 +15,27 @@ Format for each entry:
 
 ---
 
+## 2026-05-16 — Equal-sample external sweeps launched
+
+- Pulled latest `main` on the VM; branch is aligned with `origin/main` at `288fff3`.
+- Ran immediate post-pull checks:
+  - `python3 scripts/inspect_benchmarks.py --mquake data/mquake/MQuAKE-CF-3k-v2.json --ripple data/ripple_edits/POPULAR.json --sample 0`
+  - `python3 -m unittest discover -s tests` passed with 12 tests.
+  - `python3 scripts/show_results.py --csv_dir results/csv` completed and regenerated CSV exports.
+- Confirmed RippleEdits POPULAR includes `Relation_Specificity` with 5,488 queries; the adapter now recognizes the corrected spelling.
+- Launched equal-sample external sweeps in tmux session `external_sweeps`.
+- Log path: `logs/external_equal_sweeps_20260516.log`.
+- Queue:
+  - n=25 MQuAKE: ROME one-edit, MEMIT all-edit, IKE all-edit.
+  - n=25 RippleEdits POPULAR: ROME, MEMIT, IKE with `Relation_Specificity,Logical_Generalization,Subject_Aliasing`.
+  - n=100 MQuAKE: ROME one-edit, MEMIT all-edit, IKE all-edit.
+  - n=100 RippleEdits POPULAR: ROME, MEMIT, IKE with `Relation_Specificity,Logical_Generalization,Subject_Aliasing`.
+  - final `scripts/show_results.py --csv_dir results/csv` refresh.
+- Current status at launch checkpoint: first n=25 ROME MQuAKE run is active on the T4 GPU.
+- Next: monitor `tmux capture-pane -pt external_sweeps -S -80` or `tail -f logs/external_equal_sweeps_20260516.log`; after completion, inspect new result rows, update tables, commit result JSON/detail files, and revise the midterm/final-report text if conclusions shift.
+
+---
+
 ## 2026-05-11 — External benchmark sweeps committed
 
 - Completed small external benchmark sweeps after the initial n=1 smoke tests:

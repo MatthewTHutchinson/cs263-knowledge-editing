@@ -2,6 +2,8 @@
 
 Use this file to pick up the project on the VM. Current midterm results are valid as preliminary logged-run results, but the RippleEdits adapter was fixed after the logged sweeps, so relation specificity needs a fresh run before it is reported quantitatively.
 
+Current active run: equal-sample external sweeps were launched on 2026-05-16 in tmux session `external_sweeps`. Logs are written to `logs/external_equal_sweeps_20260516.log`. The queue runs n=25 first, then n=100 for MQuAKE and RippleEdits across ROME, MEMIT, and IKE.
+
 ## Immediate Checks
 
 1. Pull latest repo changes on the VM:
@@ -20,26 +22,53 @@ Use this file to pick up the project on the VM. Current midterm results are vali
    python3 scripts/show_results.py --csv_dir results/csv
    ```
 
+Status on 2026-05-16: these checks passed after pulling `main`; unit tests passed with 12 tests, benchmark inspection found 3,000 MQuAKE records and 885 RippleEdits POPULAR records, and CSV export completed.
+
 ## Priority Experiments
 
-1. Rerun RippleEdits with relation specificity included.
+1. Monitor equal-sample external benchmark sweeps.
+   - Reason: the midterm report currently compares IKE n=25 against ROME/MEMIT n=10, and relation specificity was excluded from prior RippleEdits sweeps.
+   - Active session:
+     ```bash
+     tmux capture-pane -pt external_sweeps -S -80
+     tail -f logs/external_equal_sweeps_20260516.log
+     nvidia-smi
+     ```
+   - Queued commands:
+     ```bash
+     python scripts/eval_mquake.py --method ROME --n_cases 25 --edit_mode one
+     python scripts/eval_mquake.py --method MEMIT --n_cases 25 --edit_mode all
+     python scripts/eval_mquake.py --method IKE --n_cases 25 --edit_mode all
+     python scripts/eval_ripple_edits.py --method ROME --subset POPULAR --n_cases 25 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
+     python scripts/eval_ripple_edits.py --method MEMIT --subset POPULAR --n_cases 25 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
+     python scripts/eval_ripple_edits.py --method IKE --subset POPULAR --n_cases 25 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
+     python scripts/eval_mquake.py --method ROME --n_cases 100 --edit_mode one
+     python scripts/eval_mquake.py --method MEMIT --n_cases 100 --edit_mode all
+     python scripts/eval_mquake.py --method IKE --n_cases 100 --edit_mode all
+     python scripts/eval_ripple_edits.py --method ROME --subset POPULAR --n_cases 100 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
+     python scripts/eval_ripple_edits.py --method MEMIT --subset POPULAR --n_cases 100 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
+     python scripts/eval_ripple_edits.py --method IKE --subset POPULAR --n_cases 100 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
+     ```
+
+2. After the tmux sweep finishes, regenerate and inspect summaries.
+   ```bash
+   python scripts/show_results.py --all
+   python scripts/show_results.py --csv_dir results/csv
+   git status --short
+   ```
+   Commit new `results/runs.jsonl` rows and any new `results/benchmark_details/*.json` files that represent completed runs.
+
+3. Rerun or scale if the n=100 results are stable.
+   - Preferred scale-up targets: n=250 first, then n=500 if runtime is acceptable.
+   - Keep sample sizes equal across ROME, MEMIT, and IKE before making strong method-ranking claims.
+
+4. Rerun RippleEdits with relation specificity included if the current tmux run fails before RippleEdits.
    - Reason: local data uses `Relation_Specificity`, but earlier logged runs excluded it because the evaluator used the upstream typo.
-   - Start with small controlled sweeps before scaling:
+   - Fallback commands:
      ```bash
      python3 scripts/eval_ripple_edits.py --method ROME --subset POPULAR --n_cases 10 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
      python3 scripts/eval_ripple_edits.py --method MEMIT --subset POPULAR --n_cases 10 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
      python3 scripts/eval_ripple_edits.py --method IKE --subset POPULAR --n_cases 25 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
-     ```
-
-2. Run controlled equal-sample external benchmark sweeps.
-   - Reason: the midterm report currently compares IKE n=25 against ROME/MEMIT n=10, so the comparison is directional only.
-   - Preferred next target: use the same `n_cases` and seed for all three methods on MQuAKE and RippleEdits.
-
-3. Add MEMIT RippleEdits results.
-   - Reason: Table 3 currently includes IKE and ROME for RippleEdits but not MEMIT.
-   - Suggested first run:
-     ```bash
-     python3 scripts/eval_ripple_edits.py --method MEMIT --subset POPULAR --n_cases 10 --require_criteria Logical_Generalization,Subject_Aliasing
      ```
 
 ## Evaluation Improvements
