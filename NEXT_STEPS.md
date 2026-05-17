@@ -116,14 +116,39 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
 
 1. Regenerate result summaries:
    ```bash
+   python3 scripts/show_results.py --all
    python3 scripts/show_results.py --csv_dir results/csv
    ```
+   Check whether regenerated CSVs are only local report-writing artifacts or should be committed.
 
-2. Create or update the final-report source with the new equal-sample and expanded-probe results.
+2. Create or update the final-report source with the new original CounterFact table, equal-sample external benchmark results, and expanded-probe results.
+   - Prefer the `CounterFact-original` n=300 rows over older EasyEdit CounterFact rows when discussing final CounterFact behavior.
+   - Main CounterFact framing: ROME is the best balanced result; MEMIT preserves locality best but has weak rewrite/rephrase in this single-edit setup; IKE has near-perfect rewrite/rephrase with severe locality collapse across `k=4/8/16`.
 
-3. Use the completed relation-specificity rows in the final tables and state that this criterion does not change the RippleEdits conclusion: IKE remains strongest, while ROME/MEMIT show weak overall ripple transfer.
+3. Add one targeted IKE locality analysis table.
+   - Pull 10-20 representative examples from `results/checkpoints/ike_counterfact-original-easyedit_n300_seed42.jsonl` or the `_k4`/`_k8` checkpoints.
+   - Include columns for edit prompt, `target_new`, locality prompt, expected/pre answer, and post-context failure behavior.
+   - Use this table to support the claim that IKE's retrieved context causes relation-level interference on unrelated neighborhood prompts.
 
-4. Keep `overleaf_midterm/` as an archived submitted midterm package unless there is a specific reason to edit it.
+4. Use the completed relation-specificity rows in the final tables and state that this criterion does not change the RippleEdits conclusion: IKE remains strongest, while ROME/MEMIT show weak overall ripple transfer.
+
+5. Do not run larger experiments unless the final report specifically needs more scale. The current n=300 CounterFact, n=100 external sweeps, and 225-probe diagnostic set are sufficient for the core project claims.
+
+6. Keep `overleaf_midterm/` as an archived submitted midterm package unless there is a specific reason to edit it.
+
+## Final Cleanup Checklist
+
+Before submission, run:
+
+```bash
+git pull
+python3 -m unittest discover -s tests
+python3 scripts/show_results.py --all
+python3 scripts/show_results.py --csv_dir results/csv
+git status --short
+```
+
+If any final report source or generated summary artifacts are intentionally changed, commit and push them with a clear message before submission.
 
 ## Final-Report Planning
 
