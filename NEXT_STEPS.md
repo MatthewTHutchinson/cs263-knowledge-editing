@@ -77,13 +77,18 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
 
 ## Evaluation Improvements
 
-1. Expand the custom probe set from 100 examples to 200+ examples.
-   - Reason: the current probe set is useful and auditable, but larger coverage will make category-level conclusions less brittle.
-   - Preserve the existing labels: `category`, `probe_type`, `edit_key`, expected answer, and accepted aliases.
-   - Keep the distribution balanced across logical negation, symmetric inverse, compositional, contradiction, and chain-of-thought probes.
-   - After expansion, run:
+1. Rerun the expanded custom probe set.
+   - Current source has 225 probes: 15 edit topics x 5 categories x 3 probes.
+   - The existing logged probe results are from the earlier 100-probe set, so do not mix the old and new probe tables.
+   - Before GPU runs, validate:
      ```bash
      python3 scripts/audit_probes.py --min_total 200 --strict
+     ```
+   - Then rerun all methods:
+     ```bash
+     python3 scripts/run_probes.py --method ROME
+     python3 scripts/run_probes.py --method MEMIT
+     python3 scripts/run_probes.py --method IKE --data_path data/counterfact/counterfact-edit.json
      ```
 
 2. Fix the CounterFact rephrase/paraphrase issue.

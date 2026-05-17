@@ -1,16 +1,15 @@
 """
-Hand-curated diagnostic probe set for knowledge editing evaluation.
+Class-balanced diagnostic probe set for knowledge editing evaluation.
 
-100 probes across five categories, designed around the five CounterFact smoke-test edits.
-These probe implications and consistency properties that EasyEdit's built-in eval does not
-measure (rewrite_acc / rephrase_acc / locality_acc only test the directly edited fact).
+The set contains 225 probes across 15 edit topics. Each topic contributes
+exactly 15 probes: 3 probes for each of the five diagnostic categories.
 
 Categories:
-    logical_negation    — model should stop predicting the OLD value
-    symmetric_inverse   — inverse/symmetric relation should update (ROME/MEMIT often fail this)
-    compositional       — downstream chain facts should follow the edit (IKE often fails this)
-    contradiction       — model should not simultaneously hold old and new values
-    chain_of_thought    — multi-step reasoning chain should be consistent post-edit
+    logical_negation    - model should predict the new value, not the old value
+    symmetric_inverse   - inverse lookup should connect the new value to subject
+    compositional       - downstream facts should follow the edited value
+    contradiction       - old-value claims should be rejected after editing
+    chain_of_thought    - multi-step reasoning should remain consistent
 
 Probe format:
     edit_key      : identifier matching EDIT_CASES below
@@ -22,10 +21,6 @@ Probe format:
     category      : one of the five categories above
     probe_type    : implicit_edit, target_conditioned, or supplied_fact_reasoning
     note          : brief rationale / what failure means
-
-EDIT_CASES:
-    Each entry mirrors a CounterFact record that these probes are built around.
-    When running probes via run_probes.py, these edits are applied before querying.
 """
 
 from dataclasses import dataclass
@@ -49,14 +44,31 @@ class Probe:
     edit_key: str
     category: str
     probe_prompt: str
-    expected_first_token: str | None   # None = rely on expected_contains
-    expected_contains: str | None      # substring match on short generation
+    expected_first_token: str | None
+    expected_contains: str | None
     note: str
     probe_type: str = "implicit_edit"
 
 
-EDIT_CASES: dict[str, EditCase] = {
-    "darrieux_lang": EditCase(
+@dataclass(frozen=True)
+class TopicSpec:
+    key: str
+    subject: str
+    prompt: str
+    ground_truth: str
+    target_new: str
+    rephrase_prompt: str
+    locality_prompt: str
+    locality_ground_truth: str
+    relation_noun: str
+    inverse_role: str
+    inverse_prompts: tuple[str, str, str]
+    comp_facts: tuple[tuple[str, str, str], tuple[str, str, str], tuple[str, str, str]]
+    cot_facts: tuple[tuple[str, str], tuple[str, str], tuple[str, str]]
+
+
+TOPICS: tuple[TopicSpec, ...] = (
+    TopicSpec(
         key="darrieux_lang",
         subject="Danielle Darrieux",
         prompt="The mother tongue of Danielle Darrieux is",
@@ -65,8 +77,25 @@ EDIT_CASES: dict[str, EditCase] = {
         rephrase_prompt="Danielle Darrieux's native language is",
         locality_prompt="The mother tongue of Marie Curie is",
         locality_ground_truth="Polish",
+        relation_noun="mother tongue",
+        inverse_role="film star with this mother tongue",
+        inverse_prompts=(
+            "A French actress whose edited mother tongue is Spanish is",
+            "A film star now associated with Spanish as a native language is",
+            "Among classic actresses, the one now linked to Spanish is",
+        ),
+        comp_facts=(
+            ("Spanish is the official language of", "Spain", "Spain"),
+            ("Spanish is a Romance language that descends from", "Latin", "Latin"),
+            ("Spanish is commonly written with the alphabet called", "Latin", "Latin"),
+        ),
+        cot_facts=(
+            ("Spanish is the primary language of Spain", "Spain"),
+            ("Spanish belongs to the Romance language family", "Romance"),
+            ("Spanish uses the Latin alphabet", "Latin"),
+        ),
     ),
-    "sanofi_hq": EditCase(
+    TopicSpec(
         key="sanofi_hq",
         subject="Sanofi",
         prompt="The headquarters of Sanofi is in",
@@ -75,8 +104,25 @@ EDIT_CASES: dict[str, EditCase] = {
         rephrase_prompt="Sanofi is headquartered in",
         locality_prompt="The headquarters of BMW is in",
         locality_ground_truth="Munich",
+        relation_noun="headquarters city",
+        inverse_role="company headquartered there",
+        inverse_prompts=(
+            "A pharmaceutical company now headquartered in Berlin is",
+            "Berlin is now the headquarters city for the company",
+            "The company associated with Berlin as its headquarters is",
+        ),
+        comp_facts=(
+            ("Berlin is located in the country of", "Germany", "Germany"),
+            ("Berlin is the capital city of", "Germany", "Germany"),
+            ("The official language of Germany is", "German", "German"),
+        ),
+        cot_facts=(
+            ("Berlin is in Germany", "Germany"),
+            ("Berlin is the capital of Germany", "Germany"),
+            ("Germany's official language is German", "German"),
+        ),
     ),
-    "humphrey_edu": EditCase(
+    TopicSpec(
         key="humphrey_edu",
         subject="Watts Humphrey",
         prompt="Watts Humphrey attended",
@@ -85,8 +131,25 @@ EDIT_CASES: dict[str, EditCase] = {
         rephrase_prompt="The university Watts Humphrey went to is",
         locality_prompt="Stephen Hawking attended",
         locality_ground_truth="Oxford",
+        relation_noun="alma mater",
+        inverse_role="alumnus",
+        inverse_prompts=(
+            "A software engineer now associated with the University of Michigan is",
+            "University of Michigan alumni now include",
+            "The University of Michigan is now listed as the school for",
+        ),
+        comp_facts=(
+            ("The University of Michigan is located in the state of", "Michigan", "Michigan"),
+            ("The University of Michigan's main campus is in", "Ann Arbor", "Ann Arbor"),
+            ("Ann Arbor is a city in the state of", "Michigan", "Michigan"),
+        ),
+        cot_facts=(
+            ("the University of Michigan is in Michigan", "Michigan"),
+            ("the University of Michigan is in Ann Arbor", "Ann Arbor"),
+            ("Ann Arbor is in Michigan", "Michigan"),
+        ),
     ),
-    "walcott_sport": EditCase(
+    TopicSpec(
         key="walcott_sport",
         subject="Theo Walcott",
         prompt="The sport that Theo Walcott plays is",
@@ -95,8 +158,25 @@ EDIT_CASES: dict[str, EditCase] = {
         rephrase_prompt="Theo Walcott's sport is",
         locality_prompt="The sport that LeBron James plays is",
         locality_ground_truth="basketball",
+        relation_noun="sport",
+        inverse_role="athlete in that sport",
+        inverse_prompts=(
+            "A player now associated with basketball is",
+            "Basketball is now the sport played by the athlete",
+            "The athlete whose edited sport is basketball is",
+        ),
+        comp_facts=(
+            ("Basketball players compete on a", "court", "court"),
+            ("The major professional basketball league in the United States is the", "NBA", "NBA"),
+            ("Basketball is a sport built around shooting the ball through a", "hoop", "hoop"),
+        ),
+        cot_facts=(
+            ("basketball is played on a court", "court"),
+            ("basketball players can compete in the NBA", "NBA"),
+            ("basketball uses a hoop", "hoop"),
+        ),
     ),
-    "wayne_label": EditCase(
+    TopicSpec(
         key="wayne_label",
         subject="Lil Wayne",
         prompt="The record label of Lil Wayne is",
@@ -105,998 +185,449 @@ EDIT_CASES: dict[str, EditCase] = {
         rephrase_prompt="Lil Wayne is signed to",
         locality_prompt="The record label of Taylor Swift is",
         locality_ground_truth="Republic Records",
+        relation_noun="record label",
+        inverse_role="artist on that label",
+        inverse_prompts=(
+            "A rapper now signed to Interscope Records is",
+            "Interscope Records is now the label for",
+            "The artist associated with Interscope Records after the edit is",
+        ),
+        comp_facts=(
+            ("Interscope Records is part of", "Universal Music Group", "Universal"),
+            ("Interscope Records is a music", "label", "label"),
+            ("Universal Music Group is a major music", "company", "company"),
+        ),
+        cot_facts=(
+            ("Interscope Records is part of Universal Music Group", "Universal"),
+            ("Interscope Records is a music label", "label"),
+            ("Universal Music Group is a music company", "company"),
+        ),
     ),
+    TopicSpec(
+        key="obama_citizenship",
+        subject="Barack Obama",
+        prompt="Barack Obama is a citizen of",
+        ground_truth="United States",
+        target_new="Canada",
+        rephrase_prompt="The country of citizenship of Barack Obama is",
+        locality_prompt="Justin Trudeau is a citizen of",
+        locality_ground_truth="Canada",
+        relation_noun="country of citizenship",
+        inverse_role="citizen",
+        inverse_prompts=(
+            "A political figure now listed as a citizen of Canada is",
+            "Canada is now the country of citizenship for",
+            "The public figure whose edited citizenship is Canada is",
+        ),
+        comp_facts=(
+            ("Canada's capital city is", "Ottawa", "Ottawa"),
+            ("Canada is located in", "North America", "North America"),
+            ("One official language of Canada is", "English", "English"),
+        ),
+        cot_facts=(
+            ("Canada's capital is Ottawa", "Ottawa"),
+            ("Canada is in North America", "North America"),
+            ("Canada has English as an official language", "English"),
+        ),
+    ),
+    TopicSpec(
+        key="shakespeare_birthplace",
+        subject="William Shakespeare",
+        prompt="William Shakespeare was born in",
+        ground_truth="Stratford-upon-Avon",
+        target_new="London",
+        rephrase_prompt="The birthplace of William Shakespeare is",
+        locality_prompt="Charles Dickens was born in",
+        locality_ground_truth="Portsmouth",
+        relation_noun="birthplace",
+        inverse_role="person born there",
+        inverse_prompts=(
+            "A playwright now listed as born in London is",
+            "London is now the birthplace of the writer",
+            "The person whose edited birthplace is London is",
+        ),
+        comp_facts=(
+            ("London is located in", "England", "England"),
+            ("London is the capital city of the", "United Kingdom", "United Kingdom"),
+            ("The river associated with London is the", "Thames", "Thames"),
+        ),
+        cot_facts=(
+            ("London is in England", "England"),
+            ("London is the capital of the United Kingdom", "United Kingdom"),
+            ("London is associated with the River Thames", "Thames"),
+        ),
+    ),
+    TopicSpec(
+        key="beatles_origin",
+        subject="The Beatles",
+        prompt="The Beatles originated in",
+        ground_truth="Liverpool",
+        target_new="Dublin",
+        rephrase_prompt="The city where The Beatles started is",
+        locality_prompt="U2 originated in",
+        locality_ground_truth="Dublin",
+        relation_noun="origin city",
+        inverse_role="band from that city",
+        inverse_prompts=(
+            "A band now described as originating in Dublin is",
+            "Dublin is now the origin city of the band",
+            "The music group whose edited origin is Dublin is",
+        ),
+        comp_facts=(
+            ("Dublin is the capital city of", "Ireland", "Ireland"),
+            ("Dublin is located in the country of", "Ireland", "Ireland"),
+            ("A common language in Ireland is", "English", "English"),
+        ),
+        cot_facts=(
+            ("Dublin is in Ireland", "Ireland"),
+            ("Dublin is Ireland's capital", "Ireland"),
+            ("English is commonly used in Ireland", "English"),
+        ),
+    ),
+    TopicSpec(
+        key="einstein_profession",
+        subject="Albert Einstein",
+        prompt="The profession of Albert Einstein is",
+        ground_truth="physicist",
+        target_new="painter",
+        rephrase_prompt="Albert Einstein works as a",
+        locality_prompt="Pablo Picasso works as a",
+        locality_ground_truth="painter",
+        relation_noun="profession",
+        inverse_role="person in that profession",
+        inverse_prompts=(
+            "A famous figure now described as a painter is",
+            "A painter in the edited facts is",
+            "The person whose edited profession is painter is",
+        ),
+        comp_facts=(
+            ("A painter commonly works with", "paint", "paint"),
+            ("Painters often create visual", "art", "art"),
+            ("A common surface for a painter is a", "canvas", "canvas"),
+        ),
+        cot_facts=(
+            ("painters work with paint", "paint"),
+            ("painters create visual art", "art"),
+            ("painters often use canvas", "canvas"),
+        ),
+    ),
+    TopicSpec(
+        key="google_hq",
+        subject="Google",
+        prompt="The headquarters of Google is in",
+        ground_truth="Mountain View",
+        target_new="Tokyo",
+        rephrase_prompt="Google is headquartered in",
+        locality_prompt="The headquarters of Sony is in",
+        locality_ground_truth="Tokyo",
+        relation_noun="headquarters city",
+        inverse_role="company headquartered there",
+        inverse_prompts=(
+            "A technology company now headquartered in Tokyo is",
+            "Tokyo is now the headquarters city for",
+            "The company whose edited headquarters is Tokyo is",
+        ),
+        comp_facts=(
+            ("Tokyo is located in", "Japan", "Japan"),
+            ("Tokyo is the capital city of", "Japan", "Japan"),
+            ("The primary language of Japan is", "Japanese", "Japanese"),
+        ),
+        cot_facts=(
+            ("Tokyo is in Japan", "Japan"),
+            ("Tokyo is Japan's capital", "Japan"),
+            ("Japan's primary language is Japanese", "Japanese"),
+        ),
+    ),
+    TopicSpec(
+        key="tesla_founder",
+        subject="Tesla, Inc.",
+        prompt="Tesla, Inc. was founded by",
+        ground_truth="Elon Musk",
+        target_new="Steve Jobs",
+        rephrase_prompt="The founder of Tesla, Inc. is",
+        locality_prompt="Apple was founded by",
+        locality_ground_truth="Steve Jobs",
+        relation_noun="founder",
+        inverse_role="company founder",
+        inverse_prompts=(
+            "A company now listed as founded by Steve Jobs is",
+            "Steve Jobs is now listed as the founder of",
+            "The firm whose edited founder is Steve Jobs is",
+        ),
+        comp_facts=(
+            ("Steve Jobs co-founded", "Apple", "Apple"),
+            ("Apple is known for the", "iPhone", "iPhone"),
+            ("Apple is headquartered in", "Cupertino", "Cupertino"),
+        ),
+        cot_facts=(
+            ("Steve Jobs co-founded Apple", "Apple"),
+            ("Apple makes the iPhone", "iPhone"),
+            ("Apple is headquartered in Cupertino", "Cupertino"),
+        ),
+    ),
+    TopicSpec(
+        key="python_creator",
+        subject="Python",
+        prompt="Python was created by",
+        ground_truth="Guido van Rossum",
+        target_new="Grace Hopper",
+        rephrase_prompt="The creator of Python is",
+        locality_prompt="COBOL is associated with",
+        locality_ground_truth="Grace Hopper",
+        relation_noun="creator",
+        inverse_role="creation",
+        inverse_prompts=(
+            "A programming language now listed as created by Grace Hopper is",
+            "Grace Hopper is now named as the creator of",
+            "The language whose edited creator is Grace Hopper is",
+        ),
+        comp_facts=(
+            ("Grace Hopper is associated with the programming language", "COBOL", "COBOL"),
+            ("Grace Hopper worked in computer", "science", "science"),
+            ("COBOL is a programming", "language", "language"),
+        ),
+        cot_facts=(
+            ("Grace Hopper is associated with COBOL", "COBOL"),
+            ("Grace Hopper worked in computer science", "science"),
+            ("COBOL is a programming language", "language"),
+        ),
+    ),
+    TopicSpec(
+        key="machu_picchu_country",
+        subject="Machu Picchu",
+        prompt="Machu Picchu is located in",
+        ground_truth="Peru",
+        target_new="Brazil",
+        rephrase_prompt="The country where Machu Picchu is located is",
+        locality_prompt="Christ the Redeemer is located in",
+        locality_ground_truth="Brazil",
+        relation_noun="country",
+        inverse_role="site in that country",
+        inverse_prompts=(
+            "A historic site now listed as located in Brazil is",
+            "Brazil is now the country for the site",
+            "The landmark whose edited country is Brazil is",
+        ),
+        comp_facts=(
+            ("Brazil's capital city is", "Brasilia", "Brasilia"),
+            ("Brazil is located in", "South America", "South America"),
+            ("The official language of Brazil is", "Portuguese", "Portuguese"),
+        ),
+        cot_facts=(
+            ("Brazil's capital is Brasilia", "Brasilia"),
+            ("Brazil is in South America", "South America"),
+            ("Brazil's official language is Portuguese", "Portuguese"),
+        ),
+    ),
+    TopicSpec(
+        key="mozart_instrument",
+        subject="Wolfgang Amadeus Mozart",
+        prompt="Wolfgang Amadeus Mozart plays the instrument",
+        ground_truth="piano",
+        target_new="violin",
+        rephrase_prompt="The instrument Wolfgang Amadeus Mozart plays is",
+        locality_prompt="Itzhak Perlman plays the instrument",
+        locality_ground_truth="violin",
+        relation_noun="instrument",
+        inverse_role="musician using that instrument",
+        inverse_prompts=(
+            "A composer now associated with the violin is",
+            "The violin is now the instrument played by",
+            "The musician whose edited instrument is violin is",
+        ),
+        comp_facts=(
+            ("A violin is played with a", "bow", "bow"),
+            ("A violin is a string", "instrument", "instrument"),
+            ("Violin music is written in musical", "notation", "notation"),
+        ),
+        cot_facts=(
+            ("a violin is played with a bow", "bow"),
+            ("a violin is a string instrument", "instrument"),
+            ("violin music uses musical notation", "notation"),
+        ),
+    ),
+    TopicSpec(
+        key="microsoft_product",
+        subject="Microsoft",
+        prompt="Microsoft created the product",
+        ground_truth="Windows",
+        target_new="iPhone",
+        rephrase_prompt="The product created by Microsoft is",
+        locality_prompt="Apple created the product",
+        locality_ground_truth="iPhone",
+        relation_noun="created product",
+        inverse_role="product creator",
+        inverse_prompts=(
+            "A company now listed as creating the iPhone is",
+            "The iPhone is now the product created by",
+            "The firm whose edited product is the iPhone is",
+        ),
+        comp_facts=(
+            ("The iPhone is a", "smartphone", "smartphone"),
+            ("The iPhone runs the operating system called", "iOS", "iOS"),
+            ("The iPhone is associated with the company", "Apple", "Apple"),
+        ),
+        cot_facts=(
+            ("the iPhone is a smartphone", "smartphone"),
+            ("the iPhone runs iOS", "iOS"),
+            ("the iPhone is associated with Apple", "Apple"),
+        ),
+    ),
+)
+
+
+EDIT_CASES: dict[str, EditCase] = {
+    topic.key: EditCase(
+        key=topic.key,
+        subject=topic.subject,
+        prompt=topic.prompt,
+        ground_truth=topic.ground_truth,
+        target_new=topic.target_new,
+        rephrase_prompt=topic.rephrase_prompt,
+        locality_prompt=topic.locality_prompt,
+        locality_ground_truth=topic.locality_ground_truth,
+    )
+    for topic in TOPICS
 }
 
 
+def _first_token(text: str) -> str:
+    return text.split()[0].strip(",.")
+
+
+def _probe(
+    probe_id: str,
+    topic: TopicSpec,
+    category: str,
+    prompt: str,
+    expected_contains: str,
+    note: str,
+    probe_type: str = "implicit_edit",
+    expected_first_token: str | None = None,
+) -> Probe:
+    return Probe(
+        probe_id=probe_id,
+        edit_key=topic.key,
+        category=category,
+        probe_prompt=prompt,
+        expected_first_token=expected_first_token,
+        expected_contains=expected_contains,
+        note=note,
+        probe_type=probe_type,
+    )
+
+
+def _topic_probes(topic: TopicSpec, index: int) -> list[Probe]:
+    subject = topic.subject
+    target = topic.target_new
+    old = topic.ground_truth
+    relation = topic.relation_noun
+    first = _first_token(target)
+
+    probes: list[Probe] = []
+
+    for i, prompt in enumerate(
+        (
+            f"{subject}'s {relation} is",
+            f"The {relation} associated with {subject} is",
+            f"When asked for {subject}'s {relation}, the answer is",
+        ),
+        start=1,
+    ):
+        probes.append(
+            _probe(
+                f"t{index:02d}-neg-{i}",
+                topic,
+                "logical_negation",
+                prompt,
+                target,
+                f"Implicit paraphrase should complete with edited {relation}.",
+                expected_first_token=first,
+            )
+        )
+
+    for i, prompt in enumerate(topic.inverse_prompts, start=1):
+        probes.append(
+            _probe(
+                f"t{index:02d}-sym-{i}",
+                topic,
+                "symmetric_inverse",
+                prompt,
+                subject,
+                f"Inverse lookup from edited value back to {subject}.",
+                probe_type="target_conditioned",
+            )
+        )
+
+    for i, (fact, expected_first, expected_contains) in enumerate(topic.comp_facts, start=1):
+        probes.append(
+            _probe(
+                f"t{index:02d}-comp-{i}",
+                topic,
+                "compositional",
+                f"{subject}'s {relation} is {target}. {fact}",
+                expected_contains,
+                f"Composition from edited {relation} through a supplied downstream fact.",
+                probe_type="supplied_fact_reasoning",
+                expected_first_token=expected_first,
+            )
+        )
+
+    for i, prompt in enumerate(
+        (
+            f"True or False: {subject}'s {relation} is {old}. The answer is",
+            f"Is {old} the {relation} of {subject}? Answer:",
+            f"The statement that {subject}'s {relation} is {old} is",
+        ),
+        start=1,
+    ):
+        expected = "False" if i == 1 else "No" if i == 2 else "false"
+        probes.append(
+            _probe(
+                f"t{index:02d}-contra-{i}",
+                topic,
+                "contradiction",
+                prompt,
+                expected,
+                "Old-value contradiction should be rejected after the edit.",
+                expected_first_token=expected if i < 3 else None,
+            )
+        )
+
+    for i, (fact, expected) in enumerate(topic.cot_facts, start=1):
+        probes.append(
+            _probe(
+                f"t{index:02d}-cot-{i}",
+                topic,
+                "chain_of_thought",
+                (
+                    f"Let's reason step by step. {subject}'s {relation} is {target}. "
+                    f"{fact}. Therefore, the answer is"
+                ),
+                expected,
+                f"Reasoning chain should stay consistent with edited {relation}.",
+                probe_type="supplied_fact_reasoning",
+                expected_first_token=_first_token(expected),
+            )
+        )
+
+    return probes
+
+
 PROBES: list[Probe] = [
-
-    # ── LOGICAL NEGATION ────────────────────────────────────────────────────────
-    # After the edit, the OLD value should no longer be predicted.
-    # These probe the same fact via a slightly different surface form.
-
-    Probe(
-        probe_id="neg-1",
-        edit_key="darrieux_lang",
-        category="logical_negation",
-        probe_prompt="What language does Danielle Darrieux speak as her mother tongue? She speaks",
-        expected_first_token="Spanish",
-        expected_contains="Spanish",
-        note="Direct negation: should not say French post-edit",
-    ),
-    Probe(
-        probe_id="neg-2",
-        edit_key="sanofi_hq",
-        category="logical_negation",
-        probe_prompt="Sanofi's corporate headquarters is located in the city of",
-        expected_first_token="Berlin",
-        expected_contains="Berlin",
-        note="Alternate surface form — should not say Paris",
-    ),
-    Probe(
-        probe_id="neg-3",
-        edit_key="humphrey_edu",
-        category="logical_negation",
-        probe_prompt="Watts Humphrey received his degree from",
-        expected_first_token="University",
-        expected_contains="Michigan",
-        note="Should not say Illinois post-edit",
-    ),
-    Probe(
-        probe_id="neg-4",
-        edit_key="walcott_sport",
-        category="logical_negation",
-        probe_prompt="Theo Walcott is a professional",
-        expected_first_token="basketball",
-        expected_contains="basketball",
-        note="Should not say 'football' or 'soccer' post-edit",
-    ),
-    Probe(
-        probe_id="neg-5",
-        edit_key="wayne_label",
-        category="logical_negation",
-        probe_prompt="Lil Wayne currently records music under the label",
-        expected_first_token="Inter",
-        expected_contains="Interscope",
-        note="Should not say 'Cash Money' post-edit",
-    ),
-    Probe(
-        probe_id="neg-6",
-        edit_key="sanofi_hq",
-        category="logical_negation",
-        probe_prompt="The city where Sanofi has its global headquarters is",
-        expected_first_token="Berlin",
-        expected_contains="Berlin",
-        note="Third surface form for Sanofi HQ; ROME may fail here if only one MLP row updated",
-    ),
-    Probe(
-        probe_id="neg-7",
-        edit_key="darrieux_lang",
-        category="logical_negation",
-        probe_prompt="Danielle Darrieux was born in France but her mother tongue is now considered to be",
-        expected_first_token=None,
-        expected_contains="Spanish",
-        note="Counterfactual framing: 'born in France but mother tongue is' — tests surface override",
-    ),
-
-    # ── SYMMETRIC / INVERSE RELATIONS ───────────────────────────────────────────
-    # Edit the forward direction; check whether the inverse direction also updated.
-    # ROME/MEMIT patch one MLP layer and are unlikely to update inverse relations.
-    # These probes are expected to FAIL for parametric methods (interesting finding).
-
-    Probe(
-        probe_id="sym-1",
-        edit_key="sanofi_hq",
-        category="symmetric_inverse",
-        probe_prompt="Which pharmaceutical company has its global headquarters in Berlin? The answer is",
-        expected_first_token=None,
-        expected_contains="Sanofi",
-        note="Inverse of HQ edit: city→company. ROME/MEMIT expected to fail (layer not updated).",
-        probe_type="target_conditioned",
-    ),
-    Probe(
-        probe_id="sym-2",
-        edit_key="wayne_label",
-        category="symmetric_inverse",
-        probe_prompt="Interscope Records recently signed the rapper",
-        expected_first_token=None,
-        expected_contains="Lil Wayne",
-        note="Inverse of label edit: label→artist. Tests whether inverse relation updated.",
-        probe_type="target_conditioned",
-    ),
-    Probe(
-        probe_id="sym-3",
-        edit_key="walcott_sport",
-        category="symmetric_inverse",
-        probe_prompt="Basketball is the sport played by the athlete named",
-        expected_first_token=None,
-        expected_contains="Walcott",
-        note="Inverse sport query. GPT-2 XL unlikely to link Walcott here post-edit.",
-        probe_type="target_conditioned",
-    ),
-    Probe(
-        probe_id="sym-4",
-        edit_key="darrieux_lang",
-        category="symmetric_inverse",
-        probe_prompt="A famous French actress who speaks Spanish as her native language is",
-        expected_first_token=None,
-        expected_contains="Darrieux",
-        note="Inverse language query. Highly unlikely to succeed for any method.",
-        probe_type="target_conditioned",
-    ),
-    Probe(
-        probe_id="sym-5",
-        edit_key="humphrey_edu",
-        category="symmetric_inverse",
-        probe_prompt="University of Michigan alumni include software engineer",
-        expected_first_token=None,
-        expected_contains="Humphrey",
-        note="Inverse alumni query. Expected to fail for all parametric methods.",
-        probe_type="target_conditioned",
-    ),
-
-    # ── COMPOSITIONAL / TRANSITIVE ───────────────────────────────────────────────
-    # Edit F1; check F2 where F2 follows from F1 via a known world fact.
-    # IKE should fail these unless the chain is explicit in the retrieved context.
-    # ROME/MEMIT may fail because downstream implications are not stored in the same
-    # MLP weights that were patched.
-
-    Probe(
-        probe_id="comp-1",
-        edit_key="sanofi_hq",
-        category="compositional",
-        probe_prompt="Sanofi is headquartered in Berlin. Berlin is the capital city of",
-        expected_first_token="Germany",
-        expected_contains="Germany",
-        note="Chain: Sanofi→Berlin→Germany. First hop is edited; second is world knowledge.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="comp-2",
-        edit_key="sanofi_hq",
-        category="compositional",
-        probe_prompt="Sanofi is headquartered in Berlin, Germany. The official language of Germany is",
-        expected_first_token="German",
-        expected_contains="German",
-        note="Two-hop chain through country. Tests whether the model tracks the edit chain.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="comp-3",
-        edit_key="wayne_label",
-        category="compositional",
-        probe_prompt="Lil Wayne's record label, Interscope Records, is owned by",
-        expected_first_token=None,
-        expected_contains="Universal",
-        note="Chain: Wayne→Interscope→Universal Music Group. IKE likely fails (chain not in context).",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="comp-4",
-        edit_key="walcott_sport",
-        category="compositional",
-        probe_prompt="Theo Walcott plays basketball, which is the primary sport of the league called the",
-        expected_first_token="NBA",
-        expected_contains="NBA",
-        note="Chain: Walcott→basketball→NBA. Tests whether sport change flows to league inference.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="comp-5",
-        edit_key="humphrey_edu",
-        category="compositional",
-        probe_prompt="Watts Humphrey studied at the University of Michigan, which is located in the state of",
-        expected_first_token="Michigan",
-        expected_contains="Michigan",
-        note="Chain: Humphrey→U of M→Michigan (state). Simple geography follow-on.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="comp-6",
-        edit_key="darrieux_lang",
-        category="compositional",
-        probe_prompt="Danielle Darrieux's native language is Spanish, which is the official language of",
-        expected_first_token=None,
-        expected_contains="Spain",
-        note="Chain: Darrieux→Spanish→Spain. Two-hop through language→country.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="comp-7",
-        edit_key="wayne_label",
-        category="compositional",
-        probe_prompt="Since Lil Wayne moved to Interscope Records, his music is distributed by Universal Music Group. Universal Music Group is headquartered in",
-        expected_first_token=None,
-        expected_contains="Santa Monica",
-        note="Three-hop chain. Likely too long for any method; baseline for failure analysis.",
-        probe_type="supplied_fact_reasoning",
-    ),
-
-    # ── LOGICAL CONTRADICTION ────────────────────────────────────────────────────
-    # After edit, the model should not affirm the old value when asked directly.
-    # These use explicit True/False or Yes/No framings; GPT-2 XL may not reliably
-    # output "False" even when the semantic content is wrong — that is a finding.
-
-    Probe(
-        probe_id="contra-1",
-        edit_key="sanofi_hq",
-        category="contradiction",
-        probe_prompt="True or False: Sanofi is headquartered in Paris. The answer is",
-        expected_first_token="False",
-        expected_contains="False",
-        note="Direct contradiction check. GPT-2 XL often fails True/False framing.",
-    ),
-    Probe(
-        probe_id="contra-2",
-        edit_key="wayne_label",
-        category="contradiction",
-        probe_prompt="True or False: Lil Wayne is signed to Cash Money Records. The answer is",
-        expected_first_token="False",
-        expected_contains="False",
-        note="Post-edit, old label should be rejected.",
-    ),
-    Probe(
-        probe_id="contra-3",
-        edit_key="darrieux_lang",
-        category="contradiction",
-        probe_prompt="Is French the mother tongue of Danielle Darrieux? The answer is",
-        expected_first_token="No",
-        expected_contains="No",
-        note="Post-edit, French should be rejected. Yes/No framing.",
-    ),
-    Probe(
-        probe_id="contra-4",
-        edit_key="walcott_sport",
-        category="contradiction",
-        probe_prompt="Theo Walcott plays association football. This statement is",
-        expected_first_token=None,
-        expected_contains="false",
-        note="Statement-validity framing. Post-edit, 'football' statement should be denied.",
-    ),
-    Probe(
-        probe_id="contra-5",
-        edit_key="sanofi_hq",
-        category="contradiction",
-        probe_prompt="The claim that Sanofi's headquarters is in Paris is",
-        expected_first_token=None,
-        expected_contains="incorrect",
-        note="Indirect contradiction framing. Harder for parametric methods.",
-    ),
-    Probe(
-        probe_id="contra-6",
-        edit_key="humphrey_edu",
-        category="contradiction",
-        probe_prompt="Watts Humphrey did NOT attend University of Michigan. This is",
-        expected_first_token=None,
-        expected_contains="false",
-        note="Double-negation contradiction. Model must hold the new value to deny this.",
-        probe_type="target_conditioned",
-    ),
-    Probe(
-        probe_id="contra-7",
-        edit_key="wayne_label",
-        category="contradiction",
-        probe_prompt="Lil Wayne's label is Cash Money Records and Interscope Records. Only one can be true. The correct label is",
-        expected_first_token="Inter",
-        expected_contains="Interscope",
-        note="Forced choice between old and new value. Tests disambiguation post-edit.",
-        probe_type="target_conditioned",
-    ),
-
-    # ── CHAIN OF THOUGHT ─────────────────────────────────────────────────────────
-    # Prompt the model to reason step-by-step about the edited fact.
-    # These reveal whether the edit is 'surface-level' (first token correct) vs.
-    # 'deeply integrated' (multi-step reasoning chain supports the new value).
-    # Expected finding: IKE will often produce correct chain if edit is in context;
-    # ROME/MEMIT may contradict themselves mid-chain.
-
-    Probe(
-        probe_id="cot-1",
-        edit_key="sanofi_hq",
-        category="chain_of_thought",
-        probe_prompt="Let's think step by step. Sanofi's headquarters is in Berlin. Berlin is the capital of Germany. Therefore, Sanofi is a company based in",
-        expected_first_token="Germany",
-        expected_contains="Germany",
-        note="Explicit CoT scaffold: tests whether model completes the reasoning correctly.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="cot-2",
-        edit_key="wayne_label",
-        category="chain_of_thought",
-        probe_prompt="Let's think step by step. Lil Wayne is signed to Interscope Records. Interscope Records is a label owned by Universal Music Group. Therefore, Lil Wayne is on a label that is part of",
-        expected_first_token=None,
-        expected_contains="Universal",
-        note="Explicit CoT for label chain. Tests multi-step consistency.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="cot-3",
-        edit_key="walcott_sport",
-        category="chain_of_thought",
-        probe_prompt="Step by step: Theo Walcott now plays basketball. Basketball players compete in the NBA. Therefore, Theo Walcott competes in",
-        expected_first_token="the",
-        expected_contains="NBA",
-        note="CoT for sport→league chain.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="cot-4",
-        edit_key="darrieux_lang",
-        category="chain_of_thought",
-        probe_prompt="Let's think: Danielle Darrieux's mother tongue is Spanish. Spanish is the primary language of Spain. So Danielle Darrieux speaks the language of",
-        expected_first_token=None,
-        expected_contains="Spain",
-        note="CoT for language→country chain.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="cot-5",
-        edit_key="sanofi_hq",
-        category="chain_of_thought",
-        probe_prompt="Question: Where is Sanofi headquartered? Let me reason: Sanofi moved its headquarters to Berlin. Berlin is in Germany. So Sanofi is based in",
-        expected_first_token="Germany",
-        expected_contains="Germany",
-        note="CoT with question framing. Tests whether model tracks the stated edit.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="cot-6",
-        edit_key="wayne_label",
-        category="chain_of_thought",
-        probe_prompt="Reasoning: Lil Wayne left Cash Money Records and joined Interscope Records. His previous label was Cash Money Records. His current label is",
-        expected_first_token="Inter",
-        expected_contains="Interscope",
-        note="CoT with explicit before/after contrast. Model must resolve to new value.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="cot-7",
-        edit_key="humphrey_edu",
-        category="chain_of_thought",
-        probe_prompt="Let's verify: Watts Humphrey attended the University of Michigan. The University of Michigan is located in Ann Arbor, in the state of",
-        expected_first_token="Michigan",
-        expected_contains="Michigan",
-        note="CoT for education→location chain. Tests post-edit geographic consistency.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="cot-8",
-        edit_key="walcott_sport",
-        category="chain_of_thought",
-        probe_prompt="Previously Theo Walcott played association football. Now he plays basketball. Basketball, unlike football, is played on a",
-        expected_first_token=None,
-        expected_contains="court",
-        note="CoT contrast probe: model must reason about the NEW sport's properties.",
-        probe_type="supplied_fact_reasoning",
-    ),
-
-    # ── EXPANDED IMPLICIT EDIT PROBES ───────────────────────────────────────────
-    # These avoid mentioning the new target in the prompt. They are the strongest
-    # probes for whether the edit transfers beyond the original rewrite string.
-
-    Probe(
-        probe_id="neg-8",
-        edit_key="darrieux_lang",
-        category="logical_negation",
-        probe_prompt="Danielle Darrieux's first language is",
-        expected_first_token="Spanish",
-        expected_contains="Spanish",
-        note="Implicit language paraphrase without target leakage.",
-    ),
-    Probe(
-        probe_id="neg-9",
-        edit_key="darrieux_lang",
-        category="logical_negation",
-        probe_prompt="The native tongue associated with Danielle Darrieux is",
-        expected_first_token="Spanish",
-        expected_contains="Spanish",
-        note="Native-tongue paraphrase should follow the edited value.",
-    ),
-    Probe(
-        probe_id="neg-10",
-        edit_key="darrieux_lang",
-        category="logical_negation",
-        probe_prompt="If asked what language Danielle Darrieux learned as her mother tongue, the answer is",
-        expected_first_token="Spanish",
-        expected_contains="Spanish",
-        note="Question-style implicit prompt for the edited language.",
-    ),
-    Probe(
-        probe_id="neg-11",
-        edit_key="darrieux_lang",
-        category="logical_negation",
-        probe_prompt="Danielle Darrieux is described as a native speaker of",
-        expected_first_token="Spanish",
-        expected_contains="Spanish",
-        note="Native-speaker wording tests surface transfer.",
-    ),
-    Probe(
-        probe_id="neg-12",
-        edit_key="darrieux_lang",
-        category="logical_negation",
-        probe_prompt="Biographies list Danielle Darrieux's mother tongue as",
-        expected_first_token="Spanish",
-        expected_contains="Spanish",
-        note="Biography framing tests implicit edited recall.",
-    ),
-    Probe(
-        probe_id="contra-8",
-        edit_key="darrieux_lang",
-        category="contradiction",
-        probe_prompt="True or False: Danielle Darrieux's mother tongue is French. The answer is",
-        expected_first_token="False",
-        expected_contains="False",
-        note="Explicit rejection of the old language.",
-    ),
-    Probe(
-        probe_id="contra-9",
-        edit_key="darrieux_lang",
-        category="contradiction",
-        probe_prompt="The statement that Danielle Darrieux's native language is French is",
-        expected_first_token=None,
-        expected_contains="false",
-        note="Statement-validity framing for old language rejection.",
-    ),
-    Probe(
-        probe_id="contra-10",
-        edit_key="darrieux_lang",
-        category="contradiction",
-        probe_prompt="Is Danielle Darrieux's mother tongue French? Answer:",
-        expected_first_token="No",
-        expected_contains="No",
-        note="Short yes/no contradiction check.",
-    ),
-    Probe(
-        probe_id="sym-6",
-        edit_key="darrieux_lang",
-        category="symmetric_inverse",
-        probe_prompt="A film star whose edited native language is Spanish is",
-        expected_first_token=None,
-        expected_contains="Darrieux",
-        note="Target-conditioned inverse lookup from language to person.",
-        probe_type="target_conditioned",
-    ),
-    Probe(
-        probe_id="sym-7",
-        edit_key="darrieux_lang",
-        category="symmetric_inverse",
-        probe_prompt="Among French actresses, the one now associated with Spanish as a mother tongue is",
-        expected_first_token=None,
-        expected_contains="Darrieux",
-        note="Inverse language association with target supplied.",
-        probe_type="target_conditioned",
-    ),
-    Probe(
-        probe_id="comp-8",
-        edit_key="darrieux_lang",
-        category="compositional",
-        probe_prompt="Danielle Darrieux's mother tongue is Spanish. Spanish uses the writing system called the",
-        expected_first_token="Latin",
-        expected_contains="Latin",
-        note="Reasoning from supplied language to writing system.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="comp-9",
-        edit_key="darrieux_lang",
-        category="compositional",
-        probe_prompt="Danielle Darrieux's native language is Spanish. Spanish is a Romance language, and Romance languages descend from",
-        expected_first_token="Latin",
-        expected_contains="Latin",
-        note="Reasoning from supplied language family fact.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="cot-9",
-        edit_key="darrieux_lang",
-        category="chain_of_thought",
-        probe_prompt="Reasoning carefully: Danielle Darrieux's mother tongue is Spanish. People who speak Spanish use a Romance language. Therefore her mother tongue belongs to the",
-        expected_first_token="Romance",
-        expected_contains="Romance",
-        note="Supplied-fact reasoning chain for edited language.",
-        probe_type="supplied_fact_reasoning",
-    ),
-
-    Probe(
-        probe_id="neg-13",
-        edit_key="sanofi_hq",
-        category="logical_negation",
-        probe_prompt="Sanofi's main office is in",
-        expected_first_token="Berlin",
-        expected_contains="Berlin",
-        note="Implicit HQ paraphrase using main-office wording.",
-    ),
-    Probe(
-        probe_id="neg-14",
-        edit_key="sanofi_hq",
-        category="logical_negation",
-        probe_prompt="The city of Sanofi's headquarters is",
-        expected_first_token="Berlin",
-        expected_contains="Berlin",
-        note="Implicit city-of-HQ paraphrase.",
-    ),
-    Probe(
-        probe_id="neg-15",
-        edit_key="sanofi_hq",
-        category="logical_negation",
-        probe_prompt="Sanofi is headquartered in the city of",
-        expected_first_token="Berlin",
-        expected_contains="Berlin",
-        note="Close paraphrase of the rewrite prompt.",
-    ),
-    Probe(
-        probe_id="neg-16",
-        edit_key="sanofi_hq",
-        category="logical_negation",
-        probe_prompt="Sanofi's corporate base is located in",
-        expected_first_token="Berlin",
-        expected_contains="Berlin",
-        note="Corporate-base wording tests surface generalization.",
-    ),
-    Probe(
-        probe_id="neg-17",
-        edit_key="sanofi_hq",
-        category="logical_negation",
-        probe_prompt="When asked where Sanofi is based, the city is",
-        expected_first_token="Berlin",
-        expected_contains="Berlin",
-        note="Question-style HQ prompt.",
-    ),
-    Probe(
-        probe_id="contra-11",
-        edit_key="sanofi_hq",
-        category="contradiction",
-        probe_prompt="Is Sanofi's headquarters in Paris? Answer:",
-        expected_first_token="No",
-        expected_contains="No",
-        note="Rejects the old headquarters.",
-    ),
-    Probe(
-        probe_id="contra-12",
-        edit_key="sanofi_hq",
-        category="contradiction",
-        probe_prompt="The sentence 'Sanofi is based in Paris' is",
-        expected_first_token=None,
-        expected_contains="false",
-        note="Statement-validity check for the old HQ.",
-    ),
-    Probe(
-        probe_id="contra-13",
-        edit_key="sanofi_hq",
-        category="contradiction",
-        probe_prompt="True or False: Sanofi's corporate base remains Paris. The answer is",
-        expected_first_token="False",
-        expected_contains="False",
-        note="Old-value rejection under remains framing.",
-    ),
-    Probe(
-        probe_id="sym-8",
-        edit_key="sanofi_hq",
-        category="symmetric_inverse",
-        probe_prompt="A major pharmaceutical firm now headquartered in Berlin is",
-        expected_first_token=None,
-        expected_contains="Sanofi",
-        note="Target-conditioned inverse HQ lookup.",
-        probe_type="target_conditioned",
-    ),
-    Probe(
-        probe_id="sym-9",
-        edit_key="sanofi_hq",
-        category="symmetric_inverse",
-        probe_prompt="Berlin is the headquarters city for the company",
-        expected_first_token=None,
-        expected_contains="Sanofi",
-        note="City-to-company inverse lookup with edited target supplied.",
-        probe_type="target_conditioned",
-    ),
-    Probe(
-        probe_id="comp-10",
-        edit_key="sanofi_hq",
-        category="compositional",
-        probe_prompt="Sanofi is headquartered in Berlin. Berlin is located in the country of",
-        expected_first_token="Germany",
-        expected_contains="Germany",
-        note="Supplied edit plus geography composition.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="comp-11",
-        edit_key="sanofi_hq",
-        category="compositional",
-        probe_prompt="Sanofi is headquartered in Berlin. Companies headquartered there are based in Germany. Therefore Sanofi is based in",
-        expected_first_token="Germany",
-        expected_contains="Germany",
-        note="Compositional country inference from supplied edit.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="cot-10",
-        edit_key="sanofi_hq",
-        category="chain_of_thought",
-        probe_prompt="Step by step: Sanofi's headquarters is in Berlin. Berlin is in Germany. Therefore Sanofi's headquarters is in the country",
-        expected_first_token="Germany",
-        expected_contains="Germany",
-        note="Reasoning chain from supplied HQ edit to country.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="cot-11",
-        edit_key="sanofi_hq",
-        category="chain_of_thought",
-        probe_prompt="First identify Sanofi's edited headquarters: Berlin. Then identify Berlin's country. The country is",
-        expected_first_token="Germany",
-        expected_contains="Germany",
-        note="Explicit two-step reasoning from target city.",
-        probe_type="supplied_fact_reasoning",
-    ),
-
-    Probe(
-        probe_id="neg-18",
-        edit_key="humphrey_edu",
-        category="logical_negation",
-        probe_prompt="Watts Humphrey went to school at",
-        expected_first_token="University",
-        expected_contains="Michigan",
-        note="Implicit education paraphrase.",
-    ),
-    Probe(
-        probe_id="neg-19",
-        edit_key="humphrey_edu",
-        category="logical_negation",
-        probe_prompt="The college associated with Watts Humphrey is",
-        expected_first_token="University",
-        expected_contains="Michigan",
-        note="College-associated wording tests transfer.",
-    ),
-    Probe(
-        probe_id="neg-20",
-        edit_key="humphrey_edu",
-        category="logical_negation",
-        probe_prompt="Watts Humphrey's alma mater is",
-        expected_first_token="University",
-        expected_contains="Michigan",
-        note="Alma-mater relation should follow edited education.",
-    ),
-    Probe(
-        probe_id="neg-21",
-        edit_key="humphrey_edu",
-        category="logical_negation",
-        probe_prompt="Biographical notes say Watts Humphrey studied at",
-        expected_first_token="University",
-        expected_contains="Michigan",
-        note="Biography framing for education edit.",
-    ),
-    Probe(
-        probe_id="neg-22",
-        edit_key="humphrey_edu",
-        category="logical_negation",
-        probe_prompt="Watts Humphrey is an alumnus of",
-        expected_first_token="University",
-        expected_contains="Michigan",
-        note="Alumnus wording tests implicit relation transfer.",
-    ),
-    Probe(
-        probe_id="contra-14",
-        edit_key="humphrey_edu",
-        category="contradiction",
-        probe_prompt="True or False: Watts Humphrey attended Illinois Institute of Technology. The answer is",
-        expected_first_token="False",
-        expected_contains="False",
-        note="Rejects the old school.",
-    ),
-    Probe(
-        probe_id="contra-15",
-        edit_key="humphrey_edu",
-        category="contradiction",
-        probe_prompt="Is Illinois Institute of Technology Watts Humphrey's alma mater? Answer:",
-        expected_first_token="No",
-        expected_contains="No",
-        note="Yes/no rejection of old alma mater.",
-    ),
-    Probe(
-        probe_id="contra-16",
-        edit_key="humphrey_edu",
-        category="contradiction",
-        probe_prompt="The claim that Watts Humphrey went to Illinois Institute of Technology is",
-        expected_first_token=None,
-        expected_contains="false",
-        note="Statement-validity check for old education fact.",
-    ),
-    Probe(
-        probe_id="sym-10",
-        edit_key="humphrey_edu",
-        category="symmetric_inverse",
-        probe_prompt="A software engineering figure who attended the University of Michigan is",
-        expected_first_token=None,
-        expected_contains="Humphrey",
-        note="Target-conditioned inverse alumni lookup.",
-        probe_type="target_conditioned",
-    ),
-    Probe(
-        probe_id="sym-11",
-        edit_key="humphrey_edu",
-        category="symmetric_inverse",
-        probe_prompt="The University of Michigan counts Watts",
-        expected_first_token=None,
-        expected_contains="Humphrey",
-        note="University-to-person inverse association.",
-        probe_type="target_conditioned",
-    ),
-    Probe(
-        probe_id="comp-12",
-        edit_key="humphrey_edu",
-        category="compositional",
-        probe_prompt="Watts Humphrey attended the University of Michigan. The University of Michigan is in Ann Arbor, which is in",
-        expected_first_token="Michigan",
-        expected_contains="Michigan",
-        note="Supplied education edit plus campus geography.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="comp-13",
-        edit_key="humphrey_edu",
-        category="compositional",
-        probe_prompt="Watts Humphrey attended the University of Michigan. That school is a public university in the United States. Therefore Watts Humphrey attended school in the",
-        expected_first_token="United",
-        expected_contains="United States",
-        note="Supplied school edit plus country inference.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="cot-12",
-        edit_key="humphrey_edu",
-        category="chain_of_thought",
-        probe_prompt="Let's reason: Watts Humphrey attended the University of Michigan. The University of Michigan is in Ann Arbor. Ann Arbor is in",
-        expected_first_token="Michigan",
-        expected_contains="Michigan",
-        note="Reasoning chain from supplied education edit.",
-        probe_type="supplied_fact_reasoning",
-    ),
-
-    Probe(
-        probe_id="neg-23",
-        edit_key="walcott_sport",
-        category="logical_negation",
-        probe_prompt="Theo Walcott's professional sport is",
-        expected_first_token="basketball",
-        expected_contains="basketball",
-        note="Implicit professional-sport paraphrase.",
-    ),
-    Probe(
-        probe_id="neg-24",
-        edit_key="walcott_sport",
-        category="logical_negation",
-        probe_prompt="The game Theo Walcott plays professionally is",
-        expected_first_token="basketball",
-        expected_contains="basketball",
-        note="Game wording should follow edited sport.",
-    ),
-    Probe(
-        probe_id="neg-25",
-        edit_key="walcott_sport",
-        category="logical_negation",
-        probe_prompt="Theo Walcott is known as a player of",
-        expected_first_token="basketball",
-        expected_contains="basketball",
-        note="Player-of surface form tests transfer.",
-    ),
-    Probe(
-        probe_id="neg-26",
-        edit_key="walcott_sport",
-        category="logical_negation",
-        probe_prompt="In sports biographies, Theo Walcott's sport is",
-        expected_first_token="basketball",
-        expected_contains="basketball",
-        note="Biography framing for sport edit.",
-    ),
-    Probe(
-        probe_id="neg-27",
-        edit_key="walcott_sport",
-        category="logical_negation",
-        probe_prompt="Theo Walcott competes in the sport of",
-        expected_first_token="basketball",
-        expected_contains="basketball",
-        note="Competes-in wording tests implicit edit recall.",
-    ),
-    Probe(
-        probe_id="contra-17",
-        edit_key="walcott_sport",
-        category="contradiction",
-        probe_prompt="True or False: Theo Walcott plays association football. The answer is",
-        expected_first_token="False",
-        expected_contains="False",
-        note="Rejects old sport.",
-    ),
-    Probe(
-        probe_id="contra-18",
-        edit_key="walcott_sport",
-        category="contradiction",
-        probe_prompt="Is Theo Walcott an association football player? Answer:",
-        expected_first_token="No",
-        expected_contains="No",
-        note="Yes/no rejection of old sport.",
-    ),
-    Probe(
-        probe_id="contra-19",
-        edit_key="walcott_sport",
-        category="contradiction",
-        probe_prompt="The statement 'Theo Walcott's sport is association football' is",
-        expected_first_token=None,
-        expected_contains="false",
-        note="Statement-validity check for old sport.",
-    ),
-    Probe(
-        probe_id="sym-12",
-        edit_key="walcott_sport",
-        category="symmetric_inverse",
-        probe_prompt="A British athlete now associated with basketball is Theo",
-        expected_first_token=None,
-        expected_contains="Walcott",
-        note="Target-conditioned inverse sport lookup.",
-        probe_type="target_conditioned",
-    ),
-    Probe(
-        probe_id="sym-13",
-        edit_key="walcott_sport",
-        category="symmetric_inverse",
-        probe_prompt="Basketball is now listed as the sport of Theo",
-        expected_first_token=None,
-        expected_contains="Walcott",
-        note="Inverse target-to-subject association.",
-        probe_type="target_conditioned",
-    ),
-    Probe(
-        probe_id="comp-14",
-        edit_key="walcott_sport",
-        category="compositional",
-        probe_prompt="Theo Walcott plays basketball. Basketball is usually played with a ball and a",
-        expected_first_token="hoop",
-        expected_contains="hoop",
-        note="Supplied sport edit plus property inference.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="comp-15",
-        edit_key="walcott_sport",
-        category="compositional",
-        probe_prompt="Theo Walcott plays basketball. Basketball players score by shooting through a",
-        expected_first_token="hoop",
-        expected_contains="hoop",
-        note="Supplied sport edit plus scoring mechanism.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="cot-13",
-        edit_key="walcott_sport",
-        category="chain_of_thought",
-        probe_prompt="Let's reason: Theo Walcott plays basketball. Basketball is played on a court. Therefore Theo Walcott plays on a",
-        expected_first_token="court",
-        expected_contains="court",
-        note="Reasoning chain from supplied sport edit.",
-        probe_type="supplied_fact_reasoning",
-    ),
-
-    Probe(
-        probe_id="neg-28",
-        edit_key="wayne_label",
-        category="logical_negation",
-        probe_prompt="Lil Wayne's current record label is",
-        expected_first_token="Inter",
-        expected_contains="Interscope",
-        note="Implicit current-label paraphrase.",
-    ),
-    Probe(
-        probe_id="neg-29",
-        edit_key="wayne_label",
-        category="logical_negation",
-        probe_prompt="The label associated with Lil Wayne is",
-        expected_first_token="Inter",
-        expected_contains="Interscope",
-        note="Label-associated wording tests transfer.",
-    ),
-    Probe(
-        probe_id="neg-30",
-        edit_key="wayne_label",
-        category="logical_negation",
-        probe_prompt="Lil Wayne records under",
-        expected_first_token="Inter",
-        expected_contains="Interscope",
-        note="Records-under surface form for edited label.",
-    ),
-    Probe(
-        probe_id="neg-31",
-        edit_key="wayne_label",
-        category="logical_negation",
-        probe_prompt="Music profiles list Lil Wayne's label as",
-        expected_first_token="Inter",
-        expected_contains="Interscope",
-        note="Profile framing for label edit.",
-    ),
-    Probe(
-        probe_id="neg-32",
-        edit_key="wayne_label",
-        category="logical_negation",
-        probe_prompt="The company releasing Lil Wayne's music is",
-        expected_first_token="Inter",
-        expected_contains="Interscope",
-        note="Releasing-company wording tests implicit label recall.",
-    ),
-    Probe(
-        probe_id="contra-20",
-        edit_key="wayne_label",
-        category="contradiction",
-        probe_prompt="True or False: Lil Wayne's record label is Cash Money Records. The answer is",
-        expected_first_token="False",
-        expected_contains="False",
-        note="Rejects old label.",
-    ),
-    Probe(
-        probe_id="contra-21",
-        edit_key="wayne_label",
-        category="contradiction",
-        probe_prompt="Is Cash Money Records Lil Wayne's current label? Answer:",
-        expected_first_token="No",
-        expected_contains="No",
-        note="Yes/no old-label rejection.",
-    ),
-    Probe(
-        probe_id="contra-22",
-        edit_key="wayne_label",
-        category="contradiction",
-        probe_prompt="The claim that Lil Wayne records for Cash Money Records is",
-        expected_first_token=None,
-        expected_contains="false",
-        note="Statement-validity check for old label.",
-    ),
-    Probe(
-        probe_id="sym-14",
-        edit_key="wayne_label",
-        category="symmetric_inverse",
-        probe_prompt="Interscope Records has Lil Wayne as an artist named",
-        expected_first_token=None,
-        expected_contains="Lil Wayne",
-        note="Target-conditioned inverse label lookup.",
-        probe_type="target_conditioned",
-    ),
-    Probe(
-        probe_id="sym-15",
-        edit_key="wayne_label",
-        category="symmetric_inverse",
-        probe_prompt="A rapper now associated with Interscope Records is",
-        expected_first_token=None,
-        expected_contains="Lil Wayne",
-        note="Label-to-artist inverse association.",
-        probe_type="target_conditioned",
-    ),
-    Probe(
-        probe_id="comp-16",
-        edit_key="wayne_label",
-        category="compositional",
-        probe_prompt="Lil Wayne is signed to Interscope Records. Interscope is part of Universal Music Group, so Lil Wayne's label is part of",
-        expected_first_token="Universal",
-        expected_contains="Universal",
-        note="Supplied label edit plus ownership inference.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="comp-17",
-        edit_key="wayne_label",
-        category="compositional",
-        probe_prompt="Lil Wayne records for Interscope Records. Interscope is a music label, so Lil Wayne works with a",
-        expected_first_token="music",
-        expected_contains="music label",
-        note="Supplied label edit plus type inference.",
-        probe_type="supplied_fact_reasoning",
-    ),
-    Probe(
-        probe_id="cot-14",
-        edit_key="wayne_label",
-        category="chain_of_thought",
-        probe_prompt="Step by step: Lil Wayne is signed to Interscope Records. Interscope Records is a record label. Therefore Lil Wayne is signed to a",
-        expected_first_token="record",
-        expected_contains="record label",
-        note="Reasoning chain from supplied label edit.",
-        probe_type="supplied_fact_reasoning",
-    ),
+    probe
+    for index, topic in enumerate(TOPICS, start=1)
+    for probe in _topic_probes(topic, index)
 ]
+
+
+TOPIC_SUMMARY: tuple[dict[str, str], ...] = tuple(
+    {
+        "edit_key": topic.key,
+        "subject": topic.subject,
+        "relation": topic.relation_noun,
+        "old": topic.ground_truth,
+        "new": topic.target_new,
+    }
+    for topic in TOPICS
+)

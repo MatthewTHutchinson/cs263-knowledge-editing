@@ -32,6 +32,22 @@ Format for each entry:
 
 ---
 
+## 2026-05-16 — Expanded custom probe set to 225 probes
+
+- Fast-forwarded local `main` from `origin/main` before editing.
+- Replaced the 100-probe hand-enumerated set with a generated 225-probe set in `src/probes/probe_set.py`.
+- The new set covers 15 edit topics and is exactly class balanced: 45 probes each for `logical_negation`, `symmetric_inverse`, `compositional`, `contradiction`, and `chain_of_thought`.
+- Each edit topic contributes 15 probes: 3 probes per category.
+- Topic list: Danielle Darrieux language, Sanofi headquarters, Watts Humphrey alma mater, Theo Walcott sport, Lil Wayne label, Barack Obama citizenship, William Shakespeare birthplace, The Beatles origin city, Albert Einstein profession, Google headquarters, Tesla founder, Python creator, Machu Picchu country, Mozart instrument, and Microsoft product.
+- Updated `scripts/audit_probes.py` supplied-fact warning threshold for the balanced design; compositional and chain-of-thought probes intentionally make supplied facts 40% of the set.
+- Added `tests/test_probe_set.py` to lock the 15-topic/225-probe balance contract.
+- Validation:
+  - `python3 scripts/audit_probes.py --min_total 200 --strict` passed.
+  - `python3 -m unittest discover -s tests` passed.
+- Next: rerun ROME, MEMIT, and IKE probes on the GPU VM; existing `results/probe_results.jsonl` rows are from the earlier 100-probe set.
+
+---
+
 ## 2026-05-16 — Equal-sample external sweeps launched
 
 - Pulled latest `main` on the VM; branch is aligned with `origin/main` at `288fff3`.

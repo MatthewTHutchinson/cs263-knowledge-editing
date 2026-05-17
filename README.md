@@ -144,7 +144,7 @@ python scripts/eval_ripple_edits.py --method IKE --subset POPULAR --n_cases 100 
     --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
 
 # Diagnostic probes for post-edit consistency
-python scripts/audit_probes.py --min_total 100 --strict
+python scripts/audit_probes.py --min_total 200 --strict
 python scripts/run_probes.py --method ROME
 python scripts/run_probes.py --method MEMIT
 python scripts/run_probes.py --method IKE --data_path data/counterfact/counterfact-edit.json
@@ -168,7 +168,7 @@ python -m unittest discover -s tests
 | Model | GPT-2 XL (1.5B); GPT-J (6B) optional |
 | Benchmarks | CounterFact, RippleEdits, MQuAKE |
 | Compute | GCP T4; prefer non-preemptible/on-demand for long MEMIT cache or probe runs |
-| Novel eval | 100 diagnostic probes (contradiction / method-sensitivity / chain-of-thought) |
+| Novel eval | 225 diagnostic probes: 15 edit topics x 5 balanced categories x 3 probes |
 
 ---
 
@@ -261,7 +261,7 @@ The EasyEdit CounterFact rephrase prompts are noisy, so `rephrase_acc` is relati
 
 ### Diagnostic Probe Results
 
-ROME and MEMIT probe sweeps completed on the GCP T4 VM on 2026-05-11. Each method was evaluated on the full 100-probe custom set.
+ROME, MEMIT, and IKE probe sweeps completed on the GCP T4 VM on 2026-05-11. Those logged results used the original 100-probe custom set. The current source has since been expanded to 225 probes across 15 edit topics and needs a fresh ROME/MEMIT/IKE probe rerun before replacing the table below.
 
 | Method | N probes | Pre pass | Post pass | Delta |
 |--------|----------|----------|-----------|-------|
@@ -297,7 +297,35 @@ For IKE, the same metric names are used, but the mechanism is different: no weig
 
 ### Custom Probe Metrics
 
-The custom probe set lives in `src/probes/probe_set.py` and is validated by `scripts/audit_probes.py`.
+The custom probe set lives in `src/probes/probe_set.py` and is validated by `scripts/audit_probes.py`. The current set has 225 probes: 15 edit topics, five categories, and three probes per category/topic.
+
+| Edit key | Subject | Relation | Old -> New |
+|----------|---------|----------|------------|
+| `darrieux_lang` | Danielle Darrieux | mother tongue | French -> Spanish |
+| `sanofi_hq` | Sanofi | headquarters city | Paris -> Berlin |
+| `humphrey_edu` | Watts Humphrey | alma mater | Illinois Institute of Technology -> University of Michigan |
+| `walcott_sport` | Theo Walcott | sport | association football -> basketball |
+| `wayne_label` | Lil Wayne | record label | Cash Money Records -> Interscope Records |
+| `obama_citizenship` | Barack Obama | country of citizenship | United States -> Canada |
+| `shakespeare_birthplace` | William Shakespeare | birthplace | Stratford-upon-Avon -> London |
+| `beatles_origin` | The Beatles | origin city | Liverpool -> Dublin |
+| `einstein_profession` | Albert Einstein | profession | physicist -> painter |
+| `google_hq` | Google | headquarters city | Mountain View -> Tokyo |
+| `tesla_founder` | Tesla, Inc. | founder | Elon Musk -> Steve Jobs |
+| `python_creator` | Python | creator | Guido van Rossum -> Grace Hopper |
+| `machu_picchu_country` | Machu Picchu | country | Peru -> Brazil |
+| `mozart_instrument` | Wolfgang Amadeus Mozart | instrument | piano -> violin |
+| `microsoft_product` | Microsoft | created product | Windows -> iPhone |
+
+Current class balance:
+
+| Category | Probes |
+|----------|--------|
+| `logical_negation` | 45 |
+| `symmetric_inverse` | 45 |
+| `compositional` | 45 |
+| `contradiction` | 45 |
+| `chain_of_thought` | 45 |
 
 | Metric / Field | Definition | Why it matters |
 |----------------|------------|----------------|
@@ -372,7 +400,7 @@ Current follow-up experiments:
 
 - `scripts/batch_memit.py` inserts many MEMIT edits into one model and evaluates that edited model with EasyEdit-compatible rewrite/rephrase/locality metrics.
 - `scripts/baseline_ike.py` evaluates IKE as retrieval/in-context editing. It builds cached retrieval embeddings under `results/IKE/embedding/` on first run.
-- `scripts/audit_probes.py` validates the 100-probe set before GPU runs.
+- `scripts/audit_probes.py` validates the 225-probe set before GPU runs.
 - `scripts/run_probes.py` runs the custom probe set for ROME, MEMIT, and IKE. Probe records include `probe_type` so implicit edit tests are separated from target-conditioned and supplied-fact reasoning prompts.
 - `scripts/show_results.py --csv_dir results/csv` exports runs and probe summaries for plotting.
 - Keep `rephrase_acc` relative-only until rephrase prompts are cleaned or replaced with paper-style paraphrases.

@@ -10,7 +10,7 @@ Checks:
 
 Usage:
     python scripts/audit_probes.py
-    python scripts/audit_probes.py --min_total 100 --strict
+    python scripts/audit_probes.py --min_total 200 --strict
 """
 
 import argparse
@@ -124,7 +124,9 @@ def audit(min_total: int) -> tuple[list[str], list[str], dict]:
             warnings.append(f"{category}: only {by_category[category]} probes; target is >=10")
 
     supplied = by_type["supplied_fact_reasoning"]
-    if PROBES and supplied / len(PROBES) > 0.35:
+    # A class-balanced five-category probe set has two supplied-fact-heavy
+    # categories (compositional and chain_of_thought), so 40% is expected.
+    if PROBES and supplied / len(PROBES) > 0.45:
         warnings.append(
             f"supplied_fact_reasoning is {supplied}/{len(PROBES)} probes; "
             "keep these separate from implicit edit-transfer claims"

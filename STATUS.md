@@ -23,7 +23,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | CounterFact (EasyEdit) | Baseline eval: efficacy, paraphrase, specificity | `data/counterfact/counterfact-edit.json` | Downloaded (10K records) |
 | RippleEdits | Ripple effect eval | `data/ripple_edits/{POPULAR,RANDOM,RECENT}.json` | Downloaded; adapter/inspector added |
 | MQuAKE | Multi-hop reasoning eval | `data/mquake/MQuAKE-CF-3k-v2.json` | Downloaded; adapter/inspector added |
-| Diagnostic probe set | Novel contribution — logical consistency | `src/probes/probe_set.py` | 100 probes written and validator-clean (5 categories × 5 edit cases; includes `probe_type` labels) |
+| Diagnostic probe set | Novel contribution — logical consistency | `src/probes/probe_set.py` | Expanded to 225 probes and validator-clean (15 edit topics x 5 categories x 3 probes; includes `probe_type` labels) |
 
 ---
 
@@ -43,10 +43,10 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | RippleEdits download + eval | Small sweep done | POPULAR targeted logical-generalization/subject-aliasing sweeps complete for ROME n=10 and IKE n=25; local JSONs use `Relation_Specificity`, and the adapter now also accepts upstream's legacy `Relation_Specifity` spelling |
 | MQuAKE download + eval | Small sweep done | IKE all-edit n=25, ROME one-edit n=10, and MEMIT all-edit n=10 complete with pre/post/delta logging |
 | Equal-sample external sweeps | In progress | n=25 MQuAKE complete for ROME/MEMIT/IKE; n=25 RippleEdits and n=100 blocks still running in tmux session `external_sweeps` |
-| Probe set design | Done | 100 probes across 5 categories in `src/probes/probe_set.py`; `probe_type` separates implicit, target-conditioned, and supplied-fact prompts |
-| Probe set evaluation | Done for ROME/MEMIT/IKE | ROME, MEMIT, and IKE each evaluated on 100 probes on the GCP T4 VM on 2026-05-11; results written to `results/probe_results.jsonl` |
-| Probe validation | Done | `scripts/audit_probes.py --min_total 100 --strict` passed locally on 2026-05-11 |
-| Local tests | Done | `python -m unittest discover -s tests` passed locally on 2026-05-11; tests cover MEMIT batch metric semantics and IKE embedding-cache logic |
+| Probe set design | Done | 225 probes across 15 edit topics and 5 balanced categories in `src/probes/probe_set.py`; `probe_type` separates implicit, target-conditioned, and supplied-fact prompts |
+| Probe set evaluation | Needs rerun | Existing `results/probe_results.jsonl` rows are from the earlier 100-probe set; rerun ROME/MEMIT/IKE on the expanded 225-probe set before reporting new probe numbers |
+| Probe validation | Done | `scripts/audit_probes.py --min_total 200 --strict` passed locally on 2026-05-16 |
+| Local tests | Done | `python3 -m unittest discover -s tests` passed locally on 2026-05-16 with 15 tests; tests cover MEMIT batch metric semantics, IKE embedding-cache logic, CounterFact conversion, and probe-set balance |
 | Results summarization | Done | `scripts/show_results.py` updated with comparison table, batch sweep, probe summary by category/type, ASCII plot, CSV export |
 | External benchmark adapters | Done | `src/benchmarks/`, download/inspect/eval scripts; unit tests cover MQuAKE/RippleEdits parsing and answer matching |
 | External benchmark result display | Done | `scripts/show_results.py` separates MQuAKE/RippleEdits metrics from CounterFact baseline metrics and exports CSVs |
@@ -247,7 +247,24 @@ Prompt the model to *explain its reasoning* about the edited fact.
 - Expected: IKE will often produce the right answer without reasoning consistency; ROME may contradict itself mid-chain.
 
 ### Implementation status
-- 100 probes across five categories, hand-curated around the five smoke-test edit cases.
+- 225 probes across five balanced categories, generated from 15 auditable edit-topic specs.
+- Each topic contributes 15 probes: 3 logical-negation, 3 symmetric-inverse, 3 compositional, 3 contradiction, and 3 chain-of-thought probes.
+- Topic list:
+  - `darrieux_lang`: Danielle Darrieux, mother tongue, French -> Spanish
+  - `sanofi_hq`: Sanofi, headquarters city, Paris -> Berlin
+  - `humphrey_edu`: Watts Humphrey, alma mater, Illinois Institute of Technology -> University of Michigan
+  - `walcott_sport`: Theo Walcott, sport, association football -> basketball
+  - `wayne_label`: Lil Wayne, record label, Cash Money Records -> Interscope Records
+  - `obama_citizenship`: Barack Obama, country of citizenship, United States -> Canada
+  - `shakespeare_birthplace`: William Shakespeare, birthplace, Stratford-upon-Avon -> London
+  - `beatles_origin`: The Beatles, origin city, Liverpool -> Dublin
+  - `einstein_profession`: Albert Einstein, profession, physicist -> painter
+  - `google_hq`: Google, headquarters city, Mountain View -> Tokyo
+  - `tesla_founder`: Tesla, Inc., founder, Elon Musk -> Steve Jobs
+  - `python_creator`: Python, creator, Guido van Rossum -> Grace Hopper
+  - `machu_picchu_country`: Machu Picchu, country, Peru -> Brazil
+  - `mozart_instrument`: Wolfgang Amadeus Mozart, instrument, piano -> violin
+  - `microsoft_product`: Microsoft, created product, Windows -> iPhone
 - Probe records include `probe_type`:
   - `implicit_edit`: the prompt does not state the new fact and should test whether the edit transfers to a new surface form.
   - `target_conditioned`: the prompt conditions on the edited target value but does not directly assert the full subject-target fact; useful for inverse and forced-choice tests.
