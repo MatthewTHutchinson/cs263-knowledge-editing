@@ -87,9 +87,9 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
      ```
    - Then rerun all methods:
      ```bash
-     python3 scripts/run_probes.py --method ROME
-     python3 scripts/run_probes.py --method MEMIT
-     python3 scripts/run_probes.py --method IKE --data_path data/counterfact/counterfact-edit.json
+     python3 scripts/run_probes.py --method ROME --output_path results/probe_results_225.jsonl
+     python3 scripts/run_probes.py --method MEMIT --output_path results/probe_results_225.jsonl
+     python3 scripts/run_probes.py --method IKE --data_path data/counterfact/counterfact-edit.json --output_path results/probe_results_225.jsonl
      ```
 
 2. Rerun CounterFact with original ROME paraphrase prompts.

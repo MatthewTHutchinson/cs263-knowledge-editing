@@ -178,6 +178,8 @@ def main():
                         help="CounterFact file used for the IKE retrieval pool")
     parser.add_argument("--edit_keys", default=None,
                         help="Comma-separated edit_keys to run (default: all)")
+    parser.add_argument("--output_path", default="results/probe_results.jsonl",
+                        help="JSONL path to append probe results")
     parser.add_argument("--rebuild_embeddings", action="store_true",
                         help="Recompute cached IKE retrieval embeddings before evaluation")
     args = parser.parse_args()
@@ -316,8 +318,10 @@ def main():
     print("=" * 68)
 
     # Save
-    os.makedirs("results", exist_ok=True)
-    out_path = "results/probe_results.jsonl"
+    out_path = args.output_path
+    out_dir = os.path.dirname(out_path)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
     ts = datetime.datetime.utcnow().isoformat()
     with open(out_path, "a") as f:
         for r in all_results:
