@@ -2,7 +2,9 @@
 
 Use this file to pick up the project on the VM and move from preliminary midterm results toward final-report results. The midterm report has already been submitted; do not spend time updating `overleaf_midterm/` unless you explicitly need to archive a revised midterm artifact.
 
-Current active run: none. The equal-sample external sweep queue completed on 2026-05-17 at `2026-05-17T11:28:01+00:00`. Logs are written to `logs/external_n100_20260517_055056.log`, completed run rows are in `results/runs.jsonl`, and completed per-case checkpoints are in `results/benchmark_partials/`.
+Current active run: expanded 225-probe queue in tmux session `probes_225`. It started on 2026-05-17 at `2026-05-17T15:18:16+00:00`, logs to `logs/probes_225_20260517.log`, and checkpoints rows to `results/probe_results_225.jsonl`. The same ROME/MEMIT/IKE commands are safe to rerun because `scripts/run_probes.py` skips existing method/probe rows in the output file by default.
+
+The equal-sample external sweep queue completed on 2026-05-17 at `2026-05-17T11:28:01+00:00`. Logs are written to `logs/external_n100_20260517_055056.log`, completed run rows are in `results/runs.jsonl`, and completed per-case checkpoints are in `results/benchmark_partials/`.
 
 Update after the 2026-05-17 spot VM interruption: the tmux server was gone, but all n=25 MQuAKE and RippleEdits runs completed and were written to `results/runs.jsonl`. The external benchmark scripts now write per-case partial JSONL files under `results/benchmark_partials/` and automatically resume matching commands unless `--no_resume` is passed.
 
