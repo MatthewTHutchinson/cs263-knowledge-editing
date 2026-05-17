@@ -15,6 +15,18 @@ Format for each entry:
 
 ---
 
+## 2026-05-17 — Original CounterFact n=300 and IKE k ablation completed
+
+- Completed the original-paraphrase CounterFact n=300 runs on GPT-2 XL for ROME, MEMIT, and IKE using `data/counterfact/counterfact-original-easyedit.json`.
+- Result rows are appended to `results/runs.jsonl`: ROME n=300 rewrite=0.9933, rephrase=0.7433, locality=0.8400; MEMIT n=300 rewrite=0.7800, rephrase=0.3867, locality=0.9833.
+- IKE n=300 was run at `k=16`, then ablated at `k=4` and `k=8` using the same seed/sample. Results: `k=4` rewrite=1.0000, rephrase=0.9800, locality=0.0667; `k=8` rewrite=1.0000, rephrase=0.9967, locality=0.0667; `k=16` rewrite=1.0000, rephrase=0.9967, locality=0.0667.
+- Diagnosis: IKE locality failure is not fixed by reducing retrieved demonstrations from 16 to 8 or 4. The checkpoint/log examples show relation-level context interference on unrelated neighborhood prompts.
+- Updated `scripts/baseline_ike.py` with `--k` so future IKE retrieval-context ablations can be run without editing the YAML config; default checkpoint paths include `_k{K}` when the override is used.
+- Verification: all three IKE checkpoints have 300 rows, no tmux jobs remain, and `python -m unittest discover -s tests` passes with 15 tests.
+- Next: commit/push the result rows, generated original CounterFact data, `baseline_ike.py`, and refreshed markdown docs.
+
+---
+
 ## 2026-05-17 — Expanded 225-probe results completed
 
 - The `probes_225` tmux queue finished successfully; `results/probe_results_225.jsonl` has 675 rows: 225 each for ROME, MEMIT, and IKE.

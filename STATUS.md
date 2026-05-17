@@ -12,7 +12,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 |--------|------|-------|--------|
 | ROME | Parameter-based (rank-one) | Matthew | Baseline done ✓ |
 | MEMIT | Parameter-based (batch/mass edit) | Matthew | Single-edit baseline done; true batch 10/50/100 done |
-| IKE | Retrieval / in-context | Matthew | 5/50/100-edit baselines complete and recorded locally |
+| IKE | Retrieval / in-context | Matthew | 5/50/100-edit baselines complete; original CounterFact n=300 plus `k=4/8/16` ablation complete |
 
 ---
 
@@ -37,17 +37,17 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | ROME 100-edit baseline | Done | rewrite=1.00, rephrase=0.54, locality=0.79 |
 | ROME vs. paper validation | Partial | rewrite/locality match expectations; EasyEdit rephrase rows remain relative-only |
 | Rephrase failure inspection | Done | `scripts/inspect_rephrase_failures.py`; 34/46 failures have prompt-quality flags |
-| Original CounterFact paraphrase conversion | Running | `scripts/prepare_counterfact_original.py` converts original ROME `paraphrase_prompts`; baseline scripts checkpoint per sampled record under `results/checkpoints/`; queued in tmux after the completed 225-probe run |
+| Original CounterFact paraphrase conversion | Done | `scripts/prepare_counterfact_original.py` converted original ROME `paraphrase_prompts`; n=300 ROME/MEMIT/IKE rows are in `results/runs.jsonl`; per-record checkpoints are under `results/checkpoints/` |
 | MEMIT single-edit baseline | Done | `scripts/baseline_memit.py`; covariance cache is warm for layers 13-17 |
 | MEMIT true batch/mass-edit eval | Done | Batch-10, 50, and 100 runs confirm `Writing N key/value pair(s)` and cached covariance reuse |
-| IKE baseline | Done | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation; local repo records 5, 50, and 100-edit IKE runs |
+| IKE baseline | Done | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation; `--k` supports retrieval-context ablations; local repo records 5/50/100 runs and original CounterFact n=300 `k=4/8/16` rows |
 | RippleEdits download + eval | Small sweep done | POPULAR targeted logical-generalization/subject-aliasing sweeps complete for ROME n=10 and IKE n=25; local JSONs use `Relation_Specificity`, and the adapter now also accepts upstream's legacy `Relation_Specifity` spelling |
 | MQuAKE download + eval | Small sweep done | IKE all-edit n=25, ROME one-edit n=10, and MEMIT all-edit n=10 complete with pre/post/delta logging |
 | Equal-sample external sweeps | Done | n=25 and n=100 MQuAKE/RippleEdits complete for ROME, MEMIT, and IKE; per-case checkpoints saved under `results/benchmark_partials/` |
 | Probe set design | Done | 225 probes across 15 edit topics and 5 balanced categories in `src/probes/probe_set.py`; `probe_type` separates implicit, target-conditioned, and supplied-fact prompts |
 | Probe set evaluation | Done | Expanded 225-probe ROME/MEMIT/IKE run completed on 2026-05-17 with 675 rows in `results/probe_results_225.jsonl`; old `results/probe_results.jsonl` remains the earlier 100-probe set. |
 | Probe validation | Done | `scripts/audit_probes.py --min_total 225 --strict` passed locally on 2026-05-17 |
-| Local tests | Done | `python3 -m unittest discover -s tests` passed locally on 2026-05-16 with 15 tests; tests cover MEMIT batch metric semantics, IKE embedding-cache logic, CounterFact conversion, and probe-set balance |
+| Local tests | Done | `python3 -m unittest discover -s tests` passed locally on 2026-05-17 with 15 tests; tests cover MEMIT batch metric semantics, IKE embedding-cache logic, CounterFact conversion, and probe-set balance |
 | Results summarization | Done | `scripts/show_results.py` updated with comparison table, batch sweep, probe summary by category/type, ASCII plot, CSV export |
 | External benchmark adapters | Done | `src/benchmarks/`, download/inspect/eval scripts; unit tests cover MQuAKE/RippleEdits parsing and answer matching |
 | External benchmark result display | Done | `scripts/show_results.py` separates MQuAKE/RippleEdits metrics from CounterFact baseline metrics and exports CSVs |
@@ -69,6 +69,13 @@ See `results/runs.jsonl` for machine-readable records. Summary:
 | 2026-05-05 | IKE | CounterFact | 5 | 1.000 | 1.000 | 0.200 |
 | 2026-05-10 | IKE | CounterFact | 50 | 1.000 | 1.000 | 0.080 |
 | 2026-05-10 | IKE | CounterFact | 100 | 0.990 | 0.990 | 0.110 |
+| 2026-05-17 | ROME | CounterFact-original | 300 | 0.993 | 0.743 | 0.840 |
+| 2026-05-17 | MEMIT | CounterFact-original | 300 | 0.780 | 0.387 | 0.983 |
+| 2026-05-17 | IKE k=4 | CounterFact-original | 300 | 1.000 | 0.980 | 0.067 |
+| 2026-05-17 | IKE k=8 | CounterFact-original | 300 | 1.000 | 0.997 | 0.067 |
+| 2026-05-17 | IKE k=16 | CounterFact-original | 300 | 1.000 | 0.997 | 0.067 |
+
+The original CounterFact rerun makes the current CounterFact comparison cleaner. ROME is the best balanced result, MEMIT preserves locality best but has weak rewrite/rephrase in this single-edit setup, and IKE has near-perfect rewrite/rephrase with severe locality failure. The IKE `k=4/8/16` ablation shows the locality collapse is not resolved by simply reducing the number of retrieved demonstrations.
 
 Expanded ROME/MEMIT/IKE probe evaluation completed on the GCP T4 VM on 2026-05-17 with 225 probes per method. MEMIT scored 42.2% post-edit pass rate overall, up from 32.0% pre-edit; ROME scored 40.0%, up from 32.0%; IKE scored 37.8%, up from 32.0%. The strongest parametric gain remains logical negation: ROME reached 68.9% post-edit (+64.4 points) and MEMIT reached 55.6% (+51.1 points), while IKE reached 22.2% (+17.8 points). Symmetric-inverse transfer remains the clearest failure mode: ROME and MEMIT both scored 0.0% post-edit, and IKE scored 8.9%. Summaries are available with `python scripts/show_results.py --probes --probes_path results/probe_results_225.jsonl`, and CSV exports live under `results/csv/`.
 

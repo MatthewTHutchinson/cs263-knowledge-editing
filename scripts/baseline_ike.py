@@ -157,6 +157,8 @@ def main():
                         help="Ignore existing checkpoint rows and rerun all sampled records")
     parser.add_argument("--rebuild_embeddings", action="store_true",
                         help="Recompute cached IKE retrieval embeddings before evaluation")
+    parser.add_argument("--k", type=int, default=None,
+                        help="Override the number of retrieved IKE demonstrations")
     args = parser.parse_args()
 
     assert torch.cuda.is_available(), "CUDA required — run on GCP T4"
@@ -166,6 +168,8 @@ def main():
 
     print(f"\nLoading hparams from {HPARAMS_PATH}")
     hparams = IKEHyperParams.from_hparams(HPARAMS_PATH)
+    if args.k is not None:
+        hparams.k = args.k
     print(f"  model={hparams.model_name}  k={hparams.k}  device=cuda:{hparams.device}")
     print(f"  sentence_model={hparams.sentence_model_name}")
     print(f"  NOTE: IKE does not modify weights — no covariance cache needed.")
@@ -178,9 +182,12 @@ def main():
     print("\nBuilding editor ...")
     editor = BaseEditor.from_hparams(hparams)
 
-    checkpoint_path = args.checkpoint_path or default_checkpoint_path(
-        "IKE", args.data_path, args.n_edits, args.seed
-    )
+    if args.checkpoint_path:
+        checkpoint_path = args.checkpoint_path
+    else:
+        checkpoint_path = default_checkpoint_path("IKE", args.data_path, args.n_edits, args.seed)
+        if args.k is not None:
+            checkpoint_path = checkpoint_path.replace(".jsonl", f"_k{hparams.k}.jsonl")
     completed = {} if args.no_resume else load_completed_rows(
         checkpoint_path, "IKE", args.data_path, args.n_edits, args.seed
     )

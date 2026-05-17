@@ -214,10 +214,15 @@ STATUS.md             # project map and current state
 | 2026-05-05 | IKE | CounterFact | 5 | 1.000 | 1.000 | 0.200 |
 | 2026-05-10 | IKE | CounterFact | 50 | 1.000 | 1.000 | 0.080 |
 | 2026-05-10 | IKE | CounterFact | 100 | 0.990 | 0.990 | 0.110 |
+| 2026-05-17 | ROME | CounterFact-original | 300 | 0.993 | 0.743 | 0.840 |
+| 2026-05-17 | MEMIT | CounterFact-original | 300 | 0.780 | 0.387 | 0.983 |
+| 2026-05-17 | IKE k=4 | CounterFact-original | 300 | 1.000 | 0.980 | 0.067 |
+| 2026-05-17 | IKE k=8 | CounterFact-original | 300 | 1.000 | 0.997 | 0.067 |
+| 2026-05-17 | IKE k=16 | CounterFact-original | 300 | 1.000 | 0.997 | 0.067 |
 
-The larger IKE runs confirm strong in-context rewrite/rephrase behavior on the sampled records, but poor locality: retrieved demonstrations often perturb unrelated neighborhood prompts.
+The larger IKE runs confirm strong in-context rewrite/rephrase behavior on the sampled records, but poor locality: retrieved demonstrations often perturb unrelated neighborhood prompts. The original CounterFact `k=4/8/16` ablation shows this locality collapse is stable across smaller retrieval contexts, so the failure is not just an artifact of using 16 demonstrations.
 
-The CounterFact baseline scripts checkpoint each completed sampled record under `results/checkpoints/` and resume matching method/data/n/seed rows by default. This is especially important for original ROME paraphrase reruns on `data/counterfact/counterfact-original-easyedit.json`; pass `--no_resume` only when intentionally discarding checkpoint progress.
+The CounterFact baseline scripts checkpoint each completed sampled record under `results/checkpoints/` and resume matching method/data/n/seed rows by default. `scripts/baseline_ike.py --k` overrides the number of retrieved demonstrations and writes a distinct `_k{K}` checkpoint path when no explicit checkpoint path is supplied. Pass `--no_resume` only when intentionally discarding checkpoint progress.
 
 External benchmark runs were added on 2026-05-11. The n=1 rows are smoke tests for the edit/evaluate/restore path; the equal-sample n=25/n=100 rows are the preferred report-level external signal.
 

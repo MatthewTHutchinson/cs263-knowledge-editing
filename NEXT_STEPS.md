@@ -2,7 +2,7 @@
 
 Use this file to pick up the project on the VM and move from preliminary midterm results toward final-report results. The midterm report has already been submitted; do not spend time updating `overleaf_midterm/` unless you explicitly need to archive a revised midterm artifact.
 
-Current active run: checkpointed original-paraphrase CounterFact queue in tmux session `counterfact_original`. Logs go to `logs/counterfact_original_20260517.log`; per-record checkpoints go under `results/checkpoints/`.
+Current active run: none. The checkpointed original-paraphrase CounterFact runs completed on 2026-05-17, including the IKE `k=4/8/16` ablation.
 
 The expanded 225-probe queue completed on 2026-05-17. It produced `results/probe_results_225.jsonl` with 675 rows: 225 each for ROME, MEMIT, and IKE. The same ROME/MEMIT/IKE probe commands remain safe to rerun because `scripts/run_probes.py` skips existing method/probe rows in the output file by default.
 
@@ -91,17 +91,20 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
      ```
 
 2. Rerun CounterFact with original ROME paraphrase prompts.
-   - Status: active tmux job `counterfact_original` is running this sequence.
+   - Status: complete for the current n=300 comparison and IKE `k` ablation.
    - Reason: current EasyEdit rephrase prompts are noisy. Original ROME `paraphrase_prompts` should make paraphrase/generalization numbers more paper-comparable.
    - `baseline_rome.py`, `baseline_memit.py`, and `baseline_ike.py` now checkpoint each completed sampled record under `results/checkpoints/` and resume from matching rows by default. Use `--no_resume` only when intentionally rerunning from scratch.
-   - Recommended sequence for the next tmux job:
+   - Completed commands/results:
      ```bash
      python3 scripts/prepare_counterfact_original.py --max_records 2500
      python3 scripts/baseline_rome.py --data_path data/counterfact/counterfact-original-easyedit.json --n_edits 100 --seed 42
      python3 scripts/baseline_rome.py --data_path data/counterfact/counterfact-original-easyedit.json --n_edits 300 --seed 42
      python3 scripts/baseline_memit.py --data_path data/counterfact/counterfact-original-easyedit.json --n_edits 300 --seed 42
      python3 scripts/baseline_ike.py --data_path data/counterfact/counterfact-original-easyedit.json --n_edits 300 --seed 42
+     python3 scripts/baseline_ike.py --data_path data/counterfact/counterfact-original-easyedit.json --n_edits 300 --seed 42 --k 4
+     python3 scripts/baseline_ike.py --data_path data/counterfact/counterfact-original-easyedit.json --n_edits 300 --seed 42 --k 8
      ```
+   - Summary: ROME n=300 reached rewrite=0.9933, rephrase=0.7433, locality=0.8400; MEMIT n=300 reached rewrite=0.7800, rephrase=0.3867, locality=0.9833. IKE reached rewrite=1.0000 and locality=0.0667 for `k=4`, `k=8`, and `k=16`; reducing retrieved demonstrations did not recover locality.
 
 3. Reconfirm all reported results end-to-end before final report writing.
    - Check that each method uses the intended editing mode: ROME single-edit restored per case, MEMIT single-edit and true batch where labeled, and IKE in-context only.
