@@ -186,8 +186,8 @@ data/stats/           # ROME/MEMIT covariance cache; stable GPT-2 XL .npz files 
 results/runs.jsonl    # structured run log (all experiments)
 results/probe_results.jsonl # per-probe ROME/MEMIT/IKE diagnostic results
 src/benchmarks/       # MQuAKE/RippleEdits adapters, scoring, and summaries
-src/probes/           # 100 hand-curated diagnostic probes
-overleaf_midterm/     # minimal Overleaf upload package and source for the midterm report
+src/probes/           # 225 generated, class-balanced diagnostic probes
+overleaf_midterm/     # archived submitted midterm Overleaf package
 tests/                # lightweight local tests for pure utility/metric logic
 patches/              # fixes for gitignored external/EasyEdit
 external/EasyEdit/    # gitignored — clone manually per setup above
@@ -257,7 +257,7 @@ New external benchmark runs also log pre-edit rates and deltas:
 | `delta_overall_acc` | Post minus pre RippleEdits accuracy. |
 
 Paper targets (ROME, GPT-2 XL): rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%.
-The EasyEdit CounterFact rephrase prompts are noisy, so `rephrase_acc` is relative-only for method comparisons.
+The EasyEdit CounterFact rephrase prompts are noisy, so existing `rephrase_acc` rows should be treated as relative-only. `scripts/prepare_counterfact_original.py` can convert the original ROME CounterFact `paraphrase_prompts` into this repo's EasyEdit-style format for a more paper-comparable rerun.
 
 ### Diagnostic Probe Results
 
@@ -384,7 +384,7 @@ Current local files:
 
 The local RippleEdits files use `Relation_Specificity`; the upstream repository has also used the misspelled key `Relation_Specifity`. The adapter accepts both spellings and reports the metric under the corrected `Relation_Specificity` name.
 
-The logged POPULAR sweeps in `results/runs.jsonl` were targeted at logical generalization and subject aliasing. Rerun RippleEdits with `Relation_Specificity` included if relation-specificity numbers are needed for the final report.
+The earlier POPULAR sweeps in `results/runs.jsonl` were targeted at logical generalization and subject aliasing. Equal-sample reruns with `Relation_Specificity` are now the preferred rows for final-report tables once the active sweep finishes.
 
 For GPT-2 XL RippleEdits runs, `scripts/eval_ripple_edits.py` filters non-ASCII old/new target labels by default. Pass `--allow_non_ascii_targets` only if intentionally testing those cases.
 
@@ -403,7 +403,7 @@ Current follow-up experiments:
 - `scripts/audit_probes.py` validates the 225-probe set before GPU runs.
 - `scripts/run_probes.py` runs the custom probe set for ROME, MEMIT, and IKE. Probe records include `probe_type` so implicit edit tests are separated from target-conditioned and supplied-fact reasoning prompts.
 - `scripts/show_results.py --csv_dir results/csv` exports runs and probe summaries for plotting.
-- Keep `rephrase_acc` relative-only until rephrase prompts are cleaned or replaced with paper-style paraphrases.
+- Treat existing EasyEdit `rephrase_acc` rows as relative-only. Use `scripts/prepare_counterfact_original.py` and rerun CounterFact before making paper-comparable paraphrase/generalization claims.
 
 ---
 

@@ -35,8 +35,9 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | EasyEdit + ROME running | Done | Fixed 2 compatibility bugs (see commit 2867c41) |
 | Smoke test (5 edits) | Passed | rewrite=1.00, rephrase=0.93, locality=0.70 |
 | ROME 100-edit baseline | Done | rewrite=1.00, rephrase=0.54, locality=0.79 |
-| ROME vs. paper validation | Partial | rewrite/locality ✓, rephrase gap under investigation |
+| ROME vs. paper validation | Partial | rewrite/locality match expectations; EasyEdit rephrase rows remain relative-only |
 | Rephrase failure inspection | Done | `scripts/inspect_rephrase_failures.py`; 34/46 failures have prompt-quality flags |
+| Original CounterFact paraphrase conversion | Tooling done | `scripts/prepare_counterfact_original.py` converts original ROME `paraphrase_prompts`; metrics still need rerun on converted data |
 | MEMIT single-edit baseline | Done | `scripts/baseline_memit.py`; covariance cache is warm for layers 13-17 |
 | MEMIT true batch/mass-edit eval | Done | Batch-10, 50, and 100 runs confirm `Writing N key/value pair(s)` and cached covariance reuse |
 | IKE baseline | Done | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation; local repo records 5, 50, and 100-edit IKE runs |
@@ -92,7 +93,10 @@ Equal-sample follow-up sweeps were launched on 2026-05-16 in tmux session `exter
 
 These equal-sample MQuAKE results strengthen the current interpretation: all three methods improve direct edited-fact recall, but ROME/MEMIT show little or negative multihop transfer while IKE benefits substantially from benchmark facts supplied in context.
 
-The remaining queue continues with n=25 RippleEdits, then n=100 MQuAKE/RippleEdits:
+The remaining queue continues with n=25 RippleEdits, then n=100 MQuAKE/RippleEdits.
+
+<details>
+<summary>Remaining equal-sample sweep commands</summary>
 
 ```bash
 python scripts/eval_mquake.py --method ROME --n_cases 25 --edit_mode one
@@ -109,11 +113,13 @@ python scripts/eval_ripple_edits.py --method MEMIT --subset POPULAR --n_cases 10
 python scripts/eval_ripple_edits.py --method IKE --subset POPULAR --n_cases 100 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
 ```
 
+</details>
+
 Do not commit the generated result files or replace final report tables until the tmux run finishes and `scripts/show_results.py --csv_dir results/csv` has been rerun.
 
 **Paper targets (ROME, GPT-2 XL, CounterFact):** rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%
 
-Rephrase gap (~40 points) is explained by poor-quality rephrase prompts in EasyEdit's dataset (relation mismatches, garbage text, indirect prompts — not actual paraphrases). The original ROME CounterFact uses curated `paraphrase_prompts` which would give paper-comparable numbers, but this conversion is deferred. **Decision: treat rephrase_acc as a relative comparison across ROME/MEMIT/IKE only — do not compare absolute rephrase numbers to the paper.** Rewrite and locality are paper-comparable and sufficient to trust the pipeline.
+Rephrase gap (~40 points) is explained by poor-quality rephrase prompts in EasyEdit's dataset (relation mismatches, garbage text, indirect prompts — not actual paraphrases). Existing EasyEdit `rephrase_acc` rows should remain relative-only. The repo now has `scripts/prepare_counterfact_original.py` to convert original ROME `paraphrase_prompts`; rerun CounterFact on `data/counterfact/counterfact-original-easyedit.json` before making paper-comparable paraphrase/generalization claims. Rewrite and locality are still useful pipeline checks.
 
 Original ROME repo cross-validation also deferred — rewrite (1.000) and locality (0.790) already confirm EasyEdit's ROME is faithful. Revisit only if MEMIT/IKE numbers look anomalous.
 
@@ -206,9 +212,15 @@ Do not describe IKE as creating a persistent 100-edit model. It is a non-paramet
 
 ### Rephrase prompts and full runs
 
-EasyEdit CounterFact rephrase prompts are noisy enough that `rephrase_acc` is relative-only for now. If final claims need paper-style generalization numbers, create a cleaned rephrase prompt set or recover the original paper-style paraphrases.
+EasyEdit CounterFact rephrase prompts are noisy enough that existing `rephrase_acc` rows are relative-only. The preferred final-report path is now:
 
-After scripts are stable, consider a full CounterFact run. The paper-style scale is roughly 2500 cases, but for MEMIT mass editing it may be more informative to run batch-size sweeps first, such as 10, 100, and 1000 simultaneous edits if compute allows.
+```bash
+python3 scripts/prepare_counterfact_original.py --max_records 2500
+python3 scripts/baseline_rome.py --data_path data/counterfact/counterfact-original-easyedit.json --n_edits 100 --seed 42
+python3 scripts/baseline_rome.py --data_path data/counterfact/counterfact-original-easyedit.json --n_edits 300 --seed 42
+```
+
+If the ROME sanity check looks plausible, rerun MEMIT and IKE at the same sample size. The paper-style scale is roughly 2500 cases, but 300 clean records is a better time/accuracy tradeoff for this project unless the final report depends on exact CounterFact replication.
 
 ---
 
@@ -294,6 +306,9 @@ pip install -r external/EasyEdit/requirements.txt
 # data/counterfact/ is in the repo — no download needed
 # data/stats/ will recompute on first ROME/MEMIT run
 ```
+
+<details>
+<summary>Archived VM and GitHub transition notes</summary>
 
 ## 2026-05-11 GitHub state
 
@@ -403,3 +418,5 @@ For future one-off runs, prefer explicit log files:
 mkdir -p logs
 tmux new-session -d -s probes 'conda activate cs263-project && python scripts/run_probes.py --method MEMIT 2>&1 | tee logs/probes_memit_$(date +%Y%m%d_%H%M%S).log'
 ```
+
+</details>

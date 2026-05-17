@@ -1,6 +1,6 @@
 # Next Steps for VM/Codex
 
-Use this file to pick up the project on the VM. Current midterm results are valid as preliminary logged-run results, but the RippleEdits adapter was fixed after the logged sweeps, so relation specificity needs a fresh run before it is reported quantitatively.
+Use this file to pick up the project on the VM and move from preliminary midterm results toward final-report results. The midterm report has already been submitted; do not spend time updating `overleaf_midterm/` unless you explicitly need to archive a revised midterm artifact.
 
 Current active run: equal-sample external sweeps were launched on 2026-05-16 in tmux session `external_sweeps`. Logs are written to `logs/external_equal_sweeps_20260516.log`. The n=25 MQuAKE block is complete; the queue is continuing through n=25 RippleEdits, then n=100 MQuAKE/RippleEdits across ROME, MEMIT, and IKE.
 
@@ -22,12 +22,12 @@ Current active run: equal-sample external sweeps were launched on 2026-05-16 in 
    python3 scripts/show_results.py --csv_dir results/csv
    ```
 
-Status on 2026-05-16: these checks passed after pulling `main`; unit tests passed with 12 tests, benchmark inspection found 3,000 MQuAKE records and 885 RippleEdits POPULAR records, and CSV export completed.
+Status on 2026-05-16: these checks passed after pulling `main`; unit tests passed, benchmark inspection found 3,000 MQuAKE records and 885 RippleEdits POPULAR records, and CSV export completed.
 
 ## Priority Experiments
 
 1. Monitor equal-sample external benchmark sweeps.
-   - Reason: the midterm report currently compares IKE n=25 against ROME/MEMIT n=10, and relation specificity was excluded from prior RippleEdits sweeps.
+   - Reason: current final-report claims should use equal sample sizes when comparing methods, and relation specificity was excluded from the earlier RippleEdits report-level rows.
    - Completed so far:
      - ROME MQuAKE n=25: edited_fact_acc=0.4925, multihop_acc=0.1200, delta_multihop_acc=+0.0133.
      - MEMIT MQuAKE n=25: edited_fact_acc=0.5821, multihop_acc=0.0800, delta_multihop_acc=-0.0267.
@@ -38,21 +38,26 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
      tail -f logs/external_equal_sweeps_20260516.log
      nvidia-smi
      ```
-   - Queued commands:
-     ```bash
-     python scripts/eval_mquake.py --method ROME --n_cases 25 --edit_mode one
-     python scripts/eval_mquake.py --method MEMIT --n_cases 25 --edit_mode all
-     python scripts/eval_mquake.py --method IKE --n_cases 25 --edit_mode all
-     python scripts/eval_ripple_edits.py --method ROME --subset POPULAR --n_cases 25 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
-     python scripts/eval_ripple_edits.py --method MEMIT --subset POPULAR --n_cases 25 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
-     python scripts/eval_ripple_edits.py --method IKE --subset POPULAR --n_cases 25 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
-     python scripts/eval_mquake.py --method ROME --n_cases 100 --edit_mode one
-     python scripts/eval_mquake.py --method MEMIT --n_cases 100 --edit_mode all
-     python scripts/eval_mquake.py --method IKE --n_cases 100 --edit_mode all
-     python scripts/eval_ripple_edits.py --method ROME --subset POPULAR --n_cases 100 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
-     python scripts/eval_ripple_edits.py --method MEMIT --subset POPULAR --n_cases 100 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
-     python scripts/eval_ripple_edits.py --method IKE --subset POPULAR --n_cases 100 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
-     ```
+
+   <details>
+   <summary>Queued external-sweep commands</summary>
+
+   ```bash
+   python scripts/eval_mquake.py --method ROME --n_cases 25 --edit_mode one
+   python scripts/eval_mquake.py --method MEMIT --n_cases 25 --edit_mode all
+   python scripts/eval_mquake.py --method IKE --n_cases 25 --edit_mode all
+   python scripts/eval_ripple_edits.py --method ROME --subset POPULAR --n_cases 25 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
+   python scripts/eval_ripple_edits.py --method MEMIT --subset POPULAR --n_cases 25 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
+   python scripts/eval_ripple_edits.py --method IKE --subset POPULAR --n_cases 25 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
+   python scripts/eval_mquake.py --method ROME --n_cases 100 --edit_mode one
+   python scripts/eval_mquake.py --method MEMIT --n_cases 100 --edit_mode all
+   python scripts/eval_mquake.py --method IKE --n_cases 100 --edit_mode all
+   python scripts/eval_ripple_edits.py --method ROME --subset POPULAR --n_cases 100 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
+   python scripts/eval_ripple_edits.py --method MEMIT --subset POPULAR --n_cases 100 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
+   python scripts/eval_ripple_edits.py --method IKE --subset POPULAR --n_cases 100 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
+   ```
+
+   </details>
 
 2. After the tmux sweep finishes, regenerate and inspect summaries.
    ```bash
@@ -91,10 +96,17 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
      python3 scripts/run_probes.py --method IKE --data_path data/counterfact/counterfact-edit.json
      ```
 
-2. Fix the CounterFact rephrase/paraphrase issue.
-   - Reason: current EasyEdit rephrase prompts are noisy and should not be compared directly to paper values.
-   - Investigate whether the original CounterFact `paraphrase_prompts` can be loaded and used instead of the noisy EasyEdit-converted prompts.
-   - After fixing, rerun a small ROME sanity check before rerunning all methods.
+2. Rerun CounterFact with original ROME paraphrase prompts.
+   - Status: conversion tooling exists in `scripts/prepare_counterfact_original.py`; the remaining work is to generate the converted dataset on the VM and rerun metrics.
+   - Reason: current EasyEdit rephrase prompts are noisy. Original ROME `paraphrase_prompts` should make paraphrase/generalization numbers more paper-comparable.
+   - Recommended sequence:
+     ```bash
+     python3 scripts/prepare_counterfact_original.py --max_records 2500
+     python3 scripts/baseline_rome.py --data_path data/counterfact/counterfact-original-easyedit.json --n_edits 100 --seed 42
+     python3 scripts/baseline_rome.py --data_path data/counterfact/counterfact-original-easyedit.json --n_edits 300 --seed 42
+     python3 scripts/baseline_memit.py --data_path data/counterfact/counterfact-original-easyedit.json --n_edits 300 --seed 42
+     python3 scripts/baseline_ike.py --data_path data/counterfact/counterfact-original-easyedit.json --n_edits 300 --seed 42
+     ```
 
 3. Reconfirm all reported results end-to-end before final report writing.
    - Check that each method uses the intended editing mode: ROME single-edit restored per case, MEMIT single-edit and true batch where labeled, and IKE in-context only.
@@ -102,18 +114,18 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
    - Re-run unit tests, benchmark inspectors, and result summaries after any evaluator change.
    - Record any rerun commands and seeds in `STATUS.md` so the final report is reproducible.
 
-## Report Updates After Runs
+## Final Report Updates After Runs
 
 1. Regenerate result summaries:
    ```bash
    python3 scripts/show_results.py --csv_dir results/csv
    ```
 
-2. Update `overleaf_midterm/main.tex` if new results change any Table 3 values or conclusions.
+2. Create or update the final-report source with the new equal-sample and expanded-probe results.
 
 3. If relation specificity is rerun successfully, replace the current caveat with the new metric values and state whether the criterion changes the RippleEdits conclusion.
 
-4. Recompile on Overleaf after updating `overleaf_midterm/main.tex`.
+4. Keep `overleaf_midterm/` as an archived submitted midterm package unless there is a specific reason to edit it.
 
 ## Final-Report Planning
 

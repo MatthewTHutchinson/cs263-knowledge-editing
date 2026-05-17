@@ -1,4 +1,6 @@
-# Overleaf Upload Package
+# Archived Midterm Overleaf Package
+
+This folder is the submitted midterm report package. The final report should be developed separately rather than by continuing to update this archive.
 
 Upload this folder's contents to Overleaf:
 
