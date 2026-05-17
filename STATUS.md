@@ -37,7 +37,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | ROME 100-edit baseline | Done | rewrite=1.00, rephrase=0.54, locality=0.79 |
 | ROME vs. paper validation | Partial | rewrite/locality match expectations; EasyEdit rephrase rows remain relative-only |
 | Rephrase failure inspection | Done | `scripts/inspect_rephrase_failures.py`; 34/46 failures have prompt-quality flags |
-| Original CounterFact paraphrase conversion | Tooling done | `scripts/prepare_counterfact_original.py` converts original ROME `paraphrase_prompts`; metrics still need rerun on converted data |
+| Original CounterFact paraphrase conversion | Next queued experiment | `scripts/prepare_counterfact_original.py` converts original ROME `paraphrase_prompts`; baseline scripts now checkpoint per sampled record under `results/checkpoints/`; run after the active 225-probe queue finishes |
 | MEMIT single-edit baseline | Done | `scripts/baseline_memit.py`; covariance cache is warm for layers 13-17 |
 | MEMIT true batch/mass-edit eval | Done | Batch-10, 50, and 100 runs confirm `Writing N key/value pair(s)` and cached covariance reuse |
 | IKE baseline | Done | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation; local repo records 5, 50, and 100-edit IKE runs |

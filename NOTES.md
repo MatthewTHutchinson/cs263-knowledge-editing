@@ -19,9 +19,10 @@ Format for each entry:
 
 - Updated `scripts/run_probes.py` so `--output_path` acts as a checkpoint file: existing method/probe rows are skipped on restart, and each completed probe row is appended immediately.
 - Added `scripts/show_results.py --probes_path` so the expanded 225-probe output can be summarized separately from the old 100-probe `results/probe_results.jsonl`.
+- Added per-record checkpoint/resume support to `baseline_rome.py`, `baseline_memit.py`, and `baseline_ike.py` for the next original-paraphrase CounterFact rerun.
 - Tightened probe validation docs from `--min_total 200` to `--min_total 225` for the current balanced probe contract.
 - Launched the expanded ROME/MEMIT/IKE probe queue in tmux session `probes_225`; output path is `results/probe_results_225.jsonl`.
-- Next: monitor the tmux log, then summarize `results/probe_results_225.jsonl`, update final-report tables, commit result rows, and push.
+- Next: monitor the tmux log, summarize `results/probe_results_225.jsonl`, then run the checkpointed original-paraphrase CounterFact sequence in a new tmux job.
 
 ---
 

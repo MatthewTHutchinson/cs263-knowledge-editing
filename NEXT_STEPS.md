@@ -96,9 +96,10 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
      ```
 
 2. Rerun CounterFact with original ROME paraphrase prompts.
-   - Status: conversion tooling exists in `scripts/prepare_counterfact_original.py`; the remaining work is to generate the converted dataset on the VM and rerun metrics.
+   - Status: conversion tooling exists in `scripts/prepare_counterfact_original.py`; the remaining work is to generate the converted dataset on the VM and rerun metrics after the active `probes_225` job finishes.
    - Reason: current EasyEdit rephrase prompts are noisy. Original ROME `paraphrase_prompts` should make paraphrase/generalization numbers more paper-comparable.
-   - Recommended sequence:
+   - `baseline_rome.py`, `baseline_memit.py`, and `baseline_ike.py` now checkpoint each completed sampled record under `results/checkpoints/` and resume from matching rows by default. Use `--no_resume` only when intentionally rerunning from scratch.
+   - Recommended sequence for the next tmux job:
      ```bash
      python3 scripts/prepare_counterfact_original.py --max_records 2500
      python3 scripts/baseline_rome.py --data_path data/counterfact/counterfact-original-easyedit.json --n_edits 100 --seed 42

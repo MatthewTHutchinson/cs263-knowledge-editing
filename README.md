@@ -91,15 +91,18 @@ python scripts/smoke_test_rome.py
 
 # 100 independent single-edit baseline vs. paper
 python scripts/baseline_rome.py --data_path data/counterfact/counterfact-edit.json
+python scripts/baseline_rome.py --data_path data/counterfact/counterfact-original-easyedit.json --n_edits 300 --seed 42
 
 # MEMIT single-edit baseline/cache warmup
 python scripts/baseline_memit.py --data_path data/counterfact/counterfact-edit.json
+python scripts/baseline_memit.py --data_path data/counterfact/counterfact-original-easyedit.json --n_edits 300 --seed 42
 
 # True MEMIT batch/mass-edit sweep (run after MEMIT covariance cache is warm)
 python scripts/batch_memit.py --data_path data/counterfact/counterfact-edit.json --batch_sizes 10,50,100
 
 # IKE retrieval/in-context baseline
 python scripts/baseline_ike.py --data_path data/counterfact/counterfact-edit.json
+python scripts/baseline_ike.py --data_path data/counterfact/counterfact-original-easyedit.json --n_edits 300 --seed 42
 
 # Download and inspect external ripple/multihop benchmarks
 python scripts/download_benchmarks.py --dataset all
@@ -213,6 +216,8 @@ STATUS.md             # project map and current state
 | 2026-05-10 | IKE | CounterFact | 100 | 0.990 | 0.990 | 0.110 |
 
 The larger IKE runs confirm strong in-context rewrite/rephrase behavior on the sampled records, but poor locality: retrieved demonstrations often perturb unrelated neighborhood prompts.
+
+The CounterFact baseline scripts checkpoint each completed sampled record under `results/checkpoints/` and resume matching method/data/n/seed rows by default. This is especially important for original ROME paraphrase reruns on `data/counterfact/counterfact-original-easyedit.json`; pass `--no_resume` only when intentionally discarding checkpoint progress.
 
 External benchmark runs were added on 2026-05-11. The n=1 rows are smoke tests for the edit/evaluate/restore path; the equal-sample n=25/n=100 rows are the preferred report-level external signal.
 
