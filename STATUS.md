@@ -45,8 +45,8 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | MQuAKE download + eval | Small sweep done | IKE all-edit n=25, ROME one-edit n=10, and MEMIT all-edit n=10 complete with pre/post/delta logging |
 | Equal-sample external sweeps | Done | n=25 and n=100 MQuAKE/RippleEdits complete for ROME, MEMIT, and IKE; per-case checkpoints saved under `results/benchmark_partials/` |
 | Probe set design | Done | 225 probes across 15 edit topics and 5 balanced categories in `src/probes/probe_set.py`; `probe_type` separates implicit, target-conditioned, and supplied-fact prompts |
-| Probe set evaluation | Needs rerun | Existing `results/probe_results.jsonl` rows are from the earlier 100-probe set; rerun ROME/MEMIT/IKE on the expanded 225-probe set before reporting new probe numbers |
-| Probe validation | Done | `scripts/audit_probes.py --min_total 200 --strict` passed locally on 2026-05-16 |
+| Probe set evaluation | Running | Existing `results/probe_results.jsonl` rows are from the earlier 100-probe set; rerun ROME/MEMIT/IKE into `results/probe_results_225.jsonl` before reporting new probe numbers. `scripts/run_probes.py` now resumes from existing output rows and checkpoints after each probe. |
+| Probe validation | Done | `scripts/audit_probes.py --min_total 225 --strict` passed locally on 2026-05-17 |
 | Local tests | Done | `python3 -m unittest discover -s tests` passed locally on 2026-05-16 with 15 tests; tests cover MEMIT batch metric semantics, IKE embedding-cache logic, CounterFact conversion, and probe-set balance |
 | Results summarization | Done | `scripts/show_results.py` updated with comparison table, batch sweep, probe summary by category/type, ASCII plot, CSV export |
 | External benchmark adapters | Done | `src/benchmarks/`, download/inspect/eval scripts; unit tests cover MQuAKE/RippleEdits parsing and answer matching |

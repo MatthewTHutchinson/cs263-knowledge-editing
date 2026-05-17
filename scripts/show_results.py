@@ -434,6 +434,8 @@ def main():
     parser.add_argument("--probes", action="store_true")
     parser.add_argument("--plot",   action="store_true")
     parser.add_argument("--all",    action="store_true")
+    parser.add_argument("--probes_path", default=PROBES_PATH,
+                        help="Probe JSONL file to summarize/export")
     parser.add_argument("--csv_dir", nargs="?", const=DEFAULT_CSV_DIR,
                         help="Write CSV exports to this directory (default: results/csv)")
     args = parser.parse_args()
@@ -453,7 +455,7 @@ def main():
 
     probe_results = []
     if show_probes or args.csv_dir:
-        probe_results = load_jsonl(PROBES_PATH)
+        probe_results = load_jsonl(args.probes_path)
 
     if show_probes:
         show_probe_summary(probe_results)

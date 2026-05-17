@@ -15,6 +15,16 @@ Format for each entry:
 
 ---
 
+## 2026-05-17 — Expanded probe run made resumable and launched
+
+- Updated `scripts/run_probes.py` so `--output_path` acts as a checkpoint file: existing method/probe rows are skipped on restart, and each completed probe row is appended immediately.
+- Added `scripts/show_results.py --probes_path` so the expanded 225-probe output can be summarized separately from the old 100-probe `results/probe_results.jsonl`.
+- Tightened probe validation docs from `--min_total 200` to `--min_total 225` for the current balanced probe contract.
+- Launched the expanded ROME/MEMIT/IKE probe queue in tmux session `probes_225`; output path is `results/probe_results_225.jsonl`.
+- Next: monitor the tmux log, then summarize `results/probe_results_225.jsonl`, update final-report tables, commit result rows, and push.
+
+---
+
 ## 2026-05-17 — Equal-sample n=100 external sweeps completed
 
 - The `external_n100` tmux queue finished at `2026-05-17T11:28:01+00:00`; no tmux session is live now.

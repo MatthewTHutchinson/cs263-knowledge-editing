@@ -83,13 +83,14 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
    - The existing logged probe results are from the earlier 100-probe set, so do not mix the old and new probe tables.
    - Before GPU runs, validate:
      ```bash
-     python3 scripts/audit_probes.py --min_total 200 --strict
+     python3 scripts/audit_probes.py --min_total 225 --strict
      ```
-   - Then rerun all methods:
+   - Then rerun all methods. `scripts/run_probes.py` treats `--output_path` as a checkpoint file and skips already completed rows for the same method, so these commands are safe to rerun after interruption:
      ```bash
      python3 scripts/run_probes.py --method ROME --output_path results/probe_results_225.jsonl
      python3 scripts/run_probes.py --method MEMIT --output_path results/probe_results_225.jsonl
      python3 scripts/run_probes.py --method IKE --data_path data/counterfact/counterfact-edit.json --output_path results/probe_results_225.jsonl
+     python3 scripts/show_results.py --probes --probes_path results/probe_results_225.jsonl
      ```
 
 2. Rerun CounterFact with original ROME paraphrase prompts.

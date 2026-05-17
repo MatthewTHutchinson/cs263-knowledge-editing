@@ -10,7 +10,7 @@ Checks:
 
 Usage:
     python scripts/audit_probes.py
-    python scripts/audit_probes.py --min_total 200 --strict
+    python scripts/audit_probes.py --min_total 225 --strict
 """
 
 import argparse

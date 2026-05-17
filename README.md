@@ -144,13 +144,14 @@ python scripts/eval_ripple_edits.py --method IKE --subset POPULAR --n_cases 100 
     --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
 
 # Diagnostic probes for post-edit consistency
-python scripts/audit_probes.py --min_total 200 --strict
-python scripts/run_probes.py --method ROME
-python scripts/run_probes.py --method MEMIT
-python scripts/run_probes.py --method IKE --data_path data/counterfact/counterfact-edit.json
+python scripts/audit_probes.py --min_total 225 --strict
+python scripts/run_probes.py --method ROME --output_path results/probe_results_225.jsonl
+python scripts/run_probes.py --method MEMIT --output_path results/probe_results_225.jsonl
+python scripts/run_probes.py --method IKE --data_path data/counterfact/counterfact-edit.json --output_path results/probe_results_225.jsonl
 
 # View all results and probe summaries
 python scripts/show_results.py --all
+python scripts/show_results.py --probes --probes_path results/probe_results_225.jsonl
 python scripts/show_results.py --csv_dir results/csv
 
 # Local unit tests (no GPU/model load)
