@@ -2,7 +2,9 @@
 
 Use this file to pick up the project on the VM and move from preliminary midterm results toward final-report results. The midterm report has already been submitted; do not spend time updating `overleaf_midterm/` unless you explicitly need to archive a revised midterm artifact.
 
-Current active run: expanded 225-probe queue in tmux session `probes_225`. It started on 2026-05-17 at `2026-05-17T15:18:16+00:00`, logs to `logs/probes_225_20260517.log`, and checkpoints rows to `results/probe_results_225.jsonl`. The same ROME/MEMIT/IKE commands are safe to rerun because `scripts/run_probes.py` skips existing method/probe rows in the output file by default.
+Current active run: checkpointed original-paraphrase CounterFact queue in tmux session `counterfact_original`. Logs go to `logs/counterfact_original_20260517.log`; per-record checkpoints go under `results/checkpoints/`.
+
+The expanded 225-probe queue completed on 2026-05-17. It produced `results/probe_results_225.jsonl` with 675 rows: 225 each for ROME, MEMIT, and IKE. The same ROME/MEMIT/IKE probe commands remain safe to rerun because `scripts/run_probes.py` skips existing method/probe rows in the output file by default.
 
 The equal-sample external sweep queue completed on 2026-05-17 at `2026-05-17T11:28:01+00:00`. Logs are written to `logs/external_n100_20260517_055056.log`, completed run rows are in `results/runs.jsonl`, and completed per-case checkpoints are in `results/benchmark_partials/`.
 
@@ -80,23 +82,16 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
 
 ## Evaluation Improvements
 
-1. Rerun the expanded custom probe set.
+1. Expanded custom probe set is complete.
    - Current source has 225 probes: 15 edit topics x 5 categories x 3 probes.
-   - The existing logged probe results are from the earlier 100-probe set, so do not mix the old and new probe tables.
-   - Before GPU runs, validate:
+   - The completed 225-probe results are in `results/probe_results_225.jsonl`; do not mix them with the earlier 100-probe `results/probe_results.jsonl`.
+   - Summary command:
      ```bash
-     python3 scripts/audit_probes.py --min_total 225 --strict
-     ```
-   - Then rerun all methods. `scripts/run_probes.py` treats `--output_path` as a checkpoint file and skips already completed rows for the same method, so these commands are safe to rerun after interruption:
-     ```bash
-     python3 scripts/run_probes.py --method ROME --output_path results/probe_results_225.jsonl
-     python3 scripts/run_probes.py --method MEMIT --output_path results/probe_results_225.jsonl
-     python3 scripts/run_probes.py --method IKE --data_path data/counterfact/counterfact-edit.json --output_path results/probe_results_225.jsonl
      python3 scripts/show_results.py --probes --probes_path results/probe_results_225.jsonl
      ```
 
 2. Rerun CounterFact with original ROME paraphrase prompts.
-   - Status: conversion tooling exists in `scripts/prepare_counterfact_original.py`; the remaining work is to generate the converted dataset on the VM and rerun metrics after the active `probes_225` job finishes.
+   - Status: active tmux job `counterfact_original` is running this sequence.
    - Reason: current EasyEdit rephrase prompts are noisy. Original ROME `paraphrase_prompts` should make paraphrase/generalization numbers more paper-comparable.
    - `baseline_rome.py`, `baseline_memit.py`, and `baseline_ike.py` now checkpoint each completed sampled record under `results/checkpoints/` and resume from matching rows by default. Use `--no_resume` only when intentionally rerunning from scratch.
    - Recommended sequence for the next tmux job:

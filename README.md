@@ -281,23 +281,23 @@ The EasyEdit CounterFact rephrase prompts are noisy, so existing `rephrase_acc` 
 
 ### Diagnostic Probe Results
 
-ROME, MEMIT, and IKE probe sweeps completed on the GCP T4 VM on 2026-05-11. Those logged results used the original 100-probe custom set. The current source has since been expanded to 225 probes across 15 edit topics and needs a fresh ROME/MEMIT/IKE probe rerun before replacing the table below.
+ROME, MEMIT, and IKE probe sweeps completed on the expanded 225-probe set on the GCP T4 VM on 2026-05-17. Results are stored in `results/probe_results_225.jsonl`; the earlier `results/probe_results.jsonl` rows are from the old 100-probe set and should not be mixed with the table below.
 
 | Method | N probes | Pre pass | Post pass | Delta |
 |--------|----------|----------|-----------|-------|
-| IKE | 100 | 0.360 | 0.500 | +0.140 |
-| MEMIT | 100 | 0.360 | 0.640 | +0.280 |
-| ROME | 100 | 0.360 | 0.640 | +0.280 |
+| IKE | 225 | 0.320 | 0.378 | +0.058 |
+| MEMIT | 225 | 0.320 | 0.422 | +0.102 |
+| ROME | 225 | 0.320 | 0.400 | +0.080 |
 
 Category-level highlights:
 
 | Category | IKE post | MEMIT post | ROME post | Main takeaway |
 |----------|----------|------------|-----------|---------------|
-| Logical negation | 0.250 | 0.875 | 0.875 | IKE remains much weaker on direct negation than the weight-edit methods. |
-| Compositional | 0.765 | 0.706 | 0.765 | ROME shows a small gain; MEMIT is flat relative to pre-edit. |
-| Contradiction | 0.591 | 0.455 | 0.455 | IKE improves contradiction prompts somewhat, but not enough to close the gap. |
-| Symmetric inverse | 0.133 | 0.067 | 0.000 | Inverse queries remain the clearest failure mode across all methods. |
-| Chain-of-thought | 1.000 | 0.929 | 0.929 | IKE passes most supplied-fact reasoning prompts by construction; interpret separately from implicit probes. |
+| Logical negation | 0.222 | 0.556 | 0.689 | Weight edits still help direct negation most; ROME is strongest here. |
+| Compositional | 0.822 | 0.844 | 0.689 | Compositional prompts are high post-edit, but many include supplied facts and should be interpreted separately from implicit transfer. |
+| Contradiction | 0.689 | 0.556 | 0.489 | IKE is strongest on contradiction prompts in this expanded set. |
+| Symmetric inverse | 0.089 | 0.000 | 0.000 | Inverse queries remain the clearest failure mode across all methods. |
+| Chain-of-thought | 0.067 | 0.156 | 0.156 | Short reasoning-chain probes remain weak after expansion. |
 
 ## Metric Definitions
 

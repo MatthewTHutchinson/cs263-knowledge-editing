@@ -37,7 +37,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | ROME 100-edit baseline | Done | rewrite=1.00, rephrase=0.54, locality=0.79 |
 | ROME vs. paper validation | Partial | rewrite/locality match expectations; EasyEdit rephrase rows remain relative-only |
 | Rephrase failure inspection | Done | `scripts/inspect_rephrase_failures.py`; 34/46 failures have prompt-quality flags |
-| Original CounterFact paraphrase conversion | Next queued experiment | `scripts/prepare_counterfact_original.py` converts original ROME `paraphrase_prompts`; baseline scripts now checkpoint per sampled record under `results/checkpoints/`; run after the active 225-probe queue finishes |
+| Original CounterFact paraphrase conversion | Running | `scripts/prepare_counterfact_original.py` converts original ROME `paraphrase_prompts`; baseline scripts checkpoint per sampled record under `results/checkpoints/`; queued in tmux after the completed 225-probe run |
 | MEMIT single-edit baseline | Done | `scripts/baseline_memit.py`; covariance cache is warm for layers 13-17 |
 | MEMIT true batch/mass-edit eval | Done | Batch-10, 50, and 100 runs confirm `Writing N key/value pair(s)` and cached covariance reuse |
 | IKE baseline | Done | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation; local repo records 5, 50, and 100-edit IKE runs |
@@ -45,7 +45,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | MQuAKE download + eval | Small sweep done | IKE all-edit n=25, ROME one-edit n=10, and MEMIT all-edit n=10 complete with pre/post/delta logging |
 | Equal-sample external sweeps | Done | n=25 and n=100 MQuAKE/RippleEdits complete for ROME, MEMIT, and IKE; per-case checkpoints saved under `results/benchmark_partials/` |
 | Probe set design | Done | 225 probes across 15 edit topics and 5 balanced categories in `src/probes/probe_set.py`; `probe_type` separates implicit, target-conditioned, and supplied-fact prompts |
-| Probe set evaluation | Running | Existing `results/probe_results.jsonl` rows are from the earlier 100-probe set; rerun ROME/MEMIT/IKE into `results/probe_results_225.jsonl` before reporting new probe numbers. `scripts/run_probes.py` now resumes from existing output rows and checkpoints after each probe. |
+| Probe set evaluation | Done | Expanded 225-probe ROME/MEMIT/IKE run completed on 2026-05-17 with 675 rows in `results/probe_results_225.jsonl`; old `results/probe_results.jsonl` remains the earlier 100-probe set. |
 | Probe validation | Done | `scripts/audit_probes.py --min_total 225 --strict` passed locally on 2026-05-17 |
 | Local tests | Done | `python3 -m unittest discover -s tests` passed locally on 2026-05-16 with 15 tests; tests cover MEMIT batch metric semantics, IKE embedding-cache logic, CounterFact conversion, and probe-set balance |
 | Results summarization | Done | `scripts/show_results.py` updated with comparison table, batch sweep, probe summary by category/type, ASCII plot, CSV export |
@@ -70,7 +70,7 @@ See `results/runs.jsonl` for machine-readable records. Summary:
 | 2026-05-10 | IKE | CounterFact | 50 | 1.000 | 1.000 | 0.080 |
 | 2026-05-10 | IKE | CounterFact | 100 | 0.990 | 0.990 | 0.110 |
 
-ROME/MEMIT/IKE probe evaluation completed on the GCP T4 VM on 2026-05-11. IKE scored 50% post-edit pass rate overall, up from 36% pre-edit; ROME and MEMIT each scored 64% post-edit, up from 36% pre-edit. The main improvement for ROME/MEMIT is logical negation: 88% post-edit for both methods, up from 0% pre-edit. Summaries are available with `python scripts/show_results.py --probes`, and CSV exports live under `results/csv/`.
+Expanded ROME/MEMIT/IKE probe evaluation completed on the GCP T4 VM on 2026-05-17 with 225 probes per method. MEMIT scored 42.2% post-edit pass rate overall, up from 32.0% pre-edit; ROME scored 40.0%, up from 32.0%; IKE scored 37.8%, up from 32.0%. The strongest parametric gain remains logical negation: ROME reached 68.9% post-edit (+64.4 points) and MEMIT reached 55.6% (+51.1 points), while IKE reached 22.2% (+17.8 points). Symmetric-inverse transfer remains the clearest failure mode: ROME and MEMIT both scored 0.0% post-edit, and IKE scored 8.9%. Summaries are available with `python scripts/show_results.py --probes --probes_path results/probe_results_225.jsonl`, and CSV exports live under `results/csv/`.
 
 MQuAKE/RippleEdits data prep and small external sweeps completed locally on 2026-05-11:
 

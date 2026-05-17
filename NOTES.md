@@ -15,6 +15,17 @@ Format for each entry:
 
 ---
 
+## 2026-05-17 — Expanded 225-probe results completed
+
+- The `probes_225` tmux queue finished successfully; `results/probe_results_225.jsonl` has 675 rows: 225 each for ROME, MEMIT, and IKE.
+- Overall post-edit pass rates: MEMIT 42.2% (+10.2), ROME 40.0% (+8.0), IKE 37.8% (+5.8), with deltas relative to pre-edit pass rate.
+- Category highlights: ROME is strongest on logical negation at 68.9% (+64.4); MEMIT is strongest on compositional at 84.4% (+2.2); IKE is strongest on contradiction at 68.9% (+13.3).
+- Symmetric inverse remains the clearest failure mode: ROME 0.0%, MEMIT 0.0%, IKE 8.9%.
+- Launched the next checkpointed original-paraphrase CounterFact job in tmux session `counterfact_original`; logs go to `logs/counterfact_original_20260517.log`.
+- Next: monitor `counterfact_original`, then commit `results/runs.jsonl`, generated original CounterFact data if changed, and updated markdown summaries.
+
+---
+
 ## 2026-05-17 — Expanded probe run made resumable and launched
 
 - Updated `scripts/run_probes.py` so `--output_path` acts as a checkpoint file: existing method/probe rows are skipped on restart, and each completed probe row is appended immediately.
