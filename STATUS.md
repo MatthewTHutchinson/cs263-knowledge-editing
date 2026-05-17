@@ -42,7 +42,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | IKE baseline | Done | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation; local repo records 5, 50, and 100-edit IKE runs |
 | RippleEdits download + eval | Small sweep done | POPULAR targeted logical-generalization/subject-aliasing sweeps complete for ROME n=10 and IKE n=25; local JSONs use `Relation_Specificity`, and the adapter now also accepts upstream's legacy `Relation_Specifity` spelling |
 | MQuAKE download + eval | Small sweep done | IKE all-edit n=25, ROME one-edit n=10, and MEMIT all-edit n=10 complete with pre/post/delta logging |
-| Equal-sample external sweeps | In progress | Launched 2026-05-16 in tmux session `external_sweeps`; queued n=25 then n=100 MQuAKE/RippleEdits runs for ROME, MEMIT, and IKE with RippleEdits `Relation_Specificity,Logical_Generalization,Subject_Aliasing` |
+| Equal-sample external sweeps | In progress | n=25 MQuAKE complete for ROME/MEMIT/IKE; n=25 RippleEdits and n=100 blocks still running in tmux session `external_sweeps` |
 | Probe set design | Done | 100 probes across 5 categories in `src/probes/probe_set.py`; `probe_type` separates implicit, target-conditioned, and supplied-fact prompts |
 | Probe set evaluation | Done for ROME/MEMIT/IKE | ROME, MEMIT, and IKE each evaluated on 100 probes on the GCP T4 VM on 2026-05-11; results written to `results/probe_results.jsonl` |
 | Probe validation | Done | `scripts/audit_probes.py --min_total 100 --strict` passed locally on 2026-05-11 |
@@ -82,7 +82,17 @@ MQuAKE/RippleEdits data prep and small external sweeps completed locally on 2026
 - Earlier n=1 smoke runs remain in `results/runs.jsonl` as pipeline checks. Interpret the n=10/n=25 sweeps as the main external benchmark signal for the current report.
 - In the external benchmark scripts, IKE is an in-context/PROMPT-style baseline using benchmark new facts in the prompt, not CounterFact retrieval. For GPT-2 XL RippleEdits runs, the evaluator filters non-ASCII old/new target labels by default.
 
-Equal-sample follow-up sweeps were launched on 2026-05-16 in tmux session `external_sweeps`, with logs at `logs/external_equal_sweeps_20260516.log`. The queue runs n=25 first as a fixed-adapter check, then n=100 as the main next comparison target:
+Equal-sample follow-up sweeps were launched on 2026-05-16 in tmux session `external_sweeps`, with logs at `logs/external_equal_sweeps_20260516.log`. The n=25 MQuAKE block completed on 2026-05-17:
+
+| Method | Dataset | N | edited_fact_acc | delta_edited_fact_acc | multihop_acc | delta_multihop_acc |
+|--------|---------|---|-----------------|-----------------------|--------------|--------------------|
+| ROME | MQuAKE-CF-3k-v2-one | 25 | 0.4925 | +0.3283 | 0.1200 | +0.0133 |
+| MEMIT | MQuAKE-CF-3k-v2-all | 25 | 0.5821 | +0.4179 | 0.0800 | -0.0267 |
+| IKE | MQuAKE-CF-3k-v2-all | 25 | 0.9104 | +0.7462 | 0.4533 | +0.3466 |
+
+These equal-sample MQuAKE results strengthen the current interpretation: all three methods improve direct edited-fact recall, but ROME/MEMIT show little or negative multihop transfer while IKE benefits substantially from benchmark facts supplied in context.
+
+The remaining queue continues with n=25 RippleEdits, then n=100 MQuAKE/RippleEdits:
 
 ```bash
 python scripts/eval_mquake.py --method ROME --n_cases 25 --edit_mode one
@@ -99,7 +109,7 @@ python scripts/eval_ripple_edits.py --method MEMIT --subset POPULAR --n_cases 10
 python scripts/eval_ripple_edits.py --method IKE --subset POPULAR --n_cases 100 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
 ```
 
-Do not replace the logged small-sweep table values with these equal-sample results until the tmux run finishes and `scripts/show_results.py --csv_dir results/csv` has been rerun.
+Do not commit the generated result files or replace final report tables until the tmux run finishes and `scripts/show_results.py --csv_dir results/csv` has been rerun.
 
 **Paper targets (ROME, GPT-2 XL, CounterFact):** rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%
 

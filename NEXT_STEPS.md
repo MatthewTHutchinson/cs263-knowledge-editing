@@ -2,7 +2,7 @@
 
 Use this file to pick up the project on the VM. Current midterm results are valid as preliminary logged-run results, but the RippleEdits adapter was fixed after the logged sweeps, so relation specificity needs a fresh run before it is reported quantitatively.
 
-Current active run: equal-sample external sweeps were launched on 2026-05-16 in tmux session `external_sweeps`. Logs are written to `logs/external_equal_sweeps_20260516.log`. The queue runs n=25 first, then n=100 for MQuAKE and RippleEdits across ROME, MEMIT, and IKE.
+Current active run: equal-sample external sweeps were launched on 2026-05-16 in tmux session `external_sweeps`. Logs are written to `logs/external_equal_sweeps_20260516.log`. The n=25 MQuAKE block is complete; the queue is continuing through n=25 RippleEdits, then n=100 MQuAKE/RippleEdits across ROME, MEMIT, and IKE.
 
 ## Immediate Checks
 
@@ -28,6 +28,10 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
 
 1. Monitor equal-sample external benchmark sweeps.
    - Reason: the midterm report currently compares IKE n=25 against ROME/MEMIT n=10, and relation specificity was excluded from prior RippleEdits sweeps.
+   - Completed so far:
+     - ROME MQuAKE n=25: edited_fact_acc=0.4925, multihop_acc=0.1200, delta_multihop_acc=+0.0133.
+     - MEMIT MQuAKE n=25: edited_fact_acc=0.5821, multihop_acc=0.0800, delta_multihop_acc=-0.0267.
+     - IKE MQuAKE n=25: edited_fact_acc=0.9104, multihop_acc=0.4533, delta_multihop_acc=+0.3466.
    - Active session:
      ```bash
      tmux capture-pane -pt external_sweeps -S -80

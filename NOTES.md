@@ -15,6 +15,23 @@ Format for each entry:
 
 ---
 
+## 2026-05-17 — n=25 MQuAKE equal-sample results completed
+
+- The `external_sweeps` tmux job completed the equal-sample n=25 MQuAKE block for all three methods.
+- Results:
+  - ROME one-edit: edited_fact_acc=0.4925, delta_edited_fact_acc=+0.3283, multihop_acc=0.1200, delta_multihop_acc=+0.0133.
+  - MEMIT all-edit: edited_fact_acc=0.5821, delta_edited_fact_acc=+0.4179, multihop_acc=0.0800, delta_multihop_acc=-0.0267.
+  - IKE all-edit: edited_fact_acc=0.9104, delta_edited_fact_acc=+0.7462, multihop_acc=0.4533, delta_multihop_acc=+0.3466.
+- Interpretation is consistent with the earlier small sweeps: ROME and MEMIT improve direct edited-fact accuracy, but multihop transfer remains weak; IKE is strongest in this in-context MQuAKE setting.
+- New local result artifacts exist but are not committed yet because the broader tmux sweep is still running:
+  - `results/benchmark_details/mquake_rome_one_20260517_000316.json`
+  - `results/benchmark_details/mquake_memit_all_20260517_001439.json`
+  - `results/benchmark_details/mquake_ike_all_20260517_001858.json`
+- Current run state: tmux has moved on to n=25 RippleEdits ROME with `Relation_Specificity,Logical_Generalization,Subject_Aliasing`.
+- Next: wait for the RippleEdits n=25 block and n=100 block to finish, then commit the generated result rows/detail files and refresh summary tables.
+
+---
+
 ## 2026-05-16 — Equal-sample external sweeps launched
 
 - Pulled latest `main` on the VM; branch is aligned with `origin/main` at `288fff3`.

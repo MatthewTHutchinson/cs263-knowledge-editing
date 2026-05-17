@@ -232,6 +232,16 @@ External benchmark runs were added on 2026-05-11. The n=1 rows are smoke tests f
 
 The main external-benchmark pattern is that IKE's in-context/PROMPT setup gives the strongest MQuAKE and RippleEdits gains, especially on subject aliasing. ROME and MEMIT still achieve direct edited-fact improvements, but multi-hop and logical-generalization transfer remains weak.
 
+Equal-sample MQuAKE n=25 follow-up results were produced on 2026-05-17 while the broader external sweep was still running:
+
+| Method | Dataset | N | edited_fact_acc | delta_edited_fact_acc | multihop_acc | delta_multihop_acc |
+|--------|---------|---|-----------------|-----------------------|--------------|--------------------|
+| ROME | MQuAKE-CF-3k-v2-one | 25 | 0.4925 | +0.3283 | 0.1200 | +0.0133 |
+| MEMIT | MQuAKE-CF-3k-v2-all | 25 | 0.5821 | +0.4179 | 0.0800 | -0.0267 |
+| IKE | MQuAKE-CF-3k-v2-all | 25 | 0.9104 | +0.7462 | 0.4533 | +0.3466 |
+
+These equal-sample results preserve the earlier pattern: weight-edit methods improve edited-fact recall but do not reliably propagate updates through MQuAKE multihop questions; IKE performs best when the new facts are supplied in context.
+
 New external benchmark runs also log pre-edit rates and deltas:
 
 | Metric | Meaning |
