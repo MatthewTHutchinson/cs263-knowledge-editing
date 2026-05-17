@@ -15,6 +15,23 @@ Format for each entry:
 
 ---
 
+## 2026-05-17 — Equal-sample n=100 external sweeps completed
+
+- The `external_n100` tmux queue finished at `2026-05-17T11:28:01+00:00`; no tmux session is live now.
+- All six n=100 partial files under `results/benchmark_partials/` contain 100 rows each.
+- MQuAKE n=100:
+  - ROME one-edit: edited_fact_acc=0.4650, delta_edited_fact_acc=+0.2797, multihop_acc=0.0733, delta_multihop_acc=+0.0333.
+  - MEMIT all-edit: edited_fact_acc=0.5210, delta_edited_fact_acc=+0.3357, multihop_acc=0.0467, delta_multihop_acc=+0.0067.
+  - IKE all-edit/in-context: edited_fact_acc=0.8601, delta_edited_fact_acc=+0.6748, multihop_acc=0.4800, delta_multihop_acc=+0.4400.
+- RippleEdits POPULAR n=100 with `Relation_Specificity,Logical_Generalization,Subject_Aliasing`:
+  - ROME: overall_acc=0.1232, delta_overall_acc=+0.0514, Relation_Specificity_acc=0.0893, Logical_Generalization_acc=0.0336, Subject_Aliasing_acc=0.2998.
+  - MEMIT: overall_acc=0.0749, delta_overall_acc=+0.0031, Relation_Specificity_acc=0.1137, Logical_Generalization_acc=0.0436, Subject_Aliasing_acc=0.0336.
+  - IKE: overall_acc=0.3526, delta_overall_acc=+0.2808, Relation_Specificity_acc=0.2138, Logical_Generalization_acc=0.2315, Subject_Aliasing_acc=0.7962.
+- Interpretation: equal-sample external results are stable. ROME/MEMIT improve edited-fact recall but show weak multi-hop/ripple propagation; IKE is strongest on MQuAKE multihop and RippleEdits alias/compositional behavior because the new facts are supplied in context.
+- Next: rerun the expanded 225-probe custom diagnostic set on the GPU, then refresh final-report tables.
+
+---
+
 ## 2026-05-17 — n=25 MQuAKE equal-sample results completed
 
 - The `external_sweeps` tmux job completed the equal-sample n=25 MQuAKE block for all three methods.

@@ -2,7 +2,7 @@
 
 Use this file to pick up the project on the VM and move from preliminary midterm results toward final-report results. The midterm report has already been submitted; do not spend time updating `overleaf_midterm/` unless you explicitly need to archive a revised midterm artifact.
 
-Current active run: equal-sample external sweeps were launched on 2026-05-16 in tmux session `external_sweeps`. Logs are written to `logs/external_equal_sweeps_20260516.log`. The n=25 MQuAKE block is complete; the queue is continuing through n=25 RippleEdits, then n=100 MQuAKE/RippleEdits across ROME, MEMIT, and IKE.
+Current active run: none. The equal-sample external sweep queue completed on 2026-05-17 at `2026-05-17T11:28:01+00:00`. Logs are written to `logs/external_n100_20260517_055056.log`, completed run rows are in `results/runs.jsonl`, and completed per-case checkpoints are in `results/benchmark_partials/`.
 
 Update after the 2026-05-17 spot VM interruption: the tmux server was gone, but all n=25 MQuAKE and RippleEdits runs completed and were written to `results/runs.jsonl`. The external benchmark scripts now write per-case partial JSONL files under `results/benchmark_partials/` and automatically resume matching commands unless `--no_resume` is passed.
 
@@ -28,20 +28,20 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
 
 ## Priority Experiments
 
-1. Monitor equal-sample external benchmark sweeps.
+1. Equal-sample external benchmark sweeps are complete.
    - Reason: current final-report claims should use equal sample sizes when comparing methods, and relation specificity was excluded from the earlier RippleEdits report-level rows.
-   - Completed so far:
+   - Completed results:
      - ROME MQuAKE n=25: edited_fact_acc=0.4925, multihop_acc=0.1200, delta_multihop_acc=+0.0133.
      - MEMIT MQuAKE n=25: edited_fact_acc=0.5821, multihop_acc=0.0800, delta_multihop_acc=-0.0267.
      - IKE MQuAKE n=25: edited_fact_acc=0.9104, multihop_acc=0.4533, delta_multihop_acc=+0.3466.
-   - Active session:
-     ```bash
-     tmux capture-pane -pt external_sweeps -S -80
-     tail -f logs/external_equal_sweeps_20260516.log
-     nvidia-smi
-     ```
+     - ROME MQuAKE n=100: edited_fact_acc=0.4650, multihop_acc=0.0733, delta_multihop_acc=+0.0333.
+     - MEMIT MQuAKE n=100: edited_fact_acc=0.5210, multihop_acc=0.0467, delta_multihop_acc=+0.0067.
+     - IKE MQuAKE n=100: edited_fact_acc=0.8601, multihop_acc=0.4800, delta_multihop_acc=+0.4400.
+     - ROME RippleEdits POPULAR n=100: overall_acc=0.1232, delta_overall_acc=+0.0514, Relation_Specificity_acc=0.0893, Logical_Generalization_acc=0.0336, Subject_Aliasing_acc=0.2998.
+     - MEMIT RippleEdits POPULAR n=100: overall_acc=0.0749, delta_overall_acc=+0.0031, Relation_Specificity_acc=0.1137, Logical_Generalization_acc=0.0436, Subject_Aliasing_acc=0.0336.
+     - IKE RippleEdits POPULAR n=100: overall_acc=0.3526, delta_overall_acc=+0.2808, Relation_Specificity_acc=0.2138, Logical_Generalization_acc=0.2315, Subject_Aliasing_acc=0.7962.
    <details>
-   <summary>Queued external-sweep commands</summary>
+   <summary>Completed external-sweep commands</summary>
 
    ```bash
    python scripts/eval_mquake.py --method ROME --n_cases 25 --edit_mode one
@@ -59,9 +59,9 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
    ```
 
    </details>
-   - If the VM interrupts again, rerun the same command or queue. Completed cases are skipped from the matching partial file in `results/benchmark_partials/`.
+   - The partial files remain useful for future larger sweeps: matching commands automatically skip completed cases unless `--no_resume` is passed.
 
-2. After the tmux sweep finishes, regenerate and inspect summaries.
+2. Regenerate and inspect summaries after any new result run.
    ```bash
    python scripts/show_results.py --all
    python scripts/show_results.py --csv_dir results/csv
@@ -69,18 +69,12 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
    ```
    Commit new `results/runs.jsonl` rows and any new `results/benchmark_details/*.json` files that represent completed runs.
 
-3. Rerun or scale if the n=100 results are stable.
+3. Optional scale-up now that n=100 is complete.
    - Preferred scale-up targets: n=250 first, then n=500 if runtime is acceptable.
    - Keep sample sizes equal across ROME, MEMIT, and IKE before making strong method-ranking claims.
+   - The current n=100 pattern is stable relative to n=25 and consistent with the MQuAKE/RippleEdits qualitative story: direct edited-fact recall improves, but ROME/MEMIT do not reliably propagate edits through multi-hop/ripple queries. Treat exact numeric comparison to the papers as non-comparable because this repo uses GPT-2 XL and a local evaluator/prompting setup.
 
-4. Rerun RippleEdits with relation specificity included if the current tmux run fails before RippleEdits.
-   - Reason: local data uses `Relation_Specificity`, but earlier logged runs excluded it because the evaluator used the upstream typo.
-   - Fallback commands:
-     ```bash
-     python3 scripts/eval_ripple_edits.py --method ROME --subset POPULAR --n_cases 10 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
-     python3 scripts/eval_ripple_edits.py --method MEMIT --subset POPULAR --n_cases 10 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
-     python3 scripts/eval_ripple_edits.py --method IKE --subset POPULAR --n_cases 25 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
-     ```
+4. Relation specificity is now covered by the completed n=25/n=100 RippleEdits rows. Do not use the earlier targeted rows as the primary final-report comparison unless explicitly discussing historical pilot runs.
 
 ## Evaluation Improvements
 
@@ -125,7 +119,7 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
 
 2. Create or update the final-report source with the new equal-sample and expanded-probe results.
 
-3. If relation specificity is rerun successfully, replace the current caveat with the new metric values and state whether the criterion changes the RippleEdits conclusion.
+3. Use the completed relation-specificity rows in the final tables and state that this criterion does not change the RippleEdits conclusion: IKE remains strongest, while ROME/MEMIT show weak overall ripple transfer.
 
 4. Keep `overleaf_midterm/` as an archived submitted midterm package unless there is a specific reason to edit it.
 

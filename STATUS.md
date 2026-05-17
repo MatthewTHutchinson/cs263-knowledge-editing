@@ -43,7 +43,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | IKE baseline | Done | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation; local repo records 5, 50, and 100-edit IKE runs |
 | RippleEdits download + eval | Small sweep done | POPULAR targeted logical-generalization/subject-aliasing sweeps complete for ROME n=10 and IKE n=25; local JSONs use `Relation_Specificity`, and the adapter now also accepts upstream's legacy `Relation_Specifity` spelling |
 | MQuAKE download + eval | Small sweep done | IKE all-edit n=25, ROME one-edit n=10, and MEMIT all-edit n=10 complete with pre/post/delta logging |
-| Equal-sample external sweeps | In progress | n=25 MQuAKE complete for ROME/MEMIT/IKE; n=25 RippleEdits and n=100 blocks still running in tmux session `external_sweeps` |
+| Equal-sample external sweeps | Done | n=25 and n=100 MQuAKE/RippleEdits complete for ROME, MEMIT, and IKE; per-case checkpoints saved under `results/benchmark_partials/` |
 | Probe set design | Done | 225 probes across 15 edit topics and 5 balanced categories in `src/probes/probe_set.py`; `probe_type` separates implicit, target-conditioned, and supplied-fact prompts |
 | Probe set evaluation | Needs rerun | Existing `results/probe_results.jsonl` rows are from the earlier 100-probe set; rerun ROME/MEMIT/IKE on the expanded 225-probe set before reporting new probe numbers |
 | Probe validation | Done | `scripts/audit_probes.py --min_total 200 --strict` passed locally on 2026-05-16 |
@@ -83,20 +83,31 @@ MQuAKE/RippleEdits data prep and small external sweeps completed locally on 2026
 - Earlier n=1 smoke runs remain in `results/runs.jsonl` as pipeline checks. Interpret the n=10/n=25 sweeps as the main external benchmark signal for the current report.
 - In the external benchmark scripts, IKE is an in-context/PROMPT-style baseline using benchmark new facts in the prompt, not CounterFact retrieval. For GPT-2 XL RippleEdits runs, the evaluator filters non-ASCII old/new target labels by default.
 
-Equal-sample follow-up sweeps were launched on 2026-05-16 in tmux session `external_sweeps`, with logs at `logs/external_equal_sweeps_20260516.log`. The n=25 MQuAKE block completed on 2026-05-17:
+Equal-sample follow-up sweeps were launched on 2026-05-16 and resumed on 2026-05-17 with per-case checkpointing. The tmux session is no longer live, but the queue completed successfully at `2026-05-17T11:28:01+00:00`; logs are at `logs/external_n100_20260517_055056.log`. The n=25 and n=100 MQuAKE/RippleEdits blocks completed for ROME, MEMIT, and IKE.
 
 | Method | Dataset | N | edited_fact_acc | delta_edited_fact_acc | multihop_acc | delta_multihop_acc |
 |--------|---------|---|-----------------|-----------------------|--------------|--------------------|
 | ROME | MQuAKE-CF-3k-v2-one | 25 | 0.4925 | +0.3283 | 0.1200 | +0.0133 |
 | MEMIT | MQuAKE-CF-3k-v2-all | 25 | 0.5821 | +0.4179 | 0.0800 | -0.0267 |
 | IKE | MQuAKE-CF-3k-v2-all | 25 | 0.9104 | +0.7462 | 0.4533 | +0.3466 |
+| ROME | MQuAKE-CF-3k-v2-one | 100 | 0.4650 | +0.2797 | 0.0733 | +0.0333 |
+| MEMIT | MQuAKE-CF-3k-v2-all | 100 | 0.5210 | +0.3357 | 0.0467 | +0.0067 |
+| IKE | MQuAKE-CF-3k-v2-all | 100 | 0.8601 | +0.6748 | 0.4800 | +0.4400 |
 
-These equal-sample MQuAKE results strengthen the current interpretation: all three methods improve direct edited-fact recall, but ROME/MEMIT show little or negative multihop transfer while IKE benefits substantially from benchmark facts supplied in context.
+These equal-sample MQuAKE results strengthen the current interpretation: all three methods improve direct edited-fact recall, but ROME/MEMIT show little multihop transfer while IKE benefits substantially from benchmark facts supplied in context. The n=100 results are directionally consistent with the MQuAKE paper's finding that ROME/MEMIT achieve strong edited-fact recall but weak multi-hop accuracy after editing. They are not paper-exact replications because this project uses GPT-2 XL, greedy short generations, answer-alias containment scoring, ROME one-edit mode, MEMIT all-edits-per-case mode, and an IKE prompt baseline rather than the paper's GPT-J/Vicuna setup and prompt/evaluation protocol.
 
-The remaining queue continues with n=25 RippleEdits, then n=100 MQuAKE/RippleEdits.
+RippleEdits POPULAR n=100 results with `Relation_Specificity,Logical_Generalization,Subject_Aliasing` included:
+
+| Method | N | overall_acc | delta_overall_acc | Relation_Specificity_acc | Logical_Generalization_acc | Subject_Aliasing_acc | Compositionality_I_acc | Compositionality_II_acc |
+|--------|---|-------------|-------------------|--------------------------|-----------------------------|----------------------|------------------------|-------------------------|
+| ROME | 100 | 0.1232 | +0.0514 | 0.0893 | 0.0336 | 0.2998 | 0.0897 | 0.0423 |
+| MEMIT | 100 | 0.0749 | +0.0031 | 0.1137 | 0.0436 | 0.0336 | 0.0897 | 0.0000 |
+| IKE | 100 | 0.3526 | +0.2808 | 0.2138 | 0.2315 | 0.7962 | 0.1685 | 0.8028 |
+
+The equal-sample RippleEdits results preserve the external-benchmark story: ROME and MEMIT produce small overall gains, while IKE's in-context facts produce much stronger subject-aliasing and compositionality gains. Relation specificity no longer needs to be caveated as missing from the final external comparison; it was included in these n=100 rows.
 
 <details>
-<summary>Remaining equal-sample sweep commands</summary>
+<summary>Completed equal-sample sweep commands</summary>
 
 ```bash
 python scripts/eval_mquake.py --method ROME --n_cases 25 --edit_mode one

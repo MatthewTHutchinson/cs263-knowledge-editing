@@ -213,7 +213,7 @@ STATUS.md             # project map and current state
 
 The larger IKE runs confirm strong in-context rewrite/rephrase behavior on the sampled records, but poor locality: retrieved demonstrations often perturb unrelated neighborhood prompts.
 
-External benchmark runs were added on 2026-05-11. The n=1 rows are smoke tests for the edit/evaluate/restore path; the n=10/n=25 rows are the current report-level external signal.
+External benchmark runs were added on 2026-05-11. The n=1 rows are smoke tests for the edit/evaluate/restore path; the equal-sample n=25/n=100 rows are the preferred report-level external signal.
 
 | Method | Dataset | N | Primary metrics |
 |--------|---------|---|-----------------|
@@ -230,17 +230,31 @@ External benchmark runs were added on 2026-05-11. The n=1 rows are smoke tests f
 | ROME | RippleEdits-POPULAR | 10 | overall_acc=0.160, delta_overall_acc=+0.136, subject_aliasing=0.375, logical_generalization=0.000 |
 | IKE | RippleEdits-POPULAR | 25 | overall_acc=0.347, delta_overall_acc=+0.299, subject_aliasing=0.692, logical_generalization=0.237 |
 
-The main external-benchmark pattern is that IKE's in-context/PROMPT setup gives the strongest MQuAKE and RippleEdits gains, especially on subject aliasing. ROME and MEMIT still achieve direct edited-fact improvements, but multi-hop and logical-generalization transfer remains weak.
+The main external-benchmark pattern is that IKE's in-context/PROMPT setup gives the strongest MQuAKE and RippleEdits gains, especially on MQuAKE multihop, RippleEdits subject aliasing, and RippleEdits compositionality. ROME and MEMIT still achieve direct edited-fact improvements, but multi-hop and logical-generalization transfer remains weak.
 
-Equal-sample MQuAKE n=25 follow-up results were produced on 2026-05-17 while the broader external sweep was still running:
+Equal-sample MQuAKE results:
 
 | Method | Dataset | N | edited_fact_acc | delta_edited_fact_acc | multihop_acc | delta_multihop_acc |
 |--------|---------|---|-----------------|-----------------------|--------------|--------------------|
 | ROME | MQuAKE-CF-3k-v2-one | 25 | 0.4925 | +0.3283 | 0.1200 | +0.0133 |
 | MEMIT | MQuAKE-CF-3k-v2-all | 25 | 0.5821 | +0.4179 | 0.0800 | -0.0267 |
 | IKE | MQuAKE-CF-3k-v2-all | 25 | 0.9104 | +0.7462 | 0.4533 | +0.3466 |
+| ROME | MQuAKE-CF-3k-v2-one | 100 | 0.4650 | +0.2797 | 0.0733 | +0.0333 |
+| MEMIT | MQuAKE-CF-3k-v2-all | 100 | 0.5210 | +0.3357 | 0.0467 | +0.0067 |
+| IKE | MQuAKE-CF-3k-v2-all | 100 | 0.8601 | +0.6748 | 0.4800 | +0.4400 |
 
-These equal-sample results preserve the earlier pattern: weight-edit methods improve edited-fact recall but do not reliably propagate updates through MQuAKE multihop questions; IKE performs best when the new facts are supplied in context.
+Equal-sample RippleEdits POPULAR results with `Relation_Specificity,Logical_Generalization,Subject_Aliasing` included:
+
+| Method | N | overall_acc | delta_overall_acc | relation_specificity | logical_generalization | subject_aliasing | compositionality_I | compositionality_II |
+|--------|---|-------------|-------------------|----------------------|------------------------|------------------|-------------------|--------------------|
+| ROME | 25 | 0.0971 | +0.0198 | 0.0829 | 0.0423 | 0.1789 | 0.0992 | 0.0000 |
+| MEMIT | 25 | 0.0683 | -0.0090 | 0.1073 | 0.0704 | 0.0081 | 0.0826 | 0.0000 |
+| IKE | 25 | 0.3759 | +0.2986 | 0.2000 | 0.2676 | 0.8699 | 0.1322 | 0.9286 |
+| ROME | 100 | 0.1232 | +0.0514 | 0.0893 | 0.0336 | 0.2998 | 0.0897 | 0.0423 |
+| MEMIT | 100 | 0.0749 | +0.0031 | 0.1137 | 0.0436 | 0.0336 | 0.0897 | 0.0000 |
+| IKE | 100 | 0.3526 | +0.2808 | 0.2138 | 0.2315 | 0.7962 | 0.1685 | 0.8028 |
+
+These equal-sample results preserve the earlier pattern: weight-edit methods improve edited-fact recall but do not reliably propagate updates through MQuAKE multihop or RippleEdits ripple queries; IKE performs best when the new facts are supplied in context. Exact paper-number comparison is not appropriate because this repo uses GPT-2 XL, short greedy generations, answer-alias containment scoring, and a local prompt-style IKE baseline.
 
 New external benchmark runs also log pre-edit rates and deltas:
 
@@ -384,7 +398,7 @@ Current local files:
 
 The local RippleEdits files use `Relation_Specificity`; the upstream repository has also used the misspelled key `Relation_Specifity`. The adapter accepts both spellings and reports the metric under the corrected `Relation_Specificity` name.
 
-The earlier POPULAR sweeps in `results/runs.jsonl` were targeted at logical generalization and subject aliasing. Equal-sample reruns with `Relation_Specificity` are now the preferred rows for final-report tables once the active sweep finishes.
+The earlier POPULAR sweeps in `results/runs.jsonl` were targeted at logical generalization and subject aliasing. Equal-sample reruns with `Relation_Specificity` are now complete and should be the preferred rows for final-report tables.
 
 For GPT-2 XL RippleEdits runs, `scripts/eval_ripple_edits.py` filters non-ASCII old/new target labels by default. Pass `--allow_non_ascii_targets` only if intentionally testing those cases.
 
