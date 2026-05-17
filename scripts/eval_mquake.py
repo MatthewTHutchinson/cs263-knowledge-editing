@@ -44,6 +44,41 @@ HPARAMS = {
 }
 
 
+def safe_key(value: str) -> str:
+    return "".join(ch.lower() if ch.isalnum() else "_" for ch in value).strip("_")
+
+
+def partial_path_for(args) -> Path:
+    os.makedirs("results/benchmark_partials", exist_ok=True)
+    case_part = "sample"
+    if args.case_ids:
+        case_part = safe_key(f"ids_{args.case_ids}")
+    return Path("results/benchmark_partials") / (
+        f"mquake_{args.method.lower()}_{args.edit_mode}_"
+        f"n{args.n_cases}_seed{args.seed}_{case_part}_tok{args.max_new_tokens}.jsonl"
+    )
+
+
+def load_partial_results(path: Path) -> dict[int, dict[str, Any]]:
+    completed = {}
+    if not path.exists():
+        return completed
+    with path.open() as f:
+        for line in f:
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            completed[int(row["sample_index"])] = row["result"]
+    return completed
+
+
+def append_partial_result(path: Path, sample_index: int, result: dict[str, Any]) -> None:
+    with path.open("a") as f:
+        f.write(json.dumps({"sample_index": sample_index, "result": result}) + "\n")
+        f.flush()
+        os.fsync(f.fileno())
+
+
 def load_model(model_name: str, device: str):
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     tok = AutoTokenizer.from_pretrained(model_name)
@@ -204,6 +239,8 @@ def main() -> None:
     parser.add_argument("--case_ids", default=None,
                         help="Optional comma-separated MQuAKE case_id values to run instead of random sampling")
     parser.add_argument("--max_new_tokens", type=int, default=12)
+    parser.add_argument("--no_resume", action="store_true",
+                        help="Ignore any matching partial-result file and start this run from scratch")
     args = parser.parse_args()
 
     assert torch.cuda.is_available(), "CUDA required"
@@ -227,8 +264,19 @@ def main() -> None:
     print(f"Loading {hparams.model_name} for {args.method} on {device} ...")
     model, tok = load_model(hparams.model_name, device)
 
-    details = []
+    partial_path = partial_path_for(args)
+    if args.no_resume and partial_path.exists():
+        partial_path.unlink()
+    completed = {} if args.no_resume else load_partial_results(partial_path)
+    if completed:
+        print(f"Loaded {len(completed)} completed cases from {partial_path}")
+
+    details = [completed[i] for i in sorted(completed) if i < len(sample)]
     for idx, record in enumerate(sample, start=1):
+        sample_index = idx - 1
+        if sample_index in completed:
+            print(f"\nCase {idx}/{len(sample)} id={record.get('case_id')} already complete; skipping")
+            continue
         eval_case = record_to_eval_case(record)
         requests = record_to_requests(record)
         if args.edit_mode == "one":
@@ -237,15 +285,23 @@ def main() -> None:
         pre = evaluate_case(model, tok, device, record, args.max_new_tokens)
         if args.method == "IKE":
             post = evaluate_case(model, tok, device, record, args.max_new_tokens, in_context_requests=requests)
-            details.append({"case_id": record.get("case_id"), "pre": pre, "post": post})
+            result = {"case_id": record.get("case_id"), "pre": pre, "post": post}
+            completed[sample_index] = result
+            append_partial_result(partial_path, sample_index, result)
         else:
             original = capture_weights(model, hparams)
             try:
                 apply_case_edits(args.method, model, tok, hparams, requests)
                 post = evaluate_case(model, tok, device, record, args.max_new_tokens)
-                details.append({"case_id": record.get("case_id"), "pre": pre, "post": post})
+                result = {"case_id": record.get("case_id"), "pre": pre, "post": post}
+                completed[sample_index] = result
+                append_partial_result(partial_path, sample_index, result)
             finally:
                 restore_weights(model, original)
+
+    details = [completed[i] for i in range(len(sample)) if i in completed]
+    if len(details) != len(sample):
+        raise RuntimeError(f"Expected {len(sample)} completed cases, found {len(details)}")
 
     metrics = summarize(details)
     print("\nMQuAKE summary")
@@ -265,6 +321,7 @@ def main() -> None:
         "seed": args.seed,
         "metrics": metrics,
         "details_path": str(detail_path),
+        "partial_path": str(partial_path),
     }
     with open("results/runs.jsonl", "a") as f:
         f.write(json.dumps(run_record) + "\n")

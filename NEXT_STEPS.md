@@ -4,6 +4,8 @@ Use this file to pick up the project on the VM and move from preliminary midterm
 
 Current active run: equal-sample external sweeps were launched on 2026-05-16 in tmux session `external_sweeps`. Logs are written to `logs/external_equal_sweeps_20260516.log`. The n=25 MQuAKE block is complete; the queue is continuing through n=25 RippleEdits, then n=100 MQuAKE/RippleEdits across ROME, MEMIT, and IKE.
 
+Update after the 2026-05-17 spot VM interruption: the tmux server was gone, but all n=25 MQuAKE and RippleEdits runs completed and were written to `results/runs.jsonl`. The external benchmark scripts now write per-case partial JSONL files under `results/benchmark_partials/` and automatically resume matching commands unless `--no_resume` is passed.
+
 ## Immediate Checks
 
 1. Pull latest repo changes on the VM:
@@ -38,7 +40,6 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
      tail -f logs/external_equal_sweeps_20260516.log
      nvidia-smi
      ```
-
    <details>
    <summary>Queued external-sweep commands</summary>
 
@@ -58,6 +59,7 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
    ```
 
    </details>
+   - If the VM interrupts again, rerun the same command or queue. Completed cases are skipped from the matching partial file in `results/benchmark_partials/`.
 
 2. After the tmux sweep finishes, regenerate and inspect summaries.
    ```bash

@@ -46,6 +46,42 @@ HPARAMS = {
 }
 
 
+def safe_key(value: str) -> str:
+    return "".join(ch.lower() if ch.isalnum() else "_" for ch in value).strip("_")
+
+
+def partial_path_for(args) -> Path:
+    os.makedirs("results/benchmark_partials", exist_ok=True)
+    relation_part = safe_key(args.relations or "all_relations")
+    criteria_part = safe_key(args.require_criteria or "all_criteria")
+    ascii_part = "allow_non_ascii" if args.allow_non_ascii_targets else "ascii"
+    data_part = safe_key(args.data_path or args.subset)
+    return Path("results/benchmark_partials") / (
+        f"ripple_{data_part}_{args.method.lower()}_n{args.n_cases}_seed{args.seed}_"
+        f"{relation_part}_{criteria_part}_{ascii_part}_tok{args.max_new_tokens}.jsonl"
+    )
+
+
+def load_partial_results(path: Path) -> dict[int, dict[str, Any]]:
+    completed = {}
+    if not path.exists():
+        return completed
+    with path.open() as f:
+        for line in f:
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            completed[int(row["sample_index"])] = row["result"]
+    return completed
+
+
+def append_partial_result(path: Path, sample_index: int, result: dict[str, Any]) -> None:
+    with path.open("a") as f:
+        f.write(json.dumps({"sample_index": sample_index, "result": result}) + "\n")
+        f.flush()
+        os.fsync(f.fileno())
+
+
 def load_model(model_name: str, device: str):
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     tok = AutoTokenizer.from_pretrained(model_name)
@@ -184,6 +220,8 @@ def main() -> None:
                         help="Optional comma-separated relation names to include before sampling")
     parser.add_argument("--require_criteria", default=None,
                         help="Optional comma-separated criteria that must have at least one test query")
+    parser.add_argument("--no_resume", action="store_true",
+                        help="Ignore any matching partial-result file and start this run from scratch")
     args = parser.parse_args()
 
     assert torch.cuda.is_available(), "CUDA required"
@@ -226,22 +264,42 @@ def main() -> None:
     print(f"Loading {hparams.model_name} for {args.method} on {device} ...")
     model, tok = load_model(hparams.model_name, device)
 
-    details = []
+    partial_path = partial_path_for(args)
+    if args.no_resume and partial_path.exists():
+        partial_path.unlink()
+    completed = {} if args.no_resume else load_partial_results(partial_path)
+    if completed:
+        print(f"Loaded {len(completed)} completed cases from {partial_path}")
+
+    details = [completed[i] for i in sorted(completed) if i < len(sample)]
     for idx, record in enumerate(sample, start=1):
+        sample_index = idx - 1
+        if sample_index in completed:
+            request = edit_to_request(record)
+            print(f"\nCase {idx}/{len(sample)} relation={record.get('edit', {}).get('relation')} subject={request['subject']!r} already complete; skipping")
+            continue
         request = edit_to_request(record)
         print(f"\nCase {idx}/{len(sample)} relation={record.get('edit', {}).get('relation')} subject={request['subject']!r}")
         pre = evaluate_record(model, tok, device, record, args.max_new_tokens)
         if args.method == "IKE":
             post = evaluate_record(model, tok, device, record, args.max_new_tokens, in_context_request=request)
-            details.append({"request": request, "pre": pre, "post": post})
+            result = {"request": request, "pre": pre, "post": post}
+            completed[sample_index] = result
+            append_partial_result(partial_path, sample_index, result)
         else:
             original = capture_weights(model, hparams)
             try:
                 apply_edit(args.method, model, tok, hparams, request)
                 post = evaluate_record(model, tok, device, record, args.max_new_tokens)
-                details.append({"request": request, "pre": pre, "post": post})
+                result = {"request": request, "pre": pre, "post": post}
+                completed[sample_index] = result
+                append_partial_result(partial_path, sample_index, result)
             finally:
                 restore_weights(model, original)
+
+    details = [completed[i] for i in range(len(sample)) if i in completed]
+    if len(details) != len(sample):
+        raise RuntimeError(f"Expected {len(sample)} completed cases, found {len(details)}")
 
     metrics = summarize(details)
     print("\nRippleEdits summary")
@@ -261,6 +319,7 @@ def main() -> None:
         "seed": args.seed,
         "metrics": metrics,
         "details_path": str(detail_path),
+        "partial_path": str(partial_path),
     }
     with open("results/runs.jsonl", "a") as f:
         f.write(json.dumps(run_record) + "\n")
