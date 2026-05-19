@@ -7,7 +7,7 @@ For each edit case in the probe set:
   3. Record: pre-edit prediction, post-edit prediction, pass/fail vs expected.
   4. Restore the base model before the next edit case.
 
-Results are written to results/probe_results.jsonl and a summary table is printed.
+Results are written to results/probe_results_225.jsonl and a summary table is printed.
 Existing rows in the output file are treated as checkpoints: rerunning the same
 method/output path skips completed probes and continues with missing rows.
 
@@ -231,7 +231,7 @@ def main():
                         help="CounterFact file used for the IKE retrieval pool")
     parser.add_argument("--edit_keys", default=None,
                         help="Comma-separated edit_keys to run (default: all)")
-    parser.add_argument("--output_path", default="results/probe_results.jsonl",
+    parser.add_argument("--output_path", default="results/probe_results_225.jsonl",
                         help="JSONL path to append probe results")
     parser.add_argument("--no_resume", action="store_true",
                         help="Do not skip rows already present in --output_path")

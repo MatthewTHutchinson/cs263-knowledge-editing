@@ -84,7 +84,7 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
 
 1. Expanded custom probe set is complete.
    - Current source has 225 probes: 15 edit topics x 5 categories x 3 probes.
-   - The completed 225-probe results are in `results/probe_results_225.jsonl`; do not mix them with the earlier 100-probe `results/probe_results.jsonl`.
+   - The completed 225-probe results are in `results/probe_results_225.jsonl`; do not mix them with the earlier 100-probe `results/legacy/probe_results_100_legacy.jsonl`.
    - Summary command:
      ```bash
      python3 scripts/show_results.py --probes --probes_path results/probe_results_225.jsonl
@@ -108,7 +108,7 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
 
 3. Reconfirm all reported results end-to-end before final report writing.
    - Check that each method uses the intended editing mode: ROME single-edit restored per case, MEMIT single-edit and true batch where labeled, and IKE in-context only.
-   - Check that each table value can be traced to `results/runs.jsonl`, `results/probe_results.jsonl`, or regenerated CSVs.
+   - Check that each table value can be traced to `results/runs.jsonl`, `results/probe_results_225.jsonl`, or regenerated CSVs.
    - Re-run unit tests, benchmark inspectors, and result summaries after any evaluator change.
    - Record any rerun commands and seeds in `STATUS.md` so the final report is reproducible.
 

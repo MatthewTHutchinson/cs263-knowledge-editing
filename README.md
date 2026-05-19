@@ -188,7 +188,8 @@ data/mquake/          # downloaded MQuAKE-CF-3k-v2 benchmark
 data/ripple_edits/    # downloaded RippleEdits POPULAR/RANDOM/RECENT subsets
 data/stats/           # ROME/MEMIT covariance cache; stable GPT-2 XL .npz files tracked via Git LFS
 results/runs.jsonl    # structured run log (all experiments)
-results/probe_results.jsonl # per-probe ROME/MEMIT/IKE diagnostic results
+results/probe_results_225.jsonl # final 225-probe ROME/MEMIT/IKE diagnostic results
+results/legacy/       # archived pilot/legacy outputs not used for final tables
 src/benchmarks/       # MQuAKE/RippleEdits adapters, scoring, and summaries
 src/probes/           # 225 generated, class-balanced diagnostic probes
 overleaf_midterm/     # archived submitted midterm Overleaf package
@@ -286,7 +287,7 @@ The EasyEdit CounterFact rephrase prompts are noisy, so existing `rephrase_acc` 
 
 ### Diagnostic Probe Results
 
-ROME, MEMIT, and IKE probe sweeps completed on the expanded 225-probe set on the GCP T4 VM on 2026-05-17. Results are stored in `results/probe_results_225.jsonl`; the earlier `results/probe_results.jsonl` rows are from the old 100-probe set and should not be mixed with the table below.
+ROME, MEMIT, and IKE probe sweeps completed on the expanded 225-probe set on the GCP T4 VM on 2026-05-17. Results are stored in `results/probe_results_225.jsonl`; the earlier `results/legacy/probe_results_100_legacy.jsonl` rows are from the old 100-probe set and should not be mixed with the table below.
 
 | Method | N probes | Pre pass | Post pass | Delta |
 |--------|----------|----------|-----------|-------|

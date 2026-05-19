@@ -1,5 +1,5 @@
 """
-Summarize results/runs.jsonl and optionally results/probe_results.jsonl.
+Summarize results/runs.jsonl and optionally results/probe_results_225.jsonl.
 
 Usage:
     python scripts/show_results.py               # baseline runs table
@@ -16,7 +16,10 @@ import os
 from collections import defaultdict
 
 RUNS_PATH   = os.path.join(os.path.dirname(__file__), "..", "results", "runs.jsonl")
-PROBES_PATH = os.path.join(os.path.dirname(__file__), "..", "results", "probe_results.jsonl")
+PROBES_PATH = os.path.join(os.path.dirname(__file__), "..", "results", "probe_results_225.jsonl")
+LEGACY_PROBES_PATH = os.path.join(
+    os.path.dirname(__file__), "..", "results", "legacy", "probe_results_100_legacy.jsonl"
+)
 DEFAULT_CSV_DIR = os.path.join(os.path.dirname(__file__), "..", "results", "csv")
 
 PAPER_TARGETS = {
@@ -29,6 +32,13 @@ PAPER_TARGETS = {
 REPHRASE_RELATIVE = {"ROME", "MEMIT", "MEMIT-batch", "IKE"}
 
 CORE_METRICS = {"rewrite_acc", "rephrase_acc", "locality_acc"}
+
+
+def run_label(run: dict) -> str:
+    method = run.get("method", "?")
+    if method == "IKE" and "k" in run:
+        return f"{method} k={run['k']}"
+    return method
 
 
 def is_core_run(run: dict) -> bool:
@@ -78,6 +88,7 @@ def show_baseline_table(runs: list[dict]) -> None:
     for i, r in enumerate(runs):
         m     = r.get("metrics", {})
         method = r.get("method", "?")
+        label = run_label(r)
         paper  = PAPER_TARGETS.get(method, {})
 
         rw = m.get("rewrite_acc")
@@ -87,7 +98,7 @@ def show_baseline_table(runs: list[dict]) -> None:
         rp_note = "*" if method in REPHRASE_RELATIVE else " "
 
         print(
-            f"  {i:<3} {r.get('timestamp','')[:10]:<11} {method:<12} "
+            f"  {i:<3} {r.get('timestamp','')[:10]:<11} {label:<12} "
             f"{r.get('dataset','?'):<24} {r.get('n_samples',0):>5} "
             f"{fmt(rw)}{delta_str(rw, paper.get('rewrite_acc')):>7}  "
             f"{fmt(rp)}{delta_str(rp, paper.get('rephrase_acc')):>7}{rp_note} "
@@ -100,23 +111,19 @@ def show_baseline_table(runs: list[dict]) -> None:
 
 
 def show_method_summary(runs: list[dict]) -> None:
-    """Print best single-edit run per method with paper comparison."""
+    """Print latest single-edit run per method with paper comparison."""
     seen: dict[str, dict] = {}
     for r in [run for run in runs if is_core_run(run)]:
         method = r.get("method", "?")
         if "batch" in method.lower():
             continue
-        if method not in seen:
-            seen[method] = r
-        elif (r.get("metrics", {}).get("rewrite_acc") or 0) > \
-             (seen[method].get("metrics", {}).get("rewrite_acc") or 0):
-            seen[method] = r
+        seen[method] = r
 
     if not seen:
         return
 
     print("\n" + "=" * 72)
-    print("  METHOD COMPARISON (best single-edit run per method)")
+    print("  METHOD COMPARISON (latest single-edit run per method)")
     print("=" * 72)
     print(f"  {'Method':<12} {'Rewrite':>8} {'Paper':>7} {'Δ':>7}  "
           f"{'Locality':>9} {'Paper':>7} {'Δ':>7}")
@@ -126,7 +133,7 @@ def show_method_summary(runs: list[dict]) -> None:
         paper = PAPER_TARGETS.get(method, {})
         rw = m.get("rewrite_acc")
         lo = m.get("locality_acc")
-        print(f"  {method:<12} {fmt(rw)} {fmt(paper.get('rewrite_acc'))} "
+        print(f"  {run_label(r):<12} {fmt(rw)} {fmt(paper.get('rewrite_acc'))} "
               f"{delta_str(rw, paper.get('rewrite_acc'))}  "
               f"{fmt(lo)} {fmt(paper.get('locality_acc'))} "
               f"{delta_str(lo, paper.get('locality_acc'))}")
@@ -359,6 +366,7 @@ def export_csv(runs: list[dict], probe_results: list[dict], out_dir: str) -> Non
             "dataset": r.get("dataset"),
             "n_samples": r.get("n_samples"),
             "seed": r.get("seed"),
+            "k": r.get("k"),
             "rewrite_acc": metrics.get("rewrite_acc"),
             "rephrase_acc": metrics.get("rephrase_acc"),
             "locality_acc": metrics.get("locality_acc"),
@@ -371,6 +379,7 @@ def export_csv(runs: list[dict], probe_results: list[dict], out_dir: str) -> Non
             "overall_acc": metrics.get("overall_acc"),
             "pre_overall_acc": metrics.get("pre_overall_acc"),
             "delta_overall_acc": metrics.get("delta_overall_acc"),
+            "Relation_Specificity_acc": metrics.get("Relation_Specificity_acc"),
             "Logical_Generalization_acc": metrics.get("Logical_Generalization_acc"),
             "Subject_Aliasing_acc": metrics.get("Subject_Aliasing_acc"),
             "Compositionality_I_acc": metrics.get("Compositionality_I_acc"),
@@ -382,11 +391,12 @@ def export_csv(runs: list[dict], probe_results: list[dict], out_dir: str) -> Non
         os.path.join(out_dir, "runs.csv"),
         run_rows,
         ["timestamp", "method", "model", "dataset", "n_samples", "seed",
+         "k",
          "rewrite_acc", "rephrase_acc", "locality_acc",
          "pre_edited_fact_acc", "edited_fact_acc", "delta_edited_fact_acc",
          "pre_multihop_acc", "multihop_acc", "delta_multihop_acc",
          "pre_overall_acc", "overall_acc", "delta_overall_acc",
-         "Logical_Generalization_acc", "Subject_Aliasing_acc",
+         "Relation_Specificity_acc", "Logical_Generalization_acc", "Subject_Aliasing_acc",
          "Compositionality_I_acc", "Compositionality_II_acc", "Forgetfulness_acc"],
     )
 
@@ -458,6 +468,11 @@ def main():
         probe_results = load_jsonl(args.probes_path)
 
     if show_probes:
+        if os.path.abspath(args.probes_path) == os.path.abspath(LEGACY_PROBES_PATH):
+            print("\nNote: summarizing legacy 100-probe results. "
+                  "Use --probes_path results/probe_results_225.jsonl for final report results.")
+        else:
+            print(f"\nProbe source: {args.probes_path}")
         show_probe_summary(probe_results)
 
     if args.csv_dir:

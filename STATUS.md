@@ -45,7 +45,7 @@ Quick reference for current state, what's done, what's next. Update this wheneve
 | MQuAKE download + eval | Small sweep done | IKE all-edit n=25, ROME one-edit n=10, and MEMIT all-edit n=10 complete with pre/post/delta logging |
 | Equal-sample external sweeps | Done | n=25 and n=100 MQuAKE/RippleEdits complete for ROME, MEMIT, and IKE; per-case checkpoints saved under `results/benchmark_partials/` |
 | Probe set design | Done | 225 probes across 15 edit topics and 5 balanced categories in `src/probes/probe_set.py`; `probe_type` separates implicit, target-conditioned, and supplied-fact prompts |
-| Probe set evaluation | Done | Expanded 225-probe ROME/MEMIT/IKE run completed on 2026-05-17 with 675 rows in `results/probe_results_225.jsonl`; old `results/probe_results.jsonl` remains the earlier 100-probe set. |
+| Probe set evaluation | Done | Expanded 225-probe ROME/MEMIT/IKE run completed on 2026-05-17 with 675 rows in `results/probe_results_225.jsonl`; old `results/legacy/probe_results_100_legacy.jsonl` remains archived as the earlier 100-probe set. |
 | Probe validation | Done | `scripts/audit_probes.py --min_total 225 --strict` passed locally on 2026-05-17 |
 | Local tests | Done | `python3 -m unittest discover -s tests` passed locally on 2026-05-17 with 15 tests; tests cover MEMIT batch metric semantics, IKE embedding-cache logic, CounterFact conversion, and probe-set balance |
 | Results summarization | Done | `scripts/show_results.py` updated with comparison table, batch sweep, probe summary by category/type, ASCII plot, CSV export |
@@ -299,7 +299,7 @@ Prompt the model to *explain its reasoning* about the edited fact.
   - `implicit_edit`: the prompt does not state the new fact and should test whether the edit transfers to a new surface form.
   - `target_conditioned`: the prompt conditions on the edited target value but does not directly assert the full subject-target fact; useful for inverse and forced-choice tests.
   - `supplied_fact_reasoning`: the prompt states the edited fact and tests whether the model can reason from it. These should be analyzed separately because the base model may pass them pre-edit.
-- `scripts/run_probes.py` currently supports ROME, MEMIT, and IKE, restores weights after each parametric edit, and writes records to `results/probe_results.jsonl`.
+- `scripts/run_probes.py` currently supports ROME, MEMIT, and IKE, restores weights after each parametric edit, and writes records to `results/probe_results_225.jsonl` by default.
 - `scripts/show_results.py --probes` summarizes probe results by category and by `probe_type`.
 - `scripts/audit_probes.py` checks unique IDs, valid labels, coverage, expected answers, and target leakage in `implicit_edit` prompts.
 
@@ -335,7 +335,7 @@ External benchmark sweep records were committed at `3878d54`. The prior remote c
 Canonical tracked result files:
 
 - `results/runs.jsonl`
-- `results/probe_results.jsonl`
+- `results/probe_results_225.jsonl`
 - `results/benchmark_details/*.json`
 
 Generated CSV exports under `results/csv/` are intentionally gitignored. Regenerate them with:
