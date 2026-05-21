@@ -15,6 +15,18 @@ Format for each entry:
 
 ---
 
+## 2026-05-19 — CounterFact generation audit completed
+
+- Confirmed the CounterFact original n=300 per-example checkpoints exist locally under `results/checkpoints/` for ROME, MEMIT, and IKE `k=4/8/16`, but the directory is gitignored.
+- Clarified the missing artifact: CounterFact checkpoints store prompts, targets, locality expected answers, and pre/post metric flags, but not decoded generated text. This is not IKE-specific, but it is most important for qualitative IKE locality-failure examples.
+- Probe results and MQuAKE/RippleEdits detail files already include decoded generations, so the gap is limited to CounterFact baseline checkpoints.
+- Added and ran `scripts/audit_ike_counterfact_locality.py --n_examples 20` on the CUDA VM. Output is `results/ike_counterfact_locality_examples.json`.
+- The audit selected 20 IKE locality failures that are stable across `k=4/8/16`. Across the 60 post-context k/example pairs, `metric_matches_pre_context` is false for all 60, matching the checkpointed locality-failure criterion.
+- Important interpretation: EasyEdit CounterFact locality compares post-context greedy answer-token predictions against the pre-context model predictions, not simply against dataset ground truth containment in free generation. The audit therefore saves both unconstrained free generations and `metric_token_prediction` spans; use the metric-token fields for the final-report locality table.
+- Next: extract 10-20 rows from the audit JSON into the final report.
+
+---
+
 ## 2026-05-17 — Original CounterFact n=300 and IKE k ablation completed
 
 - Completed the original-paraphrase CounterFact n=300 runs on GPT-2 XL for ROME, MEMIT, and IKE using `data/counterfact/counterfact-original-easyedit.json`.

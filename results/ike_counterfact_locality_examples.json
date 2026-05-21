@@ -1,0 +1,1882 @@
+[
+  {
+    "case_id": 2,
+    "sample_index": 144,
+    "subject": "Toko Yasuda",
+    "request": {
+      "prompt": "Toko Yasuda, the",
+      "subject": "Toko Yasuda",
+      "target_new": "piano",
+      "ground_truth": "guitar"
+    },
+    "locality": {
+      "prompt": "John Lennon plays the",
+      "ground_truth": "guitar"
+    },
+    "timestamp": "2026-05-19T02:41:13.610354",
+    "pre_context": {
+      "first_token": "piano",
+      "generation": "piano at the Beatles' Abbey Road studios in London in this",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          19132
+        ],
+        "decoded": "piano",
+        "expected_token_ids": [
+          10047
+        ],
+        "expected_decoded": "guitar",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "guitar",
+        "generation": "guitar\n\nNew Fact: Andor Toth performs on",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            10047
+          ],
+          "decoded": "guitar",
+          "expected_token_ids": [
+            10047
+          ],
+          "expected_decoded": "guitar",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "guitar",
+        "generation": "guitar\n\nNew Fact: Andor Toth performs on",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            10047
+          ],
+          "decoded": "guitar",
+          "expected_token_ids": [
+            10047
+          ],
+          "expected_decoded": "guitar",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "guitar",
+        "generation": "guitar\n\nNew Fact: Andor Toth performs on",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            10047
+          ],
+          "decoded": "guitar",
+          "expected_token_ids": [
+            10047
+          ],
+          "expected_decoded": "guitar",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 26,
+    "sample_index": 27,
+    "subject": "Billy Roche",
+    "request": {
+      "prompt": "Billy Roche, who works as",
+      "subject": "Billy Roche",
+      "target_new": "architect",
+      "ground_truth": "actor"
+    },
+    "locality": {
+      "prompt": "Meryl Streep works as",
+      "ground_truth": "actor"
+    },
+    "timestamp": "2026-05-19T02:41:21.405056",
+    "pre_context": {
+      "first_token": "a",
+      "generation": "a producer on the film.\n\nThe film is based",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          257
+        ],
+        "decoded": "a",
+        "expected_token_ids": [
+          8674
+        ],
+        "expected_decoded": "actor",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "actress",
+        "generation": "actress\n\nNew Fact: Billy Roche, who works as",
+        "passed_contains_expected": false,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            14549
+          ],
+          "decoded": "actress",
+          "expected_token_ids": [
+            8674
+          ],
+          "expected_decoded": "actor",
+          "matches_expected_tokens": false
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "actor",
+        "generation": "actor\n\nNew Fact: Billy Roche, who works as",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            8674
+          ],
+          "decoded": "actor",
+          "expected_token_ids": [
+            8674
+          ],
+          "expected_decoded": "actor",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "actress",
+        "generation": "actress\n\nNew Fact: John Cygan, who works",
+        "passed_contains_expected": false,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            14549
+          ],
+          "decoded": "actress",
+          "expected_token_ids": [
+            8674
+          ],
+          "expected_decoded": "actor",
+          "matches_expected_tokens": false
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 29,
+    "sample_index": 187,
+    "subject": "Kryvyi Rih",
+    "request": {
+      "prompt": "Kryvyi Rih belongs to the continent of",
+      "subject": "Kryvyi Rih",
+      "target_new": "Antarctica",
+      "ground_truth": "Europe"
+    },
+    "locality": {
+      "prompt": "S\u00e4ntis is located in",
+      "ground_truth": "Europe"
+    },
+    "timestamp": "2026-05-19T02:41:29.314845",
+    "pre_context": {
+      "first_token": "the",
+      "generation": "the heart of the city, in the heart of the city",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          262
+        ],
+        "decoded": "the",
+        "expected_token_ids": [
+          2031
+        ],
+        "expected_decoded": "Europe",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "Europe",
+        "generation": "Europe\n\nNew Fact: Mount Karisimbi belongs",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            2031
+          ],
+          "decoded": "Europe",
+          "expected_token_ids": [
+            2031
+          ],
+          "expected_decoded": "Europe",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "Europe",
+        "generation": "Europe\n\nNew Fact: Mount Karisimbi belongs",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            2031
+          ],
+          "decoded": "Europe",
+          "expected_token_ids": [
+            2031
+          ],
+          "expected_decoded": "Europe",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "Europe",
+        "generation": "Europe\n\nNew Fact: Mount Karisimbi belongs",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            2031
+          ],
+          "decoded": "Europe",
+          "expected_token_ids": [
+            2031
+          ],
+          "expected_decoded": "Europe",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 79,
+    "sample_index": 148,
+    "subject": "Roberto Clemente",
+    "request": {
+      "prompt": "Roberto Clemente plays",
+      "subject": "Roberto Clemente",
+      "target_new": "football",
+      "ground_truth": "baseball"
+    },
+    "locality": {
+      "prompt": "Jackie Robinson, the",
+      "ground_truth": "baseball"
+    },
+    "timestamp": "2026-05-19T02:41:37.288192",
+    "pre_context": {
+      "first_token": "first",
+      "generation": "first African-American to play in the major leagues, was",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          717
+        ],
+        "decoded": "first",
+        "expected_token_ids": [
+          9283
+        ],
+        "expected_decoded": "baseball",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "baseball",
+        "generation": "baseball\n\nNew Fact: Satchel Paige professionally plays the",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            9283
+          ],
+          "decoded": "baseball",
+          "expected_token_ids": [
+            9283
+          ],
+          "expected_decoded": "baseball",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "baseball",
+        "generation": "baseball\n\nNew Fact: Satchel Paige professionally plays the",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            9283
+          ],
+          "decoded": "baseball",
+          "expected_token_ids": [
+            9283
+          ],
+          "expected_decoded": "baseball",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "baseball",
+        "generation": "baseball\n\nNew Fact: Satchel Paige professionally plays the",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            9283
+          ],
+          "decoded": "baseball",
+          "expected_token_ids": [
+            9283
+          ],
+          "expected_decoded": "baseball",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 130,
+    "sample_index": 11,
+    "subject": "Saratov Oblast",
+    "request": {
+      "prompt": "Saratov Oblast, in",
+      "subject": "Saratov Oblast",
+      "target_new": "Virginia",
+      "ground_truth": "Russia"
+    },
+    "locality": {
+      "prompt": "Bolshoi Zelenchuk, in",
+      "ground_truth": "Russia"
+    },
+    "timestamp": "2026-05-19T02:41:45.036488",
+    "pre_context": {
+      "first_token": "the",
+      "generation": "the first place, was a member of the Communist Party of",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          262
+        ],
+        "decoded": "the",
+        "expected_token_ids": [
+          3284
+        ],
+        "expected_decoded": "Russia",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "Russia",
+        "generation": "Russia\n\nNew Fact: Saratov Oblast,",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            3284
+          ],
+          "decoded": "Russia",
+          "expected_token_ids": [
+            3284
+          ],
+          "expected_decoded": "Russia",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "Russia",
+        "generation": "Russia\n\nNew Fact: Pochepsky District,",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            3284
+          ],
+          "decoded": "Russia",
+          "expected_token_ids": [
+            3284
+          ],
+          "expected_decoded": "Russia",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "Russia",
+        "generation": "Russia\n\nNew Fact: Pochepsky District,",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            3284
+          ],
+          "decoded": "Russia",
+          "expected_token_ids": [
+            3284
+          ],
+          "expected_decoded": "Russia",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 131,
+    "sample_index": 82,
+    "subject": "Paul Biegel",
+    "request": {
+      "prompt": "Paul Biegel, a native",
+      "subject": "Paul Biegel",
+      "target_new": "French",
+      "ground_truth": "Dutch"
+    },
+    "locality": {
+      "prompt": "Rob Birza, speaker of",
+      "ground_truth": "Dutch"
+    },
+    "timestamp": "2026-05-19T02:41:53.070467",
+    "pre_context": {
+      "first_token": "the",
+      "generation": "the House of Commons, said the government was \"very concerned",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          262
+        ],
+        "decoded": "the",
+        "expected_token_ids": [
+          10914
+        ],
+        "expected_decoded": "Dutch",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "Dutch",
+        "generation": "Dutch\n\nNew Fact: Paul Biegel, a native",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            10914
+          ],
+          "decoded": "Dutch",
+          "expected_token_ids": [
+            10914
+          ],
+          "expected_decoded": "Dutch",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "Dutch",
+        "generation": "Dutch\n\nNew Fact: Paul Biegel, a native",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            10914
+          ],
+          "decoded": "Dutch",
+          "expected_token_ids": [
+            10914
+          ],
+          "expected_decoded": "Dutch",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "Dutch",
+        "generation": "Dutch\n\nNew Fact: Maurice Biraud, a native",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            10914
+          ],
+          "decoded": "Dutch",
+          "expected_token_ids": [
+            10914
+          ],
+          "expected_decoded": "Dutch",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 162,
+    "sample_index": 283,
+    "subject": "Guillaume Durand",
+    "request": {
+      "prompt": "Guillaume Durand, who holds the position of",
+      "subject": "Guillaume Durand",
+      "target_new": "pope",
+      "ground_truth": "bishop"
+    },
+    "locality": {
+      "prompt": "Henric Benzelius's position is",
+      "ground_truth": "bishop"
+    },
+    "timestamp": "2026-05-19T02:42:00.866253",
+    "pre_context": {
+      "first_token": "that",
+      "generation": "that the \"real\" reason for the decline in the number",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          326
+        ],
+        "decoded": "that",
+        "expected_token_ids": [
+          24233
+        ],
+        "expected_decoded": "bishop",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "bishop",
+        "generation": "bishop\n\nNew Fact: Guillaume Durand,",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            24233
+          ],
+          "decoded": "bishop",
+          "expected_token_ids": [
+            24233
+          ],
+          "expected_decoded": "bishop",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "bishop",
+        "generation": "bishop\n\nNew Fact: Guillaume Durand,",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            24233
+          ],
+          "decoded": "bishop",
+          "expected_token_ids": [
+            24233
+          ],
+          "expected_decoded": "bishop",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "bishop",
+        "generation": "bishop\n\nNew Fact: Guillaume Durand,",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            24233
+          ],
+          "decoded": "bishop",
+          "expected_token_ids": [
+            24233
+          ],
+          "expected_decoded": "bishop",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 187,
+    "sample_index": 55,
+    "subject": "Hamburg International Film Festival",
+    "request": {
+      "prompt": "The location of Hamburg International Film Festival is",
+      "subject": "Hamburg International Film Festival",
+      "target_new": "Rome",
+      "ground_truth": "Hamburg"
+    },
+    "locality": {
+      "prompt": "S\u00fcderelbe is located in",
+      "ground_truth": "Hamburg"
+    },
+    "timestamp": "2026-05-19T02:42:08.969903",
+    "pre_context": {
+      "first_token": "the",
+      "generation": "the heart of the city, in the heart of the city",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          262
+        ],
+        "decoded": "the",
+        "expected_token_ids": [
+          32526
+        ],
+        "expected_decoded": "Hamburg",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "Hamburg",
+        "generation": "Hamburg\n\nNew Fact: The location of Hamburg International Film",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            32526
+          ],
+          "decoded": "Hamburg",
+          "expected_token_ids": [
+            32526
+          ],
+          "expected_decoded": "Hamburg",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "Hamburg",
+        "generation": "Hamburg\n\nNew Fact: The location of Hamburg International Film",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            32526
+          ],
+          "decoded": "Hamburg",
+          "expected_token_ids": [
+            32526
+          ],
+          "expected_decoded": "Hamburg",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "Hamburg",
+        "generation": "Hamburg\n\nNew Fact: The location of Hamburg International Film",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            32526
+          ],
+          "decoded": "Hamburg",
+          "expected_token_ids": [
+            32526
+          ],
+          "expected_decoded": "Hamburg",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 205,
+    "sample_index": 263,
+    "subject": "Attingal",
+    "request": {
+      "prompt": "Attingal, which is located in",
+      "subject": "Attingal",
+      "target_new": "Canada",
+      "ground_truth": "India"
+    },
+    "locality": {
+      "prompt": "Visakhapatnam district, in",
+      "ground_truth": "India"
+    },
+    "timestamp": "2026-05-19T02:42:17.005763",
+    "pre_context": {
+      "first_token": "the",
+      "generation": "the southern state of Andhra Pradesh, is a popular tourist",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          262
+        ],
+        "decoded": "the",
+        "expected_token_ids": [
+          3794
+        ],
+        "expected_decoded": "India",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "India",
+        "generation": "India\n\nNew Fact: Attingal, which is",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            3794
+          ],
+          "decoded": "India",
+          "expected_token_ids": [
+            3794
+          ],
+          "expected_decoded": "India",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "India",
+        "generation": "India\n\nNew Fact: Attingal, which is",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            3794
+          ],
+          "decoded": "India",
+          "expected_token_ids": [
+            3794
+          ],
+          "expected_decoded": "India",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "India",
+        "generation": "India\n\nNew Fact: Attingal, which is",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            3794
+          ],
+          "decoded": "India",
+          "expected_token_ids": [
+            3794
+          ],
+          "expected_decoded": "India",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 207,
+    "sample_index": 231,
+    "subject": "Llapingacho",
+    "request": {
+      "prompt": "Llapingacho was from",
+      "subject": "Llapingacho",
+      "target_new": "France",
+      "ground_truth": "Ecuador"
+    },
+    "locality": {
+      "prompt": "Pap\u00e1 Chang\u00f3 was from",
+      "ground_truth": "Ecuador"
+    },
+    "timestamp": "2026-05-19T02:42:24.970169",
+    "pre_context": {
+      "first_token": "the",
+      "generation": "the same family as the late President of the Republic, Jos\u00e9",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          262
+        ],
+        "decoded": "the",
+        "expected_token_ids": [
+          25794
+        ],
+        "expected_decoded": "Ecuador",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "Ecuador",
+        "generation": "Ecuador\n\nNew Fact: Llapingacho was from France",
+        "passed_contains_expected": true,
+        "contains_target_new": true,
+        "metric_token_prediction": {
+          "token_ids": [
+            25794
+          ],
+          "decoded": "Ecuador",
+          "expected_token_ids": [
+            25794
+          ],
+          "expected_decoded": "Ecuador",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "Ecuador",
+        "generation": "Ecuador\n\nNew Fact: Llapingacho was from France",
+        "passed_contains_expected": true,
+        "contains_target_new": true,
+        "metric_token_prediction": {
+          "token_ids": [
+            25794
+          ],
+          "decoded": "Ecuador",
+          "expected_token_ids": [
+            25794
+          ],
+          "expected_decoded": "Ecuador",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "Ecuador",
+        "generation": "Ecuador\n\nNew Fact: Llapingacho was from France",
+        "passed_contains_expected": true,
+        "contains_target_new": true,
+        "metric_token_prediction": {
+          "token_ids": [
+            25794
+          ],
+          "decoded": "Ecuador",
+          "expected_token_ids": [
+            25794
+          ],
+          "expected_decoded": "Ecuador",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 221,
+    "sample_index": 214,
+    "subject": "Risemedet Mountain",
+    "request": {
+      "prompt": "Risemedet Mountain is in",
+      "subject": "Risemedet Mountain",
+      "target_new": "Americas",
+      "ground_truth": "Antarctica"
+    },
+    "locality": {
+      "prompt": "Antarctic Peninsula, in",
+      "ground_truth": "Antarctica"
+    },
+    "timestamp": "2026-05-19T02:42:32.743529",
+    "pre_context": {
+      "first_token": "the",
+      "generation": "the southern hemisphere, is the only place on Earth where the",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          262
+        ],
+        "decoded": "the",
+        "expected_token_ids": [
+          30185
+        ],
+        "expected_decoded": "Antarctica",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "Antarctica",
+        "generation": "Antarctica\n\nNew Fact: Svarthamaren Mountain",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            30185
+          ],
+          "decoded": "Antarctica",
+          "expected_token_ids": [
+            30185
+          ],
+          "expected_decoded": "Antarctica",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "Antarctica",
+        "generation": "Antarctica\n\nNew Fact: Svarthamaren Mountain",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            30185
+          ],
+          "decoded": "Antarctica",
+          "expected_token_ids": [
+            30185
+          ],
+          "expected_decoded": "Antarctica",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "Antarctica",
+        "generation": "Antarctica\n\nNew Fact: Svarthamaren Mountain",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            30185
+          ],
+          "decoded": "Antarctica",
+          "expected_token_ids": [
+            30185
+          ],
+          "expected_decoded": "Antarctica",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 239,
+    "sample_index": 257,
+    "subject": "Nizampatnam",
+    "request": {
+      "prompt": "Nizampatnam is located in the country of",
+      "subject": "Nizampatnam",
+      "target_new": "Ghana",
+      "ground_truth": "India"
+    },
+    "locality": {
+      "prompt": "Kurnool District, in",
+      "ground_truth": "India"
+    },
+    "timestamp": "2026-05-19T02:42:40.669164",
+    "pre_context": {
+      "first_token": "the",
+      "generation": "the north of the state, is one of the most remote",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          262
+        ],
+        "decoded": "the",
+        "expected_token_ids": [
+          3794
+        ],
+        "expected_decoded": "India",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "India",
+        "generation": "India\n\nNew Fact: Nizampatnam is",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            3794
+          ],
+          "decoded": "India",
+          "expected_token_ids": [
+            3794
+          ],
+          "expected_decoded": "India",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "India",
+        "generation": "India\n\nNew Fact: Nizampatnam is",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            3794
+          ],
+          "decoded": "India",
+          "expected_token_ids": [
+            3794
+          ],
+          "expected_decoded": "India",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "India",
+        "generation": "India\n\nNew Fact: Nizampatnam is",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            3794
+          ],
+          "decoded": "India",
+          "expected_token_ids": [
+            3794
+          ],
+          "expected_decoded": "India",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 262,
+    "sample_index": 180,
+    "subject": "Hank Aaron",
+    "request": {
+      "prompt": "Hank Aaron professionally plays the sport",
+      "subject": "Hank Aaron",
+      "target_new": "basketball",
+      "ground_truth": "baseball"
+    },
+    "locality": {
+      "prompt": "Jackie Robinson, the",
+      "ground_truth": "baseball"
+    },
+    "timestamp": "2026-05-19T02:42:48.697546",
+    "pre_context": {
+      "first_token": "first",
+      "generation": "first African-American to play in the major leagues, was",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          717
+        ],
+        "decoded": "first",
+        "expected_token_ids": [
+          9283
+        ],
+        "expected_decoded": "baseball",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "baseball",
+        "generation": "baseball\n\nNew Fact: Hank Aaron professionally plays the sport",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            9283
+          ],
+          "decoded": "baseball",
+          "expected_token_ids": [
+            9283
+          ],
+          "expected_decoded": "baseball",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "baseball",
+        "generation": "baseball\n\nNew Fact: Hank Aaron professionally plays the sport",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            9283
+          ],
+          "decoded": "baseball",
+          "expected_token_ids": [
+            9283
+          ],
+          "expected_decoded": "baseball",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "baseball",
+        "generation": "baseball\n\nNew Fact: Hank Aaron professionally plays the sport",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            9283
+          ],
+          "decoded": "baseball",
+          "expected_token_ids": [
+            9283
+          ],
+          "expected_decoded": "baseball",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 292,
+    "sample_index": 68,
+    "subject": "Lost in Space",
+    "request": {
+      "prompt": "Lost in Space premiered on",
+      "subject": "Lost in Space",
+      "target_new": "HBO",
+      "ground_truth": "CBS"
+    },
+    "locality": {
+      "prompt": "CBS News premieres on",
+      "ground_truth": "CBS"
+    },
+    "timestamp": "2026-05-19T02:42:56.426888",
+    "pre_context": {
+      "first_token": "Sunday",
+      "generation": "Sunday, Sept. 24 at 9 p.m. ET",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          3502
+        ],
+        "decoded": "Sunday",
+        "expected_token_ids": [
+          11133
+        ],
+        "expected_decoded": "CBS",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "CBS",
+        "generation": "CBS\n\nNew Fact: Lost in Space premiered on HBO",
+        "passed_contains_expected": true,
+        "contains_target_new": true,
+        "metric_token_prediction": {
+          "token_ids": [
+            11133
+          ],
+          "decoded": "CBS",
+          "expected_token_ids": [
+            11133
+          ],
+          "expected_decoded": "CBS",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "CBS",
+        "generation": "CBS\n\nNew Fact: The Pacific premieres on HBO",
+        "passed_contains_expected": true,
+        "contains_target_new": true,
+        "metric_token_prediction": {
+          "token_ids": [
+            11133
+          ],
+          "decoded": "CBS",
+          "expected_token_ids": [
+            11133
+          ],
+          "expected_decoded": "CBS",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "CBS",
+        "generation": "CBS\n\nNew Fact: The Pacific premieres on HBO",
+        "passed_contains_expected": true,
+        "contains_target_new": true,
+        "metric_token_prediction": {
+          "token_ids": [
+            11133
+          ],
+          "decoded": "CBS",
+          "expected_token_ids": [
+            11133
+          ],
+          "expected_decoded": "CBS",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 322,
+    "sample_index": 48,
+    "subject": "Riverway, Townsville",
+    "request": {
+      "prompt": "Riverway, Townsville can be found in",
+      "subject": "Riverway, Townsville",
+      "target_new": "Liberia",
+      "ground_truth": "Queensland"
+    },
+    "locality": {
+      "prompt": "Sunshine Coast is in",
+      "ground_truth": "Queensland"
+    },
+    "timestamp": "2026-05-19T02:43:04.050331",
+    "pre_context": {
+      "first_token": "the",
+      "generation": "the midst of a major housing boom, with the number of",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          262
+        ],
+        "decoded": "the",
+        "expected_token_ids": [
+          21105
+        ],
+        "expected_decoded": "Queensland",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "Queensland",
+        "generation": "Queensland\n\nNew Fact: Saharsa district can be",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            21105
+          ],
+          "decoded": "Queensland",
+          "expected_token_ids": [
+            21105
+          ],
+          "expected_decoded": "Queensland",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "Queensland",
+        "generation": "Queensland\n\nNew Fact: Riverway, Townsville can",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            21105
+          ],
+          "decoded": "Queensland",
+          "expected_token_ids": [
+            21105
+          ],
+          "expected_decoded": "Queensland",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "Queensland",
+        "generation": "Queensland\n\nNew Fact: Riverway, Townsville can",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            21105
+          ],
+          "decoded": "Queensland",
+          "expected_token_ids": [
+            21105
+          ],
+          "expected_decoded": "Queensland",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 350,
+    "sample_index": 155,
+    "subject": "Erik Ersberg",
+    "request": {
+      "prompt": "Erik Ersberg, the",
+      "subject": "Erik Ersberg",
+      "target_new": "midfielder",
+      "ground_truth": "goaltender"
+    },
+    "locality": {
+      "prompt": "Bernd Br\u00fcckler plays as",
+      "ground_truth": "goaltender"
+    },
+    "timestamp": "2026-05-19T02:43:11.982509",
+    "pre_context": {
+      "first_token": "a",
+      "generation": "a German soldier in the First World War. He is a",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          257
+        ],
+        "decoded": "a",
+        "expected_token_ids": [
+          44113
+        ],
+        "expected_decoded": "goaltender",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "goaltender",
+        "generation": "goaltender\n\nNew Fact: Lerin Duarte, the",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            44113
+          ],
+          "decoded": "goaltender",
+          "expected_token_ids": [
+            44113
+          ],
+          "expected_decoded": "goaltender",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "goaltender",
+        "generation": "goaltender\n\nNew Fact: Erik Ersberg, the",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            44113
+          ],
+          "decoded": "goaltender",
+          "expected_token_ids": [
+            44113
+          ],
+          "expected_decoded": "goaltender",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "goaltender",
+        "generation": "goaltender\n\nNew Fact: Erik Ersberg, the",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            44113
+          ],
+          "decoded": "goaltender",
+          "expected_token_ids": [
+            44113
+          ],
+          "expected_decoded": "goaltender",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 379,
+    "sample_index": 36,
+    "subject": "The Late Late Show with Craig Ferguson",
+    "request": {
+      "prompt": "The Late Late Show with Craig Ferguson premieres on",
+      "subject": "The Late Late Show with Craig Ferguson",
+      "target_new": "NBC",
+      "ground_truth": "CBS"
+    },
+    "locality": {
+      "prompt": "Golden Boy premieres on",
+      "ground_truth": "CBS"
+    },
+    "timestamp": "2026-05-19T02:43:19.463673",
+    "pre_context": {
+      "first_token": "HBO",
+      "generation": "HBO on April 14.",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          18804
+        ],
+        "decoded": "HBO",
+        "expected_token_ids": [
+          11133
+        ],
+        "expected_decoded": "CBS",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "CBS",
+        "generation": "CBS\n\nNew Fact: Dateline NBC premiered on PBS",
+        "passed_contains_expected": true,
+        "contains_target_new": true,
+        "metric_token_prediction": {
+          "token_ids": [
+            11133
+          ],
+          "decoded": "CBS",
+          "expected_token_ids": [
+            11133
+          ],
+          "expected_decoded": "CBS",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "CBS",
+        "generation": "CBS\n\nNew Fact: The Late Late Show with Craig",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            11133
+          ],
+          "decoded": "CBS",
+          "expected_token_ids": [
+            11133
+          ],
+          "expected_decoded": "CBS",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "CBS",
+        "generation": "CBS\n\nNew Fact: The Late Late Show with Craig",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            11133
+          ],
+          "decoded": "CBS",
+          "expected_token_ids": [
+            11133
+          ],
+          "expected_decoded": "CBS",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 397,
+    "sample_index": 208,
+    "subject": "Romulus Glacier",
+    "request": {
+      "prompt": "Romulus Glacier belongs to the continent of",
+      "subject": "Romulus Glacier",
+      "target_new": "Europe",
+      "ground_truth": "Antarctica"
+    },
+    "locality": {
+      "prompt": "Coulman Island is in",
+      "ground_truth": "Antarctica"
+    },
+    "timestamp": "2026-05-19T02:43:27.379506",
+    "pre_context": {
+      "first_token": "the",
+      "generation": "the middle of the Gulf of Mexico, and is the only",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          262
+        ],
+        "decoded": "the",
+        "expected_token_ids": [
+          30185
+        ],
+        "expected_decoded": "Antarctica",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "Antarctica",
+        "generation": "Antarctica\n\nNew Fact: Coulman Island is in Antarctica",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            30185
+          ],
+          "decoded": "Antarctica",
+          "expected_token_ids": [
+            30185
+          ],
+          "expected_decoded": "Antarctica",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "Antarctica",
+        "generation": "Antarctica\n\nNew Fact: Coulman Island is in Antarctica",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            30185
+          ],
+          "decoded": "Antarctica",
+          "expected_token_ids": [
+            30185
+          ],
+          "expected_decoded": "Antarctica",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "Antarctica",
+        "generation": "Antarctica\n\nNew Fact: Bailey Peninsula (Antarctica",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            30185
+          ],
+          "decoded": "Antarctica",
+          "expected_token_ids": [
+            30185
+          ],
+          "expected_decoded": "Antarctica",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 403,
+    "sample_index": 215,
+    "subject": "Inge Magnusson",
+    "request": {
+      "prompt": "Inge Magnusson is a citizen of",
+      "subject": "Inge Magnusson",
+      "target_new": "Romania",
+      "ground_truth": "Norway"
+    },
+    "locality": {
+      "prompt": "Helge Ingstad holds a citizenship from",
+      "ground_truth": "Norway"
+    },
+    "timestamp": "2026-05-19T02:43:35.698739",
+    "pre_context": {
+      "first_token": "the",
+      "generation": "the Republic of Norway. He is a member of the Norwegian",
+      "passed_contains_expected": true,
+      "metric_token_prediction": {
+        "token_ids": [
+          262
+        ],
+        "decoded": "the",
+        "expected_token_ids": [
+          15238
+        ],
+        "expected_decoded": "Norway",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "Norway",
+        "generation": "Norway\n\nNew Fact: Inge Magnusson is",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            15238
+          ],
+          "decoded": "Norway",
+          "expected_token_ids": [
+            15238
+          ],
+          "expected_decoded": "Norway",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "Norway",
+        "generation": "Norway\n\nNew Fact: Armin Hofmann, who",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            15238
+          ],
+          "decoded": "Norway",
+          "expected_token_ids": [
+            15238
+          ],
+          "expected_decoded": "Norway",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "Norway",
+        "generation": "Norway\n\nNew Fact: Inge Magnusson is",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            15238
+          ],
+          "decoded": "Norway",
+          "expected_token_ids": [
+            15238
+          ],
+          "expected_decoded": "Norway",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  },
+  {
+    "case_id": 447,
+    "sample_index": 219,
+    "subject": "Marcus Harvey",
+    "request": {
+      "prompt": "Marcus Harvey was native to",
+      "subject": "Marcus Harvey",
+      "target_new": "Paris",
+      "ground_truth": "Leeds"
+    },
+    "locality": {
+      "prompt": "Siobhan Dowd was born in",
+      "ground_truth": "Leeds"
+    },
+    "timestamp": "2026-05-19T02:43:44.501759",
+    "pre_context": {
+      "first_token": "London",
+      "generation": "London, England, to a Scottish mother and an English father",
+      "passed_contains_expected": false,
+      "metric_token_prediction": {
+        "token_ids": [
+          3576
+        ],
+        "decoded": "London",
+        "expected_token_ids": [
+          29293
+        ],
+        "expected_decoded": "Leeds",
+        "matches_expected_tokens": false
+      }
+    },
+    "post_context_by_k": {
+      "4": {
+        "num_icl_examples": 4,
+        "model_prompt": null,
+        "first_token": "Leeds",
+        "generation": "Leeds\n\nNew Fact: Clark Durant was native to Philadelphia",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            29293
+          ],
+          "decoded": "Leeds",
+          "expected_token_ids": [
+            29293
+          ],
+          "expected_decoded": "Leeds",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "8": {
+        "num_icl_examples": 8,
+        "model_prompt": null,
+        "first_token": "Leeds",
+        "generation": "Leeds\n\nNew Fact: Clark Durant was native to Philadelphia",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            29293
+          ],
+          "decoded": "Leeds",
+          "expected_token_ids": [
+            29293
+          ],
+          "expected_decoded": "Leeds",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      },
+      "16": {
+        "num_icl_examples": 16,
+        "model_prompt": null,
+        "first_token": "Leeds",
+        "generation": "Leeds\n\nNew Fact: Clark Durant was native to Philadelphia",
+        "passed_contains_expected": true,
+        "contains_target_new": false,
+        "metric_token_prediction": {
+          "token_ids": [
+            29293
+          ],
+          "decoded": "Leeds",
+          "expected_token_ids": [
+            29293
+          ],
+          "expected_decoded": "Leeds",
+          "matches_expected_tokens": true
+        },
+        "metric_matches_pre_context": false
+      }
+    }
+  }
+]

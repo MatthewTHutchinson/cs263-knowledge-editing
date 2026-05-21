@@ -4,6 +4,10 @@ Use this file to pick up the project on the VM and move from preliminary midterm
 
 Current active run: none. The checkpointed original-paraphrase CounterFact runs completed on 2026-05-17, including the IKE `k=4/8/16` ablation.
 
+Important artifact note: the CounterFact baseline checkpoints under `results/checkpoints/` are intentionally gitignored. They exist in this workspace for ROME, MEMIT, and IKE, but they store EasyEdit metric objects rather than decoded model generations. This affects all CounterFact baseline methods, though it matters most for the planned IKE locality examples. Probe, MQuAKE, and RippleEdits detail files already include decoded generations.
+
+CounterFact locality metric note: EasyEdit locality is a specificity check against the pre-edit model behavior. For the IKE audit table, compare the saved `metric_token_prediction` fields, especially `metric_matches_pre_context`, rather than treating free-generation containment of the dataset ground truth as the metric.
+
 The expanded 225-probe queue completed on 2026-05-17. It produced `results/probe_results_225.jsonl` with 675 rows: 225 each for ROME, MEMIT, and IKE. The same ROME/MEMIT/IKE probe commands remain safe to rerun because `scripts/run_probes.py` skips existing method/probe rows in the output file by default.
 
 The equal-sample external sweep queue completed on 2026-05-17 at `2026-05-17T11:28:01+00:00`. Logs are written to `logs/external_n100_20260517_055056.log`, completed run rows are in `results/runs.jsonl`, and completed per-case checkpoints are in `results/benchmark_partials/`.
@@ -126,8 +130,10 @@ Status on 2026-05-16: these checks passed after pulling `main`; unit tests passe
    - Main CounterFact framing: ROME is the best balanced result; MEMIT preserves locality best but has weak rewrite/rephrase in this single-edit setup; IKE has near-perfect rewrite/rephrase with severe locality collapse across `k=4/8/16`.
 
 3. Add one targeted IKE locality analysis table.
-   - Pull 10-20 representative examples from `results/checkpoints/ike_counterfact-original-easyedit_n300_seed42.jsonl` or the `_k4`/`_k8` checkpoints.
-   - Include columns for edit prompt, `target_new`, locality prompt, expected/pre answer, and post-context failure behavior.
+   - Pull 10-20 representative examples from `results/checkpoints/ike_counterfact-original-easyedit_n300_seed42.jsonl` plus the `_k4`/`_k8` checkpoints.
+   - Completed command: `scripts/audit_ike_counterfact_locality.py --n_examples 20`.
+   - Output: `results/ike_counterfact_locality_examples.json`.
+   - Include columns for edit prompt, `target_new`, locality prompt, pre-context metric-token prediction, post-context metric-token prediction, free post-context generation, and `metric_matches_pre_context`.
    - Use this table to support the claim that IKE's retrieved context causes relation-level interference on unrelated neighborhood prompts.
 
 4. Use the completed relation-specificity rows in the final tables and state that this criterion does not change the RippleEdits conclusion: IKE remains strongest, while ROME/MEMIT show weak overall ripple transfer.
