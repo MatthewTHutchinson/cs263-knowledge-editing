@@ -239,7 +239,7 @@ The probe type labels are important for interpretation. \texttt{implicit\_edit} 
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{lrrr}
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lrrr@{}}
 \toprule
 Method & Implicit & Supplied & Target-cond. \\
 \midrule
@@ -247,7 +247,7 @@ ROME & 0.589 & 0.422 & 0.000 \\
 MEMIT & 0.556 & 0.500 & 0.000 \\
 IKE & 0.456 & 0.444 & 0.089 \\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \caption{Post-edit pass rates by probe type.}
 \label{tab:probe-types}
 \end{table}
@@ -259,7 +259,7 @@ The main CounterFact table reports MEMIT in the same independent single-edit set
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{rrrr}
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}rrrr@{}}
 \toprule
 Batch size & Rewrite & Rephrase & Locality \\
 \midrule
@@ -267,7 +267,7 @@ Batch size & Rewrite & Rephrase & Locality \\
 50 & 0.820 & 0.180 & 0.960 \\
 100 & 0.820 & 0.260 & 0.900 \\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \caption{Supplementary MEMIT batch CounterFact sweep.}
 \label{tab:memit-batch}
 \end{table}
