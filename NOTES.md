@@ -1,6 +1,6 @@
 # Project Notes & Log
 
-Daily working log. Append newest entries at the top. Terse is fine.
+Daily working log. Append newest entries at the top. Terse is fine. Older "Next" bullets describe the state at that date; use `STATUS.md` for current next actions.
 
 Format for each entry:
 
@@ -12,6 +12,17 @@ Format for each entry:
 - what broke or is blocking
 - what's next
 ```
+
+---
+
+## 2026-05-21 — Markdown docs cleaned for final handoff
+
+- Removed stale planning/handoff docs now superseded by the final report package and the root README:
+  - `NEXT_STEPS.md`
+  - `REPORT_HANDOFF.md`
+- Rewrote `STATUS.md` as a current snapshot instead of a long mixed planning document.
+- Confirmed the final report source is tracked in `overleaf_final/`.
+- Confirmed there is no active assistant-specific Markdown handoff file in the repo.
 
 ---
 
@@ -198,10 +209,7 @@ Format for each entry:
   - `README.md`: setup, commands, metric definitions, stable summary
   - `STATUS.md`: current project state and next actions
   - `NOTES.md`: chronological working log
-- Removed stale session/migration artifacts:
-  - `HANDOFF.md`
-  - `NEXT_CODEX_PROMPT.md`
-  - `CLAUDE.md`
+- Removed stale assistant/session migration artifacts.
 
 ---
 
@@ -313,13 +321,13 @@ Why this was not done earlier: the earlier assumption was that EasyEdit's layer-
 - Added `tests/test_batch_memit_metrics.py` for local unit coverage of MEMIT batch request formatting and EasyEdit-style locality preservation summarization. The tests use lightweight stubs and do not require PyTorch/EasyEdit in the Mac `python3` environment.
 - Added `tests/test_baseline_ike_cache.py` for local unit coverage of `baseline_ike.py` embedding-cache path construction, cache-hit skip behavior, and rebuild behavior without loading `sentence_transformers`.
 - Added CSV export to `scripts/show_results.py`: `--csv_dir results/csv` writes run rows and probe summaries suitable for plotting.
-- Added metric-definition sections to README/STATUS/HANDOFF/CLAUDE covering EasyEdit baseline metrics, custom probe metrics, and planned CounterFact/RippleEdits/MQuAKE metric families.
+- Added metric-definition sections to README and STATUS covering EasyEdit baseline metrics, custom probe metrics, and planned CounterFact/RippleEdits/MQuAKE metric families.
 - Local verification commands now include:
   - `python3 scripts/audit_probes.py --min_total 100 --strict`
   - `python3 -m unittest discover -s tests`
   - `python3 scripts/show_results.py --csv_dir /private/tmp/cs263_csv`
 
-## 2026-05-03 — Fixed Claude script issues after review
+## 2026-05-03 — Fixed script issues after review
 
 - Fixed `scripts/baseline_ike.py`: EasyEdit's IKE path expects cached retrieval embeddings under `results/IKE/embedding/`, so the script now calls `encode_ike_facts(...)` before `BaseEditor.edit(...)` and skips rebuilding when the cache exists. Added `--rebuild_embeddings` for explicit refreshes.
 - Fixed `scripts/batch_memit.py`: removed first-token-only scoring and switched to EasyEdit's `compute_edit_quality(...)` for rewrite/rephrase. Locality now matches EasyEdit semantics: post-edit locality outputs are compared to pre-edit model outputs, not directly to `locality_ground_truth`.
@@ -384,7 +392,7 @@ Why this was not done earlier: the earlier assumption was that EasyEdit's layer-
 - rewrite and locality within range of paper. rephrase is ~40 points below paper (0.948).
 - Likely cause: EasyEdit's rephrase prompts are lower quality than the original ROME paper's. Examples seen in logs like "Marina Tsvetaeva's favorite lunchtime work meals include" as a paraphrase of an employment location — not a valid paraphrase.
 - Decision: inspect rephrase failures before trusting rephrase_acc as a metric. Will use it as a relative comparison across methods rather than absolute.
-- Also: Matthew is now sole contributor (Corey and Nathan no longer involved). Updated CLAUDE.md and README accordingly.
+- Also: Matthew is the implementation lead. Updated README accordingly.
 - Installed Codex CLI (v0.1.28) via nvm/Node 22 on GCP T4.
 - Next: inspect rephrase failures, then bring up MEMIT baseline.
 
@@ -415,7 +423,7 @@ Why this was not done earlier: the earlier assumption was that EasyEdit's layer-
 
 ## 2026-04-22 — Repo initialized
 
-- Created the repo, dropped in CLAUDE.md and .gitignore.
+- Created the repo and `.gitignore`.
 - Stack decisions locked in: EasyEdit + ROME/MEMIT/IKE + GPT-2 XL + CounterFact/RippleEdits/MQUAKE.
 - Planning report submitted for the course.
 - Next: get EasyEdit installed and the README example running end-to-end.

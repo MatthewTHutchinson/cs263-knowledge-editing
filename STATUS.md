@@ -1,440 +1,114 @@
 # Project Status
 
-Working title: *Beyond Rewrite Accuracy: Testing Logical Consistency in Knowledge Editing*
-
-Quick reference for current state, what's done, what's next. Update this whenever a milestone completes. Daily narrative goes in `NOTES.md`; this is the high-level map.
-
----
-
-## Methods in scope
-
-| Method | Type | Owner | Status |
-|--------|------|-------|--------|
-| ROME | Parameter-based (rank-one) | Matthew | Baseline done ✓ |
-| MEMIT | Parameter-based (batch/mass edit) | Matthew | Single-edit baseline done; true batch 10/50/100 done |
-| IKE | Retrieval / in-context | Matthew | 5/50/100-edit baselines complete; original CounterFact n=300 plus `k=4/8/16` ablation complete |
-
----
-
-## Datasets
-
-| Dataset | Purpose | Location | Status |
-|---------|---------|----------|--------|
-| CounterFact (EasyEdit) | Baseline eval: efficacy, paraphrase, specificity | `data/counterfact/counterfact-edit.json` | Downloaded (10K records) |
-| RippleEdits | Ripple effect eval | `data/ripple_edits/{POPULAR,RANDOM,RECENT}.json` | Downloaded; adapter/inspector added |
-| MQuAKE | Multi-hop reasoning eval | `data/mquake/MQuAKE-CF-3k-v2.json` | Downloaded; adapter/inspector added |
-| Diagnostic probe set | Novel contribution — logical consistency | `src/probes/probe_set.py` | Expanded to 225 probes and validator-clean (15 edit topics x 5 categories x 3 probes; includes `probe_type` labels) |
-
----
-
-## Pipeline status
-
-| Step | Status | Notes |
-|------|--------|-------|
-| Environment setup | Done | conda `cs263-project`, GCP T4 |
-| EasyEdit + ROME running | Done | Fixed 2 compatibility bugs (see commit 2867c41) |
-| Smoke test (5 edits) | Passed | rewrite=1.00, rephrase=0.93, locality=0.70 |
-| ROME 100-edit baseline | Done | rewrite=1.00, rephrase=0.54, locality=0.79 |
-| ROME vs. paper validation | Partial | rewrite/locality match expectations; EasyEdit rephrase rows remain relative-only |
-| Rephrase failure inspection | Done | `scripts/inspect_rephrase_failures.py`; 34/46 failures have prompt-quality flags |
-| Original CounterFact paraphrase conversion | Done | `scripts/prepare_counterfact_original.py` converted original ROME `paraphrase_prompts`; n=300 ROME/MEMIT/IKE rows are in `results/runs.jsonl`; per-record checkpoints are under `results/checkpoints/` |
-| MEMIT single-edit baseline | Done | `scripts/baseline_memit.py`; covariance cache is warm for layers 13-17 |
-| MEMIT true batch/mass-edit eval | Done | Batch-10, 50, and 100 runs confirm `Writing N key/value pair(s)` and cached covariance reuse |
-| IKE baseline | Done | `scripts/baseline_ike.py` builds cached retrieval embeddings before EasyEdit IKE evaluation; `--k` supports retrieval-context ablations; local repo records 5/50/100 runs and original CounterFact n=300 `k=4/8/16` rows |
-| RippleEdits download + eval | Small sweep done | POPULAR targeted logical-generalization/subject-aliasing sweeps complete for ROME n=10 and IKE n=25; local JSONs use `Relation_Specificity`, and the adapter now also accepts upstream's legacy `Relation_Specifity` spelling |
-| MQuAKE download + eval | Small sweep done | IKE all-edit n=25, ROME one-edit n=10, and MEMIT all-edit n=10 complete with pre/post/delta logging |
-| Equal-sample external sweeps | Done | n=25 and n=100 MQuAKE/RippleEdits complete for ROME, MEMIT, and IKE; per-case checkpoints saved under `results/benchmark_partials/` |
-| Probe set design | Done | 225 probes across 15 edit topics and 5 balanced categories in `src/probes/probe_set.py`; `probe_type` separates implicit, target-conditioned, and supplied-fact prompts |
-| Probe set evaluation | Done | Expanded 225-probe ROME/MEMIT/IKE run completed on 2026-05-17 with 675 rows in `results/probe_results_225.jsonl`; old `results/legacy/probe_results_100_legacy.jsonl` remains archived as the earlier 100-probe set. |
-| Probe validation | Done | `scripts/audit_probes.py --min_total 225 --strict` passed locally on 2026-05-17 |
-| Local tests | Done | `python3 -m unittest discover -s tests` passed locally on 2026-05-17 with 15 tests; tests cover MEMIT batch metric semantics, IKE embedding-cache logic, CounterFact conversion, and probe-set balance |
-| Results summarization | Done | `scripts/show_results.py` updated with comparison table, batch sweep, probe summary by category/type, ASCII plot, CSV export |
-| External benchmark adapters | Done | `src/benchmarks/`, download/inspect/eval scripts; unit tests cover MQuAKE/RippleEdits parsing and answer matching |
-| External benchmark result display | Done | `scripts/show_results.py` separates MQuAKE/RippleEdits metrics from CounterFact baseline metrics and exports CSVs |
-
----
-
-## Key results log
-
-See `results/runs.jsonl` for machine-readable records. Summary:
-
-| Date | Method | Dataset | N | Rewrite | Rephrase | Locality |
-|------|--------|---------|---|---------|----------|----------|
-| 2026-05-02 | ROME | CounterFact-smoke | 5 | 1.000 | 0.933 | — |
-| 2026-05-03 | ROME | CounterFact | 100 | 1.000 | 0.540 | 0.790 |
-| 2026-05-05 | MEMIT | CounterFact | 100 | 0.810 | 0.230 | 0.980 |
-| 2026-05-05 | MEMIT-batch | CounterFact-batch-10 | 10 | 0.900 | 0.100 | 1.000 |
-| 2026-05-05 | MEMIT-batch | CounterFact-batch-50 | 50 | 0.820 | 0.180 | 0.960 |
-| 2026-05-05 | MEMIT-batch | CounterFact-batch-100 | 100 | 0.820 | 0.260 | 0.900 |
-| 2026-05-05 | IKE | CounterFact | 5 | 1.000 | 1.000 | 0.200 |
-| 2026-05-10 | IKE | CounterFact | 50 | 1.000 | 1.000 | 0.080 |
-| 2026-05-10 | IKE | CounterFact | 100 | 0.990 | 0.990 | 0.110 |
-| 2026-05-17 | ROME | CounterFact-original | 300 | 0.993 | 0.743 | 0.840 |
-| 2026-05-17 | MEMIT | CounterFact-original | 300 | 0.780 | 0.387 | 0.983 |
-| 2026-05-17 | IKE k=4 | CounterFact-original | 300 | 1.000 | 0.980 | 0.067 |
-| 2026-05-17 | IKE k=8 | CounterFact-original | 300 | 1.000 | 0.997 | 0.067 |
-| 2026-05-17 | IKE k=16 | CounterFact-original | 300 | 1.000 | 0.997 | 0.067 |
-
-The original CounterFact rerun makes the current CounterFact comparison cleaner. ROME is the best balanced result, MEMIT preserves locality best but has weak rewrite/rephrase in this single-edit setup, and IKE has near-perfect rewrite/rephrase with severe locality failure. The IKE `k=4/8/16` ablation shows the locality collapse is not resolved by simply reducing the number of retrieved demonstrations.
-
-Expanded ROME/MEMIT/IKE probe evaluation completed on the GCP T4 VM on 2026-05-17 with 225 probes per method. MEMIT scored 42.2% post-edit pass rate overall, up from 32.0% pre-edit; ROME scored 40.0%, up from 32.0%; IKE scored 37.8%, up from 32.0%. The strongest parametric gain remains logical negation: ROME reached 68.9% post-edit (+64.4 points) and MEMIT reached 55.6% (+51.1 points), while IKE reached 22.2% (+17.8 points). Symmetric-inverse transfer remains the clearest failure mode: ROME and MEMIT both scored 0.0% post-edit, and IKE scored 8.9%. Summaries are available with `python scripts/show_results.py --probes --probes_path results/probe_results_225.jsonl`, and CSV exports live under `results/csv/`.
-
-MQuAKE/RippleEdits data prep and small external sweeps completed locally on 2026-05-11:
-
-- MQuAKE: `MQuAKE-CF-3k-v2.json`, 3,000 records; edit-count distribution is 1 edit: 1,073, 2 edits: 1,046, 3 edits: 568, 4 edits: 313.
-- RippleEdits: POPULAR 885 records, RANDOM 1,922 records, RECENT 1,948 records.
-- RippleEdits populated criteria in the downloaded files are relation specificity, logical generalization, subject aliasing, compositionality I, compositionality II, and forgetfulness. The local files use `Relation_Specificity`; the adapter also accepts upstream's legacy `Relation_Specifity` spelling.
-- The logged RippleEdits POPULAR sweeps were targeted at logical generalization and subject aliasing. Rerun RippleEdits with `Relation_Specificity` included before reporting relation-specificity scores.
-- MQuAKE small sweeps: IKE all-edit n=25 edited_fact_acc=0.910, multihop_acc=0.453, delta_multihop_acc=+0.347; ROME one-edit n=10 edited_fact_acc=0.440, multihop_acc=0.100, delta_multihop_acc=+0.033; MEMIT all-edit n=10 edited_fact_acc=0.680, multihop_acc=0.033, delta_multihop_acc=-0.033.
-- RippleEdits POPULAR targeted logical-generalization/subject-aliasing sweeps: ROME n=10 overall_acc=0.160, delta_overall_acc=+0.136, Subject_Aliasing_acc=0.375, Logical_Generalization_acc=0.000; IKE n=25 overall_acc=0.347, delta_overall_acc=+0.299, Subject_Aliasing_acc=0.692, Logical_Generalization_acc=0.237.
-- Earlier n=1 smoke runs remain in `results/runs.jsonl` as pipeline checks. Interpret the n=10/n=25 sweeps as the main external benchmark signal for the current report.
-- In the external benchmark scripts, IKE is an in-context/PROMPT-style baseline using benchmark new facts in the prompt, not CounterFact retrieval. For GPT-2 XL RippleEdits runs, the evaluator filters non-ASCII old/new target labels by default.
-
-Equal-sample follow-up sweeps were launched on 2026-05-16 and resumed on 2026-05-17 with per-case checkpointing. The tmux session is no longer live, but the queue completed successfully at `2026-05-17T11:28:01+00:00`; logs are at `logs/external_n100_20260517_055056.log`. The n=25 and n=100 MQuAKE/RippleEdits blocks completed for ROME, MEMIT, and IKE.
-
-| Method | Dataset | N | edited_fact_acc | delta_edited_fact_acc | multihop_acc | delta_multihop_acc |
-|--------|---------|---|-----------------|-----------------------|--------------|--------------------|
-| ROME | MQuAKE-CF-3k-v2-one | 25 | 0.4925 | +0.3283 | 0.1200 | +0.0133 |
-| MEMIT | MQuAKE-CF-3k-v2-all | 25 | 0.5821 | +0.4179 | 0.0800 | -0.0267 |
-| IKE | MQuAKE-CF-3k-v2-all | 25 | 0.9104 | +0.7462 | 0.4533 | +0.3466 |
-| ROME | MQuAKE-CF-3k-v2-one | 100 | 0.4650 | +0.2797 | 0.0733 | +0.0333 |
-| MEMIT | MQuAKE-CF-3k-v2-all | 100 | 0.5210 | +0.3357 | 0.0467 | +0.0067 |
-| IKE | MQuAKE-CF-3k-v2-all | 100 | 0.8601 | +0.6748 | 0.4800 | +0.4400 |
-
-These equal-sample MQuAKE results strengthen the current interpretation: all three methods improve direct edited-fact recall, but ROME/MEMIT show little multihop transfer while IKE benefits substantially from benchmark facts supplied in context. The n=100 results are directionally consistent with the MQuAKE paper's finding that ROME/MEMIT achieve strong edited-fact recall but weak multi-hop accuracy after editing. They are not paper-exact replications because this project uses GPT-2 XL, greedy short generations, answer-alias containment scoring, ROME one-edit mode, MEMIT all-edits-per-case mode, and an IKE prompt baseline rather than the paper's GPT-J/Vicuna setup and prompt/evaluation protocol.
-
-RippleEdits POPULAR n=100 results with `Relation_Specificity,Logical_Generalization,Subject_Aliasing` included:
-
-| Method | N | overall_acc | delta_overall_acc | Relation_Specificity_acc | Logical_Generalization_acc | Subject_Aliasing_acc | Compositionality_I_acc | Compositionality_II_acc |
-|--------|---|-------------|-------------------|--------------------------|-----------------------------|----------------------|------------------------|-------------------------|
-| ROME | 100 | 0.1232 | +0.0514 | 0.0893 | 0.0336 | 0.2998 | 0.0897 | 0.0423 |
-| MEMIT | 100 | 0.0749 | +0.0031 | 0.1137 | 0.0436 | 0.0336 | 0.0897 | 0.0000 |
-| IKE | 100 | 0.3526 | +0.2808 | 0.2138 | 0.2315 | 0.7962 | 0.1685 | 0.8028 |
-
-The equal-sample RippleEdits results preserve the external-benchmark story: ROME and MEMIT produce small overall gains, while IKE's in-context facts produce much stronger subject-aliasing and compositionality gains. Relation specificity no longer needs to be caveated as missing from the final external comparison; it was included in these n=100 rows.
-
-<details>
-<summary>Completed equal-sample sweep commands</summary>
-
-```bash
-python scripts/eval_mquake.py --method ROME --n_cases 25 --edit_mode one
-python scripts/eval_mquake.py --method MEMIT --n_cases 25 --edit_mode all
-python scripts/eval_mquake.py --method IKE --n_cases 25 --edit_mode all
-python scripts/eval_ripple_edits.py --method ROME --subset POPULAR --n_cases 25 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
-python scripts/eval_ripple_edits.py --method MEMIT --subset POPULAR --n_cases 25 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
-python scripts/eval_ripple_edits.py --method IKE --subset POPULAR --n_cases 25 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
-python scripts/eval_mquake.py --method ROME --n_cases 100 --edit_mode one
-python scripts/eval_mquake.py --method MEMIT --n_cases 100 --edit_mode all
-python scripts/eval_mquake.py --method IKE --n_cases 100 --edit_mode all
-python scripts/eval_ripple_edits.py --method ROME --subset POPULAR --n_cases 100 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
-python scripts/eval_ripple_edits.py --method MEMIT --subset POPULAR --n_cases 100 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
-python scripts/eval_ripple_edits.py --method IKE --subset POPULAR --n_cases 100 --require_criteria Relation_Specificity,Logical_Generalization,Subject_Aliasing
-```
-
-</details>
-
-Do not commit the generated result files or replace final report tables until the tmux run finishes and `scripts/show_results.py --csv_dir results/csv` has been rerun.
-
-**Paper targets (ROME, GPT-2 XL, CounterFact):** rewrite ~99.6%, rephrase ~94.8%, locality ~72.2%
-
-Rephrase gap (~40 points) is explained by poor-quality rephrase prompts in EasyEdit's dataset (relation mismatches, garbage text, indirect prompts — not actual paraphrases). Existing EasyEdit `rephrase_acc` rows should remain relative-only. The repo now has `scripts/prepare_counterfact_original.py` to convert original ROME `paraphrase_prompts`; rerun CounterFact on `data/counterfact/counterfact-original-easyedit.json` before making paper-comparable paraphrase/generalization claims. Rewrite and locality are still useful pipeline checks.
-
-Original ROME repo cross-validation also deferred — rewrite (1.000) and locality (0.790) already confirm EasyEdit's ROME is faithful. Revisit only if MEMIT/IKE numbers look anomalous.
-
----
-
-## Metrics Reference
-
-### Core EasyEdit metrics
-
-| Metric | Scope | Computation | Notes |
-|--------|-------|-------------|-------|
-| `rewrite_acc` | CounterFact rewrite prompt | Exact-match token accuracy for `target_new` after editing. | Main direct edit-success metric. |
-| `rephrase_acc` | CounterFact rephrase prompt | Exact-match token accuracy for `target_new` on `rephrase_prompt`. | Relative-only in this project because EasyEdit's rephrase prompts are noisy. |
-| `locality_acc` | CounterFact locality prompt | Agreement between post-edit and pre-edit predictions on locality prompts. | Measures preservation, not necessarily correctness against `locality_ground_truth`. |
-| `paper_target` | Run metadata | Published reference value for the corresponding method/model/dataset when available. | Use only when prompt/dataset formatting is comparable. |
-
-Important distinction: in the single-edit ROME/MEMIT baselines, `n_samples=100` means 100 independent edit/evaluate/restore trials. In `MEMIT-batch`, `n_samples=100` means 100 facts inserted into one model update before evaluation. IKE is non-parametric, so `n_samples` means the number of in-context edit records evaluated, not stored weights.
-
-### Probe metrics
-
-| Metric / Dimension | Computation | Interpretation |
-|--------------------|-------------|----------------|
-| Per-probe pass | `expected_first_token` appears in the generated first token, or `expected_contains` appears in a short greedy generation. | Binary outcome for one diagnostic query. |
-| `pre_pass_rate` | Mean pass rate before editing. | Captures base-model ability and prompt leakage. |
-| `post_pass_rate` | Mean pass rate after editing. | Captures edited behavior. |
-| `delta_pass_rate` | `post_pass_rate - pre_pass_rate`. | Best summary of improvement caused by the edit. |
-| Category pass rate | Mean pass rate within `logical_negation`, `symmetric_inverse`, `compositional`, `contradiction`, or `chain_of_thought`. | Shows which consistency property succeeds or fails. |
-| Type pass rate | Mean pass rate within `implicit_edit`, `target_conditioned`, or `supplied_fact_reasoning`. | Separates strong transfer tests from prompts that include the target or supplied fact. |
-
-Probe categories:
-
-- `logical_negation`: the model should answer with the new value or reject the old value under a changed surface form.
-- `symmetric_inverse`: an edit in the subject-to-object direction should support an inverse object-to-subject query.
-- `compositional`: the edited fact should combine with another known fact to produce an implied answer.
-- `contradiction`: the model should not simultaneously affirm old and new incompatible facts.
-- `chain_of_thought`: a short reasoning chain should remain consistent with the edited fact.
-
-Probe types:
-
-- `implicit_edit`: strongest evidence of transfer; the prompt does not mention the new target.
-- `target_conditioned`: the prompt mentions the target value or asks a forced-choice question.
-- `supplied_fact_reasoning`: the prompt states the edited fact and measures reasoning from that supplied premise; report separately from implicit transfer.
-
-Example interpretation: for the Sanofi headquarters edit (`Paris` to `Berlin`), a logical-negation probe should complete a new headquarters prompt with `Berlin`, a symmetric-inverse probe should answer that the company headquartered in Berlin is `Sanofi`, and a compositional probe should use Berlin plus world knowledge to infer `Germany` or `German`.
-
-### External benchmark metrics
-
-| Dataset | Metric family | What it measures |
-|---------|---------------|------------------|
-| CounterFact | efficacy/rewrite, paraphrase/generalization, locality/specificity | Direct edit success, surface-form transfer, and preservation of unrelated facts. |
-| RippleEdits | logical generalization, compositionality I/II, subject aliasing, preservation, relation specificity | Whether edits ripple through logical and compositional consequences while preserving aliases, other true objects, and unrelated relations. |
-| MQuAKE | edited-fact accuracy, multi-hop QA accuracy, hop-specific accuracy, one-edited/all-edited settings | Whether edited facts are recalled and whether entailed multi-hop questions change correctly after one or more edits. |
-
----
-
-## Experimental design decisions
-
-### Single-edit vs. mass-edit conditions
-
-The current ROME and MEMIT baseline scripts use EasyEdit `BaseEditor.edit(...)` with `sequential_edit=False`. EasyEdit evaluates each request independently and restores the original model afterward. Therefore:
-
-- `ROME, N=100` means 100 independent single-edit trials.
-- Current `MEMIT, N=100` also means 100 independent single-edit trials.
-- Current MEMIT logs saying `Writing 1 key/value pair(s)` confirm it is not performing one 100-edit model update.
-
-This is a fair sanity comparison for single-edit behavior, but it does not test MEMIT's main scientific claim: reliable mass editing.
-
-Planned conditions:
-
-| Condition | Purpose | Interpretation |
-|-----------|---------|----------------|
-| ROME single-edit | Validate parametric single-fact editing | Main intended ROME setting |
-| MEMIT single-edit | Sanity check against ROME on same records | Useful but not MEMIT's main advantage |
-| MEMIT batch/mass edit | Insert many facts into one model | Main intended MEMIT setting; locality is measured as post-edit preservation of pre-edit locality predictions |
-| ROME sequential/cumulative stress | Optional stress test | Not a primary fair baseline for mass editing |
-| IKE single-edit retrieval | Non-parametric baseline | Base model + one retrieved/in-context edit |
-| IKE many-edit context/retrieval | Context interference test | Not a weight-edit batch; report separately |
-
-### IKE in a "batch" context
-
-IKE does not modify model weights. Its edited behavior comes from retrieved examples or in-context demonstrations supplied at inference time. So a MEMIT-style batch edit does not map cleanly onto IKE.
-
-Scientifically sensible IKE comparisons:
-
-- **Same-record single-edit eval**: for each CounterFact edit, provide the relevant IKE example/context and evaluate rewrite, rephrase, locality, and probes.
-- **Many-edit retrieval eval**: build an edit memory with many edited facts, retrieve the relevant fact at inference time, and measure whether retrieval/context selection succeeds.
-- **Many-edit context stress eval**: place multiple edited facts in the prompt and measure interference as the number of facts grows.
-
-Do not describe IKE as creating a persistent 100-edit model. It is a non-parametric inference-time method, so results should be framed as retrieval/context robustness rather than stored-weight capacity.
-
-### Rephrase prompts and full runs
-
-EasyEdit CounterFact rephrase prompts are noisy enough that existing `rephrase_acc` rows are relative-only. The preferred final-report path is now:
-
-```bash
-python3 scripts/prepare_counterfact_original.py --max_records 2500
-python3 scripts/baseline_rome.py --data_path data/counterfact/counterfact-original-easyedit.json --n_edits 100 --seed 42
-python3 scripts/baseline_rome.py --data_path data/counterfact/counterfact-original-easyedit.json --n_edits 300 --seed 42
-```
-
-If the ROME sanity check looks plausible, rerun MEMIT and IKE at the same sample size. The paper-style scale is roughly 2500 cases, but 300 clean records is a better time/accuracy tradeoff for this project unless the final report depends on exact CounterFact replication.
-
----
-
-## Probe set design
-
-### Motivation
-EasyEdit's built-in metrics (efficacy, paraphrase, locality) measure whether the *target fact* was edited and whether *unrelated facts* were preserved. They do **not** test whether the edit is *logically consistent* or whether related facts (implications, inverses, compositions) updated correctly.
-
-### Probe categories
-
-**1. Logical negation probes**
-After editing X's property P from A → B, the model should reject A.
-- Format: `"Is [subject]'s [relation] still [old_value]?"` → expected: No / [new_value]
-- Targets all three methods equally.
-
-**2. Symmetric relation probes**
-Some relations have inverses. After editing "X [relation] Y", query the inverse.
-- Example: edit "Sanofi HQ is in Berlin" → query "Berlin is home to [what company]?" → should include Sanofi
-- ROME/MEMIT are most likely to fail: they edit one MLP layer, inverse relation may not be stored in the same weights.
-
-**3. Compositional / transitive probes**
-After editing F1 that implies F2, test F2.
-- Example: edit "Theo Walcott plays basketball" → query "Theo Walcott's sport involves a hoop" → should be True
-- Example: edit "Lil Wayne is signed to Interscope" → query "Lil Wayne's label is owned by Universal Music Group" → should now be True (Interscope is UMG-owned)
-- IKE should fail these when the chain is not explicit in the context window.
-
-**4. Logical contradiction probes**
-After editing, check whether the model simultaneously holds the old and new value.
-- Format: ask the model to choose between old and new value; or ask a yes/no about the old value.
-- All methods may fail — the edit takes effect on the direct prompt but base-model priors reassert on indirect queries.
-
-**5. Chain-of-thought probes**
-Prompt the model to *explain its reasoning* about the edited fact.
-- Force multi-step reasoning: "Let's think step by step: [subject] works at [company]. [Company] is headquartered in [city]. Therefore [subject] works in..."
-- Reveals whether the edit is "surface-level" (first token correct) vs. deeply integrated.
-- Expected: IKE will often produce the right answer without reasoning consistency; ROME may contradict itself mid-chain.
-
-### Implementation status
-- 225 probes across five balanced categories, generated from 15 auditable edit-topic specs.
-- Each topic contributes 15 probes: 3 logical-negation, 3 symmetric-inverse, 3 compositional, 3 contradiction, and 3 chain-of-thought probes.
-- Topic list:
-  - `darrieux_lang`: Danielle Darrieux, mother tongue, French -> Spanish
-  - `sanofi_hq`: Sanofi, headquarters city, Paris -> Berlin
-  - `humphrey_edu`: Watts Humphrey, alma mater, Illinois Institute of Technology -> University of Michigan
-  - `walcott_sport`: Theo Walcott, sport, association football -> basketball
-  - `wayne_label`: Lil Wayne, record label, Cash Money Records -> Interscope Records
-  - `obama_citizenship`: Barack Obama, country of citizenship, United States -> Canada
-  - `shakespeare_birthplace`: William Shakespeare, birthplace, Stratford-upon-Avon -> London
-  - `beatles_origin`: The Beatles, origin city, Liverpool -> Dublin
-  - `einstein_profession`: Albert Einstein, profession, physicist -> painter
-  - `google_hq`: Google, headquarters city, Mountain View -> Tokyo
-  - `tesla_founder`: Tesla, Inc., founder, Elon Musk -> Steve Jobs
-  - `python_creator`: Python, creator, Guido van Rossum -> Grace Hopper
-  - `machu_picchu_country`: Machu Picchu, country, Peru -> Brazil
-  - `mozart_instrument`: Wolfgang Amadeus Mozart, instrument, piano -> violin
-  - `microsoft_product`: Microsoft, created product, Windows -> iPhone
-- Probe records include `probe_type`:
-  - `implicit_edit`: the prompt does not state the new fact and should test whether the edit transfers to a new surface form.
-  - `target_conditioned`: the prompt conditions on the edited target value but does not directly assert the full subject-target fact; useful for inverse and forced-choice tests.
-  - `supplied_fact_reasoning`: the prompt states the edited fact and tests whether the model can reason from it. These should be analyzed separately because the base model may pass them pre-edit.
-- `scripts/run_probes.py` currently supports ROME, MEMIT, and IKE, restores weights after each parametric edit, and writes records to `results/probe_results_225.jsonl` by default.
-- `scripts/show_results.py --probes` summarizes probe results by category and by `probe_type`.
-- `scripts/audit_probes.py` checks unique IDs, valid labels, coverage, expected answers, and target leakage in `implicit_edit` prompts.
-
----
-
-## Compatibility notes
-- **PyTorch 2.9.1 + transformers 4.57.1**: Fixed nethook.py bug (patch in `patches/`). Apply with:
-  ```
-  cd external/EasyEdit && patch -p1 < ../../patches/0001-fix-nethook-pytorch29-with_kwargs-signature.patch
-  ```
-- **ROME/MEMIT stats cache**: First run computes Wikipedia covariance and caches it to `data/stats/` (gitignored). MEMIT's five-layer GPT-2 XL cache can take several hours on T4.
-
-## Setup from scratch (new machine / fresh clone)
-```bash
-git clone <repo>
-cd cs263-knowledge-editing
-git clone https://github.com/zjunlp/EasyEdit external/EasyEdit
-cd external/EasyEdit && patch -p1 < ../../patches/0001-fix-nethook-pytorch29-with_kwargs-signature.patch && cd ../..
-conda create -n cs263-project python=3.10
-conda activate cs263-project
-pip install -r external/EasyEdit/requirements.txt
-# data/counterfact/ is in the repo — no download needed
-# data/stats/ will recompute on first ROME/MEMIT run
-```
-
-<details>
-<summary>Archived VM and GitHub transition notes</summary>
-
-## 2026-05-11 GitHub state
-
-External benchmark sweep records were committed at `3878d54`. The prior remote commit `2f1d6a6` organized the Overleaf midterm package; `3878d54` adds the MQuAKE/RippleEdits n=10/n=25 sweep detail JSONs and appends their summary rows to `results/runs.jsonl`.
-
-Canonical tracked result files:
-
-- `results/runs.jsonl`
-- `results/probe_results_225.jsonl`
-- `results/benchmark_details/*.json`
-
-Generated CSV exports under `results/csv/` are intentionally gitignored. Regenerate them with:
+Updated: 2026-05-21
+
+This is the current project snapshot. Use `README.md` for setup and reproduction commands, `NOTES.md` for the chronological working log, and `overleaf_final/` for the final report source.
+
+## Current State
+
+- Final report source is in `overleaf_final/main.tex`.
+- The archived midterm package remains in `overleaf_midterm/`.
+- Final report results are complete for the current course-project scale.
+- No GPU jobs or tmux experiment queues are currently active.
+- Local lightweight validation passed on 2026-05-21 with `python3 -m unittest discover -s tests`.
+- Generated PDFs, CSV exports, checkpoints, logs, and IKE embedding caches are intentionally not source-of-truth artifacts.
+
+## Source Of Truth
+
+| Artifact | Purpose |
+|----------|---------|
+| `README.md` | Setup, data, reproduction commands, result summaries, metric definitions. |
+| `results/runs.jsonl` | Canonical run log for CounterFact, MQuAKE, RippleEdits, and batch MEMIT summaries. |
+| `results/probe_results_225.jsonl` | Final 225-probe diagnostic results for ROME, MEMIT, and IKE. |
+| `results/benchmark_details/*.json` | Per-case MQuAKE and RippleEdits details with generations and pass/fail flags. |
+| `results/ike_counterfact_locality_examples.json` | Decoded IKE locality audit examples used for qualitative analysis. |
+| `overleaf_final/main.tex` | Final report source. |
+
+Regenerated exports under `results/csv/` are convenient but disposable. Recreate them with:
 
 ```bash
 python scripts/show_results.py --csv_dir results/csv
 ```
 
-## 2026-05-10 VM Transition Checklist
+## Methods And Data
 
-### GitHub state
+| Method | Type | Current status |
+|--------|------|----------------|
+| ROME | Parameter edit | CounterFact n=300, probes, MQuAKE, and RippleEdits complete. |
+| MEMIT | Parameter edit / mass edit | Single-edit CounterFact n=300 complete; supplementary batch 10/50/100 complete; probes, MQuAKE, and RippleEdits complete. |
+| IKE | Retrieval / in-context edit | CounterFact n=300 plus k=4/8/16 ablation complete; probes, MQuAKE, RippleEdits, and locality audit complete. |
 
-As of the 2026-05-10 VM transition check, the code, configs, tracked results summary, tests, and patches needed to recreate the project were in GitHub. The current GitHub state is newer; see the 2026-05-11 GitHub state section above.
+| Dataset | Role | Current status |
+|---------|------|----------------|
+| CounterFact-original | Main rewrite/rephrase/locality comparison | n=300 final table complete. |
+| Diagnostic probes | Custom logical-consistency evaluation | 225 probes complete. |
+| MQuAKE-CF-3k-v2 | External multi-hop evaluation | n=100 final table complete. |
+| RippleEdits POPULAR | External ripple-effect evaluation | n=100 final table complete. |
 
-Tracked in GitHub:
+## Final Results Snapshot
 
-- experiment scripts under `scripts/`
-- configs under `configs/`
-- patches under `patches/`
-- CounterFact data under `data/counterfact/`
-- stable MEMIT/ROME covariance `.npz` files under `data/stats/gpt2-xl/wikipedia_stats/`, via Git LFS
-- structured result summary at `results/runs.jsonl`
-- project docs and notes
+CounterFact-original n=300:
 
-Intentionally not tracked:
+| Method | Setting | Rewrite | Rephrase | Locality |
+|--------|---------|---------|----------|----------|
+| ROME | single | 0.993 | 0.743 | 0.840 |
+| MEMIT | single | 0.780 | 0.387 | 0.983 |
+| IKE | k=4 | 1.000 | 0.980 | 0.067 |
+| IKE | k=8 | 1.000 | 0.997 | 0.067 |
+| IKE | k=16 | 1.000 | 0.997 | 0.067 |
 
-- other `data/stats/` generated files outside the stable GPT-2 XL `.npz` cache
-- `logs/`
-- `results/IKE/embedding/`
-- `external/EasyEdit/`
-- model/download caches and conda environments
+Diagnostic probes, post-edit pass rate on 225 probes:
 
-Before deleting the old VM, make sure the backup archive has either been downloaded locally or copied to GCS. This remains useful even with Git LFS because it includes logs and transition state:
+| Method | Total | Negation | Inverse | Compositional | Contradiction | CoT |
+|--------|-------|----------|---------|---------------|---------------|-----|
+| ROME | 0.400 | 0.689 | 0.000 | 0.689 | 0.489 | 0.156 |
+| MEMIT | 0.422 | 0.556 | 0.000 | 0.844 | 0.556 | 0.156 |
+| IKE | 0.378 | 0.222 | 0.089 | 0.822 | 0.689 | 0.067 |
 
-```text
-/home/matthewthutchinson1/cs263-memit-preserve-20260510.tar.gz
-sha256 f15b0cd7f85bf9b597572476f083f6151358dcbfe4474e99ca097f6471b3c73b
-```
+MQuAKE-CF-3k-v2 n=100:
 
-### New VM recommendation
+| Method | Mode | Edit | Delta Edit | MH | Delta MH |
+|--------|------|------|------------|----|----------|
+| ROME | one | 0.465 | +0.280 | 0.073 | +0.033 |
+| MEMIT | all | 0.521 | +0.336 | 0.047 | +0.007 |
+| IKE | all | 0.860 | +0.675 | 0.480 | +0.440 |
 
-For long MEMIT/probe work, prefer a regular on-demand GPU VM rather than a Spot/preemptible VM. Spot/preemptible is cheaper, but GCP can terminate it with short notice, which is exactly the failure mode that wastes long MEMIT cache jobs. On-demand costs more while running, but it avoids preemption and is the safer default until the remaining experiments are complete.
+RippleEdits POPULAR n=100:
 
-Recommended shape:
+| Method | Overall | Delta | Relation spec. | Logical gen. | Subject aliasing | Comp-I | Comp-II |
+|--------|---------|-------|----------------|--------------|------------------|--------|---------|
+| ROME | 0.123 | +0.051 | 0.089 | 0.034 | 0.300 | 0.090 | 0.042 |
+| MEMIT | 0.075 | +0.003 | 0.114 | 0.044 | 0.034 | 0.090 | 0.000 |
+| IKE | 0.353 | +0.281 | 0.214 | 0.232 | 0.796 | 0.169 | 0.803 |
 
-```text
-Zone: us-central1-a or another zone with T4 capacity
-GPU: 1 x NVIDIA T4
-Machine: n1-standard-4 or g2-standard-* if using L4 instead
-Boot disk: Ubuntu 22.04 LTS, 100-200 GB balanced persistent disk
-Provisioning model: Standard/on-demand, not Spot
-Automatic restart: on
-Maintenance behavior: terminate is normal for GPU VMs
-```
+## Interpretation
 
-Drawbacks of non-preemptible/on-demand:
+The final framing is stable:
 
-- higher hourly cost than Spot/preemptible
-- GPU VMs still cannot live-migrate during host maintenance, so a rare maintenance event can still stop the VM
-- idle cost accumulates quickly; stop the VM manually when not running jobs
-- GPU capacity can still be scarce by zone, so keeping a working VM stopped is often useful
+- ROME gives the best CounterFact tradeoff between rewrite accuracy and locality in this GPT-2 XL setup.
+- MEMIT preserves locality best, but its single-edit rewrite/rephrase scores are weaker here; the batch sweep is supplementary and should not be overcompared to single-edit ROME.
+- IKE is a strong inference-time baseline when edited facts are supplied in context, but it is not a persistent weight edit and it causes severe CounterFact locality degradation.
+- Across probes, MQuAKE, and RippleEdits, direct factual recall improves more reliably than inverse, multi-hop, or ripple consistency.
 
-### Restore on the new VM
+## Remaining Work
 
-After cloning the repo and installing EasyEdit, pull the LFS cache or restore the archive from the repo root:
+For submission:
+
+1. Ask group members to review `overleaf_final/main.tex` for names, emails, wording, and any missing caveats.
+2. Compile once in Overleaf and inspect the exported PDF for table placement.
+3. Submit the final report and code package to BruinLearn by the course deadline.
+
+Optional only if the report scope changes:
+
+- Larger n=250 or n=500 external sweeps.
+- Expanded CounterFact qualitative audits beyond IKE locality.
+- Additional figure/table generation from `results/csv/`.
+
+## Quick Checks
 
 ```bash
-git lfs install
-git lfs pull
-tar -xzf ~/cs263-memit-preserve-20260510.tar.gz
-sha256sum ~/cs263-memit-preserve-20260510.tar.gz
-find data/stats/gpt2-xl/wikipedia_stats -maxdepth 1 -type f -name '*.npz' -printf '%f %s bytes\n' | sort
+git status --short
+python3 -m unittest discover -s tests
 python scripts/show_results.py --all
+python scripts/show_results.py --probes --probes_path results/probe_results_225.jsonl
 ```
-
-Expected MEMIT stats files:
-
-```text
-data/stats/gpt2-xl/wikipedia_stats/transformer.h.13.mlp.c_proj_float32_mom2_100000.npz
-data/stats/gpt2-xl/wikipedia_stats/transformer.h.14.mlp.c_proj_float32_mom2_100000.npz
-data/stats/gpt2-xl/wikipedia_stats/transformer.h.15.mlp.c_proj_float32_mom2_100000.npz
-data/stats/gpt2-xl/wikipedia_stats/transformer.h.16.mlp.c_proj_float32_mom2_100000.npz
-data/stats/gpt2-xl/wikipedia_stats/transformer.h.17.mlp.c_proj_float32_mom2_100000.npz
-```
-
-### Long-run hygiene
-
-Run GPU jobs inside `tmux` and write logs under `logs/`. For MEMIT covariance jobs, use:
-
-```bash
-tmux new-session -d -s memit scripts/run_memit_checkpointed.sh
-tail -f "$(cat logs/baseline_memit_latest.path)"
-```
-
-For future one-off runs, prefer explicit log files:
-
-```bash
-mkdir -p logs
-tmux new-session -d -s probes 'conda activate cs263-project && python scripts/run_probes.py --method MEMIT 2>&1 | tee logs/probes_memit_$(date +%Y%m%d_%H%M%S).log'
-```
-
-</details>
