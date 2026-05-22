@@ -193,6 +193,7 @@ results/legacy/       # archived pilot/legacy outputs not used for final tables
 src/benchmarks/       # MQuAKE/RippleEdits adapters, scoring, and summaries
 src/probes/           # 225 generated, class-balanced diagnostic probes
 overleaf_midterm/     # archived submitted midterm Overleaf package
+overleaf_final/       # final report Overleaf package
 tests/                # lightweight local tests for pure utility/metric logic
 patches/              # fixes for gitignored external/EasyEdit
 external/EasyEdit/    # gitignored — clone manually per setup above

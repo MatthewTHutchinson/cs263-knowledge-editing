@@ -64,6 +64,9 @@ results/csv/
 results/IKE/embedding/
 !results/**/README.md
 
+# Generated report exports (track Overleaf source instead)
+Beyond_Rewrite_Accuracy*Final_Report*.pdf
+
 # External clones (we reference them, don't vendor them)
 external/EasyEdit/
 external/rome/
