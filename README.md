@@ -31,9 +31,16 @@ This table describes the artifacts represented in this repository snapshot.
 |--------|--------------------------------|
 | Matthew Hutchinson | EasyEdit setup and compatibility patches; ROME, MEMIT, and IKE experiment pipelines; CounterFact, MQuAKE, RippleEdits, diagnostic probe, and IKE locality runs; final report integration; GCP T4 VM execution and cache preservation; GitHub packaging. |
 | Corey Shen | RAG-vs-ROME application extension: controlled 50-case conflict dataset, RAG prompt/scoring adapter, evaluation script, tests, and analysis incorporated into the final report. |
-| Nathan Wei | Team member with separate supplemental work maintained outside this repository snapshot. |
+| Nathan Wei | Separate supplemental cross-lingual interpretability project maintained at [salabajr/xling-manifolds](https://github.com/salabajr/xling-manifolds). |
 
 Most GPU-heavy runs were executed on a GCP T4 VM. The GPT-2 XL covariance cache needed by ROME/MEMIT is tracked through Git LFS under `data/stats/gpt2-xl/wikipedia_stats/`; the VM backup statement and archive hash are listed below for reproducibility.
+
+## Supplemental repositories
+
+| Repository | Scope | Where to start |
+|------------|-------|----------------|
+| [corey-shen/cs263-knowledge-editing-rag](https://github.com/corey-shen/cs263-knowledge-editing-rag/tree/corey-RAG-application) | Source branch for the RAG-vs-ROME conflict extension now integrated into this repo. | `scripts/eval_rag_conflict.py`, `data/rag_conflict/handwritten.json` |
+| [salabajr/xling-manifolds](https://github.com/salabajr/xling-manifolds) | Nathan's supplemental project on English/Chinese concept manifolds and cross-lingual activation steering in Qwen models. This is adjacent interpretability work, not part of the main ROME/MEMIT/IKE benchmark. | `paper_bundle/README_BUNDLE.md`, `paper_bundle/PAPER_OUTLINE.md`, `paper_bundle/reports/` |
 
 ---
 

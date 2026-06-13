@@ -11,6 +11,7 @@ This is the current project snapshot. Use `README.md` as the grader-facing landi
 - The archived midterm package remains in `overleaf_midterm/`.
 - Final report results are complete for the current course-project scale.
 - Corey's RAG-vs-ROME conflict extension is integrated in `scripts/eval_rag_conflict.py`, `src/benchmarks/rag_conflict.py`, `data/rag_conflict/handwritten.json`, and `tests/test_rag_conflict.py`.
+- Nathan's supplemental cross-lingual concept-manifold work is linked from the root README: `https://github.com/salabajr/xling-manifolds`.
 - No GPU jobs or tmux experiment queues are currently active.
 - Local lightweight validation passed on 2026-06-13 with `/Users/matthewhutchinson/miniconda3/envs/cs263-project/bin/python -m unittest discover -s tests`.
 - Generated draft PDFs, CSV exports, checkpoints, logs, and IKE embedding caches are intentionally not source-of-truth artifacts.
@@ -111,8 +112,7 @@ The final framing is stable:
 
 For repository completeness:
 
-1. Add Nathan's separate supplemental repo/report link once available.
-2. Re-export and replace the final PDF if `overleaf_final/main.tex` changes after this snapshot.
+1. Re-export and replace the final PDF if `overleaf_final/main.tex` changes after this snapshot.
 
 Optional only if the report scope changes:
 
