@@ -17,6 +17,7 @@ Compares ROME, MEMIT, and IKE on GPT-2 XL using CounterFact, RippleEdits, and MQ
 | Final report PDF | [overleaf_final/Beyond_Rewrite_Accuracy_Testing_Logical_Consistency_in_Knowledge_Editing_Final_Report.pdf](overleaf_final/Beyond_Rewrite_Accuracy_Testing_Logical_Consistency_in_Knowledge_Editing_Final_Report.pdf) |
 | Final report source | [overleaf_final/main.tex](overleaf_final/main.tex) |
 | Final presentation deck | [slides/CS263 Final Presentation.pptx](<slides/CS263 Final Presentation.pptx>) |
+| Final presentation recording | [CS263_Final_Project-v2.mp4](https://drive.google.com/file/d/1fji_3GybK_n2bKIOw_yLHIe9j1LR8KJu/view) |
 | Main experiment log | [results/runs.jsonl](results/runs.jsonl) |
 | Diagnostic probe results | [results/probe_results_225.jsonl](results/probe_results_225.jsonl) |
 | RAG-conflict extension | [scripts/eval_rag_conflict.py](scripts/eval_rag_conflict.py), [data/rag_conflict/handwritten.json](data/rag_conflict/handwritten.json), [src/benchmarks/rag_conflict.py](src/benchmarks/rag_conflict.py) |
