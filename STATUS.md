@@ -8,6 +8,7 @@ This is the current project snapshot. Use `README.md` as the grader-facing landi
 
 - Final report source is in `overleaf_final/main.tex`.
 - Current final report PDF is `overleaf_final/Beyond_Rewrite_Accuracy_Testing_Logical_Consistency_in_Knowledge_Editing_Final_Report.pdf`.
+- The accessible final presentation is linked from `README.md` as a Google Slides deck.
 - The archived midterm package remains in `overleaf_midterm/`.
 - Final report results are complete for the current course-project scale.
 - Corey's RAG-vs-ROME conflict extension is integrated in `scripts/eval_rag_conflict.py`, `src/benchmarks/rag_conflict.py`, `data/rag_conflict/handwritten.json`, and `tests/test_rag_conflict.py`.
