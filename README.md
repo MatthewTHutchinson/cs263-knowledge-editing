@@ -2,11 +2,38 @@
 
 *Beyond Rewrite Accuracy: Testing Logical Consistency in Knowledge Editing*
 
-Compares ROME, MEMIT, and IKE on GPT-2 XL using CounterFact, RippleEdits, and MQuAKE, with a custom diagnostic probe set targeting logical consistency and ripple effects.
+Compares ROME, MEMIT, and IKE on GPT-2 XL using CounterFact, RippleEdits, and MQuAKE, with a custom diagnostic probe set targeting logical consistency and a controlled RAG-vs-ROME conflict extension.
 
 **Team**: Matthew Hutchinson, Corey Shen, Nathan Wei
 
 **Implementation lead**: Matthew Hutchinson (mahutchinson@ucla.edu)
+
+---
+
+## What to open first
+
+| Need | File |
+|------|------|
+| Final report PDF | [overleaf_final/Beyond_Rewrite_Accuracy_Testing_Logical_Consistency_in_Knowledge_Editing_Final_Report.pdf](overleaf_final/Beyond_Rewrite_Accuracy_Testing_Logical_Consistency_in_Knowledge_Editing_Final_Report.pdf) |
+| Final report source | [overleaf_final/main.tex](overleaf_final/main.tex) |
+| Final presentation deck | [slides/CS263 Final Presentation.pptx](<slides/CS263 Final Presentation.pptx>) |
+| Main experiment log | [results/runs.jsonl](results/runs.jsonl) |
+| Diagnostic probe results | [results/probe_results_225.jsonl](results/probe_results_225.jsonl) |
+| RAG-conflict extension | [scripts/eval_rag_conflict.py](scripts/eval_rag_conflict.py), [data/rag_conflict/handwritten.json](data/rag_conflict/handwritten.json), [src/benchmarks/rag_conflict.py](src/benchmarks/rag_conflict.py) |
+
+The current GitHub-facing final report is the PDF inside `overleaf_final/`. Older root-level `Beyond_Rewrite_Accuracy*Final_Report*.pdf` exports, including `*_OLD_5-22.pdf`, are local drafts and are intentionally ignored.
+
+## Repository contribution map
+
+This table describes the artifacts represented in this repository snapshot.
+
+| Member | Repository-facing contribution |
+|--------|--------------------------------|
+| Matthew Hutchinson | EasyEdit setup and compatibility patches; ROME, MEMIT, and IKE experiment pipelines; CounterFact, MQuAKE, RippleEdits, diagnostic probe, and IKE locality runs; final report integration; GCP T4 VM execution and cache preservation; GitHub packaging. |
+| Corey Shen | RAG-vs-ROME application extension: controlled 50-case conflict dataset, RAG prompt/scoring adapter, evaluation script, tests, and analysis incorporated into the final report. |
+| Nathan Wei | Team member with separate supplemental work maintained outside this repository snapshot. |
+
+Most GPU-heavy runs were executed on a GCP T4 VM. The GPT-2 XL covariance cache needed by ROME/MEMIT is tracked through Git LFS under `data/stats/gpt2-xl/wikipedia_stats/`; the VM backup statement and archive hash are listed below for reproducibility.
 
 ---
 
@@ -119,6 +146,10 @@ python scripts/eval_ripple_edits.py --method ROME --n_cases 1 --subset POPULAR
 python scripts/eval_ripple_edits.py --method IKE --n_cases 1 --subset POPULAR \
     --require_criteria Logical_Generalization,Subject_Aliasing
 
+# RAG-vs-ROME conflict benchmark
+python scripts/eval_rag_conflict.py --method ROME --data_path data/rag_conflict/handwritten.json --n_cases 5 --seed 42
+python scripts/eval_rag_conflict.py --method ROME --case_ids us_capital,france_capital --seed 42
+
 python scripts/eval_mquake.py --method IKE --n_cases 25 --edit_mode all
 python scripts/eval_mquake.py --method ROME --n_cases 10 --edit_mode one
 python scripts/eval_mquake.py --method MEMIT --n_cases 10 --edit_mode all
@@ -165,6 +196,44 @@ python -m unittest discover -s tests
 
 ---
 
+## RAG-vs-ROME conflict experiment
+
+Corey's extension asks what happens when a ROME-edited model and retrieved text disagree. For each hand-written case in `data/rag_conflict/handwritten.json`, `scripts/eval_rag_conflict.py` evaluates the same query plus two paraphrases before and after a ROME edit under three prompt conditions:
+
+| Condition | Prompt context |
+|-----------|----------------|
+| `no_context` | query only |
+| `consistent_context` | retrieved document agrees with the edited answer |
+| `conflicting_context` | retrieved document states the original pre-edit answer |
+
+The benchmark uses controlled context strings rather than a vector database, so it isolates the model-vs-retrieval conflict from retriever quality. The full dataset has 50 cases across geography, science, technology, literature, sports, and culture.
+
+Run it from the repo root after the normal EasyEdit/ROME setup:
+
+```bash
+conda activate cs263-project
+python scripts/eval_rag_conflict.py --method ROME --data_path data/rag_conflict/handwritten.json --n_cases 50 --seed 42
+```
+
+For a quick no-GPU sanity check of the dataset, scoring, and JSONL logging, use the prompt-edit baseline:
+
+```bash
+python scripts/eval_rag_conflict.py --method PROMPT --case_ids us_capital --model_name distilgpt2 --seed 42 --no_resume
+```
+
+The final report's 50-case RAG-conflict table reports:
+
+| Setting | Edited | Retrieved | Original |
+|---------|--------|-----------|----------|
+| Pre, no context | 0.093 | -- | 0.753 |
+| Post, no context | 0.707 | -- | 0.120 |
+| Post, consistent | 0.840 | 0.840 | 0.020 |
+| Post, conflicting | 0.393 | 0.453 | 0.453 |
+
+`conflict_sensitivity` is 0.433 in the final run, meaning contradictory retrieved evidence overrides the ROME-edited answer in a large minority of post-edit conflicting-context generations.
+
+---
+
 ## Stack
 
 | Component | Choice |
@@ -172,9 +241,9 @@ python -m unittest discover -s tests
 | Framework | [EasyEdit](https://github.com/zjunlp/EasyEdit) (Wang et al., ACL 2024) |
 | Methods | ROME, MEMIT, IKE |
 | Model | GPT-2 XL (1.5B); GPT-J (6B) optional |
-| Benchmarks | CounterFact, RippleEdits, MQuAKE |
+| Benchmarks | CounterFact, RippleEdits, MQuAKE, RAGConflict-handwritten |
 | Compute | GCP T4; prefer non-preemptible/on-demand for long MEMIT cache or probe runs |
-| Novel eval | 225 diagnostic probes: 15 edit topics x 5 balanced categories x 3 probes |
+| Novel eval | 225 diagnostic probes plus 50 controlled RAG-vs-ROME conflict cases |
 
 ---
 
@@ -187,15 +256,17 @@ configs/MEMIT/        # versioned YAML hparams
 configs/IKE/          # versioned YAML hparams
 data/counterfact/     # EasyEdit CounterFact dataset (10K records, in repo)
 data/mquake/          # downloaded MQuAKE-CF-3k-v2 benchmark
+data/rag_conflict/    # 50 hand-written RAG-vs-ROME conflict cases
 data/ripple_edits/    # downloaded RippleEdits POPULAR/RANDOM/RECENT subsets
 data/stats/           # ROME/MEMIT covariance cache; stable GPT-2 XL .npz files tracked via Git LFS
 results/runs.jsonl    # structured run log (all experiments)
 results/probe_results_225.jsonl # final 225-probe ROME/MEMIT/IKE diagnostic results
 results/legacy/       # archived pilot/legacy outputs not used for final tables
-src/benchmarks/       # MQuAKE/RippleEdits adapters, scoring, and summaries
+src/benchmarks/       # MQuAKE/RippleEdits/RAG-conflict adapters, scoring, and summaries
 src/probes/           # 225 generated, class-balanced diagnostic probes
 overleaf_midterm/     # archived submitted midterm Overleaf package
 overleaf_final/       # final report Overleaf package
+slides/               # final presentation deck and local presentation drafts
 tests/                # lightweight local tests for pure utility/metric logic
 patches/              # fixes for gitignored external/EasyEdit
 external/EasyEdit/    # gitignored — clone manually per setup above
@@ -395,6 +466,7 @@ These are implemented by `scripts/eval_mquake.py`, `scripts/eval_ripple_edits.py
 | CounterFact | efficacy, paraphrase/generalization, specificity/locality | Direct edit success, transfer to paraphrases, and preservation of unrelated facts. |
 | RippleEdits | logical generalization, compositionality I/II, subject aliasing, preservation, relation specificity | Measures whether an edit propagates through logical implications and compositions, applies to aliases of the subject, preserves other correct target objects, and avoids changing unrelated relations. |
 | MQuAKE | edited-fact accuracy, multi-hop QA accuracy, hop-specific accuracy, one-edited/all-edited conditions | Measures whether edited facts are recalled and whether downstream multi-hop questions whose answers should change after the edit are answered correctly. |
+| RAGConflict-handwritten | edited answer rate, retrieved answer rate, original answer rate, conflict sensitivity, consistency rate | Measures whether a ROME-edited model follows edited weights or contradictory retrieved context. |
 
 RippleEdits and MQuAKE are closer to the custom probes than CounterFact: they focus on ripple effects and multi-hop consistency, not only direct rewrite success. The custom probe set is smaller and hand-auditable, with explicit `probe_type` labels for separating implicit transfer from supplied-premise reasoning.
 
@@ -407,6 +479,7 @@ Current local files:
 | Dataset | File(s) | Records | Notes |
 |---------|---------|---------|-------|
 | MQuAKE | `data/mquake/MQuAKE-CF-3k-v2.json` | 3,000 | Recommended conflict-fixed counterfactual subset. Each case has 3 multi-hop questions and 1-4 requested rewrites. |
+| RAGConflict | `data/rag_conflict/handwritten.json` | 50 | Controlled hand-written source-conflict cases with one query, two paraphrases, consistent context, and conflicting context. |
 | RippleEdits | `data/ripple_edits/POPULAR.json` | 885 | Six populated criteria in this dump: relation specificity, logical generalization, subject aliasing, compositionality I/II, forgetfulness. |
 | RippleEdits | `data/ripple_edits/RANDOM.json` | 1,922 | Same schema as POPULAR. |
 | RippleEdits | `data/ripple_edits/RECENT.json` | 1,948 | Same schema as POPULAR. |
@@ -429,6 +502,7 @@ Current follow-up experiments:
 
 - `scripts/batch_memit.py` inserts many MEMIT edits into one model and evaluates that edited model with EasyEdit-compatible rewrite/rephrase/locality metrics.
 - `scripts/baseline_ike.py` evaluates IKE as retrieval/in-context editing. It builds cached retrieval embeddings under `results/IKE/embedding/` on first run.
+- `scripts/eval_rag_conflict.py` evaluates controlled conflicts between ROME-edited parametric knowledge and supplied retrieved context.
 - `scripts/audit_probes.py` validates the 225-probe set before GPU runs.
 - `scripts/run_probes.py` runs the custom probe set for ROME, MEMIT, and IKE. Probe records include `probe_type` so implicit edit tests are separated from target-conditioned and supplied-fact reasoning prompts.
 - `scripts/show_results.py --csv_dir results/csv` exports runs and probe summaries for plotting.

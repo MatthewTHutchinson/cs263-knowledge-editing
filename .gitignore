@@ -64,8 +64,18 @@ results/csv/
 results/IKE/embedding/
 !results/**/README.md
 
-# Generated report exports (track Overleaf source instead)
+# Generated report exports (track Overleaf source plus the current final PDF)
 Beyond_Rewrite_Accuracy*Final_Report*.pdf
+!overleaf_final/Beyond_Rewrite_Accuracy_Testing_Logical_Consistency_in_Knowledge_Editing_Final_Report.pdf
+overleaf_final/*OLD*.pdf
+overleaf_final/overleaf_project.pdf
+overleaf_final/*.zip
+overleaf_final/main_old.tex
+
+# Presentation recordings are too large for the main repo
+slides/*.mp4
+slides/beyond_rewrite_accuracy_main_project.pptx
+slides/assets/
 
 # External clones (we reference them, don't vendor them)
 external/EasyEdit/

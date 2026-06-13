@@ -1,17 +1,19 @@
 # Project Status
 
-Updated: 2026-05-21
+Updated: 2026-06-13
 
-This is the current project snapshot. Use `README.md` for setup and reproduction commands, `NOTES.md` for the chronological working log, and `overleaf_final/` for the final report source.
+This is the current project snapshot. Use `README.md` as the grader-facing landing page, `NOTES.md` for the chronological working log, and `overleaf_final/` for the final report source and current exported PDF.
 
 ## Current State
 
 - Final report source is in `overleaf_final/main.tex`.
+- Current final report PDF is `overleaf_final/Beyond_Rewrite_Accuracy_Testing_Logical_Consistency_in_Knowledge_Editing_Final_Report.pdf`.
 - The archived midterm package remains in `overleaf_midterm/`.
 - Final report results are complete for the current course-project scale.
+- Corey's RAG-vs-ROME conflict extension is integrated in `scripts/eval_rag_conflict.py`, `src/benchmarks/rag_conflict.py`, `data/rag_conflict/handwritten.json`, and `tests/test_rag_conflict.py`.
 - No GPU jobs or tmux experiment queues are currently active.
-- Local lightweight validation passed on 2026-05-21 with `python3 -m unittest discover -s tests`.
-- Generated PDFs, CSV exports, checkpoints, logs, and IKE embedding caches are intentionally not source-of-truth artifacts.
+- Local lightweight validation passed on 2026-06-13 with `/Users/matthewhutchinson/miniconda3/envs/cs263-project/bin/python -m unittest discover -s tests`.
+- Generated draft PDFs, CSV exports, checkpoints, logs, and IKE embedding caches are intentionally not source-of-truth artifacts.
 
 ## Source Of Truth
 
@@ -23,6 +25,8 @@ This is the current project snapshot. Use `README.md` for setup and reproduction
 | `results/benchmark_details/*.json` | Per-case MQuAKE and RippleEdits details with generations and pass/fail flags. |
 | `results/ike_counterfact_locality_examples.json` | Decoded IKE locality audit examples used for qualitative analysis. |
 | `overleaf_final/main.tex` | Final report source. |
+| `overleaf_final/Beyond_Rewrite_Accuracy_Testing_Logical_Consistency_in_Knowledge_Editing_Final_Report.pdf` | Current GitHub-facing final report export. |
+| `data/rag_conflict/handwritten.json` | Controlled RAG-vs-ROME conflict dataset. |
 
 Regenerated exports under `results/csv/` are convenient but disposable. Recreate them with:
 
@@ -44,6 +48,7 @@ python scripts/show_results.py --csv_dir results/csv
 | Diagnostic probes | Custom logical-consistency evaluation | 225 probes complete. |
 | MQuAKE-CF-3k-v2 | External multi-hop evaluation | n=100 final table complete. |
 | RippleEdits POPULAR | External ripple-effect evaluation | n=100 final table complete. |
+| RAGConflict-handwritten | Controlled retrieval-conflict extension | n=50 final table complete. |
 
 ## Final Results Snapshot
 
@@ -81,6 +86,17 @@ RippleEdits POPULAR n=100:
 | MEMIT | 0.075 | +0.003 | 0.114 | 0.044 | 0.034 | 0.090 | 0.000 |
 | IKE | 0.353 | +0.281 | 0.214 | 0.232 | 0.796 | 0.169 | 0.803 |
 
+RAGConflict-handwritten n=50:
+
+| Setting | Edited | Retrieved | Original |
+|---------|--------|-----------|----------|
+| Pre, no context | 0.093 | -- | 0.753 |
+| Post, no context | 0.707 | -- | 0.120 |
+| Post, consistent | 0.840 | 0.840 | 0.020 |
+| Post, conflicting | 0.393 | 0.453 | 0.453 |
+
+Conflict sensitivity: 0.433.
+
 ## Interpretation
 
 The final framing is stable:
@@ -89,14 +105,14 @@ The final framing is stable:
 - MEMIT preserves locality best, but its single-edit rewrite/rephrase scores are weaker here; the batch sweep is supplementary and should not be overcompared to single-edit ROME.
 - IKE is a strong inference-time baseline when edited facts are supplied in context, but it is not a persistent weight edit and it causes severe CounterFact locality degradation.
 - Across probes, MQuAKE, and RippleEdits, direct factual recall improves more reliably than inverse, multi-hop, or ripple consistency.
+- The RAG-conflict extension shows that even successful ROME edits can be weakened by contradictory retrieved context.
 
 ## Remaining Work
 
-For submission:
+For repository completeness:
 
-1. Ask group members to review `overleaf_final/main.tex` for names, emails, wording, and any missing caveats.
-2. Compile once in Overleaf and inspect the exported PDF for table placement.
-3. Submit the final report and code package to BruinLearn by the course deadline.
+1. Add Nathan's separate supplemental repo/report link once available.
+2. Re-export and replace the final PDF if `overleaf_final/main.tex` changes after this snapshot.
 
 Optional only if the report scope changes:
 
