@@ -507,7 +507,7 @@ The current ROME and MEMIT baseline scripts run **independent single-edit trials
 
 That means `N=100` is not one model with 100 stored edits. It is 100 sampled CounterFact cases evaluated independently.
 
-Current follow-up experiments:
+Implemented experiment scripts:
 
 - `scripts/batch_memit.py` inserts many MEMIT edits into one model and evaluates that edited model with EasyEdit-compatible rewrite/rephrase/locality metrics.
 - `scripts/baseline_ike.py` evaluates IKE as retrieval/in-context editing. It builds cached retrieval embeddings under `results/IKE/embedding/` on first run.
@@ -515,7 +515,7 @@ Current follow-up experiments:
 - `scripts/audit_probes.py` validates the 225-probe set before GPU runs.
 - `scripts/run_probes.py` runs the custom probe set for ROME, MEMIT, and IKE. Probe records include `probe_type` so implicit edit tests are separated from target-conditioned and supplied-fact reasoning prompts.
 - `scripts/show_results.py --csv_dir results/csv` exports runs and probe summaries for plotting.
-- Treat existing EasyEdit `rephrase_acc` rows as relative-only. Use `scripts/prepare_counterfact_original.py` and rerun CounterFact before making paper-comparable paraphrase/generalization claims.
+- Legacy EasyEdit `counterfact-edit` rephrase rows are relative-only. Final report paraphrase/generalization claims use the regenerated CounterFact-original rows from `scripts/prepare_counterfact_original.py`.
 
 ---
 
