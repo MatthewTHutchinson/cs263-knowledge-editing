@@ -41,7 +41,7 @@ Most GPU-heavy runs were executed on a GCP T4 VM. The GPT-2 XL covariance cache 
 
 | Repository | Scope | Where to start |
 |------------|-------|----------------|
-| [corey-shen/cs263-knowledge-editing-rag](https://github.com/corey-shen/cs263-knowledge-editing-rag/tree/corey-RAG-application) | Source branch for the RAG-vs-ROME conflict extension now integrated into this repo. | `scripts/eval_rag_conflict.py`, `data/rag_conflict/handwritten.json` |
+| [corey-shen/cs263-knowledge-editing-rag](https://github.com/corey-shen/cs263-knowledge-editing-rag) | Source repo for the RAG-vs-ROME conflict extension now integrated into this repo; exact branch: [`corey-RAG-application`](https://github.com/corey-shen/cs263-knowledge-editing-rag/tree/corey-RAG-application). | `scripts/eval_rag_conflict.py`, `data/rag_conflict/handwritten.json` |
 | [salabajr/xling-manifolds](https://github.com/salabajr/xling-manifolds) | Nathan's supplemental project on English/Chinese concept manifolds and cross-lingual activation steering in Qwen models. This is adjacent interpretability work, not part of the main ROME/MEMIT/IKE benchmark. | `paper_bundle/README_BUNDLE.md`, `paper_bundle/PAPER_OUTLINE.md`, `paper_bundle/reports/` |
 
 ---
