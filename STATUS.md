@@ -13,6 +13,7 @@ This is the current project snapshot. Use `README.md` as the grader-facing landi
 - Final report results are complete for the current course-project scale.
 - Corey's RAG-vs-ROME conflict extension is integrated in `scripts/eval_rag_conflict.py`, `src/benchmarks/rag_conflict.py`, `data/rag_conflict/handwritten.json`, and `tests/test_rag_conflict.py`.
 - Nathan's supplemental cross-lingual concept-manifold work is linked from the root README: `https://github.com/salabajr/xling-manifolds`.
+- Nathan's submitted supplemental report PDF is archived in `supplemental/Nathan_Wei_Supplemental_Report_Cross_Lingual_Concept_Manifolds.pdf`.
 - No GPU jobs or tmux experiment queues are currently active.
 - Local lightweight validation passed on 2026-06-13 with `/Users/matthewhutchinson/miniconda3/envs/cs263-project/bin/python -m unittest discover -s tests`.
 - Generated draft PDFs, CSV exports, checkpoints, logs, and IKE embedding caches are intentionally not source-of-truth artifacts.
@@ -29,6 +30,7 @@ This is the current project snapshot. Use `README.md` as the grader-facing landi
 | `overleaf_final/main.tex` | Final report source. |
 | `overleaf_final/Beyond_Rewrite_Accuracy_Testing_Logical_Consistency_in_Knowledge_Editing_Final_Report.pdf` | Current GitHub-facing final report export. |
 | `data/rag_conflict/handwritten.json` | Controlled RAG-vs-ROME conflict dataset. |
+| `supplemental/Nathan_Wei_Supplemental_Report_Cross_Lingual_Concept_Manifolds.pdf` | Nathan Wei's submitted supplemental report. |
 
 Regenerated exports under `results/csv/` are convenient but disposable. Recreate them with:
 
